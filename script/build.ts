@@ -73,21 +73,21 @@ rmSync(getDistRoot(), { recursive: true, force: true })
 console.log('Copying dependencies…')
 copyDependencies()
 
-console.log('Packaging emoji…')
-copyEmoji()
+// console.log('Packaging emoji…')
+// copyEmoji()
 
 console.log('Copying static resources…')
 copyStaticResources()
 
-console.log('Parsing license metadata…')
-generateLicenseMetadata(outRoot)
+// console.log('Parsing license metadata…')
+// generateLicenseMetadata(outRoot)
 
 moveAnalysisFiles()
 
-if (isGitHubActions() && process.platform === 'darwin' && isPublishableBuild) {
-  console.log('Setting up keychain…')
-  cp.execSync(path.join(__dirname, 'setup-macos-keychain'))
-}
+// if (isGitHubActions() && process.platform === 'darwin' && isPublishableBuild) {
+//   console.log('Setting up keychain…')
+//   cp.execSync(path.join(__dirname, 'setup-macos-keychain'))
+// }
 
 verifyInjectedSassVariables(outRoot)
   .catch(err => {
@@ -246,20 +246,20 @@ function packageApp() {
   return packager(options)
 }
 
-function removeAndCopy(source: string, destination: string) {
-  rmSync(destination, { recursive: true, force: true })
-  copySync(source, destination)
-}
+// function removeAndCopy(source: string, destination: string) {
+//   rmSync(destination, { recursive: true, force: true })
+//   copySync(source, destination)
+// }
 
-function copyEmoji() {
-  const emojiImages = path.join(projectRoot, 'gemoji', 'images', 'emoji')
-  const emojiImagesDestination = path.join(outRoot, 'emoji')
-  removeAndCopy(emojiImages, emojiImagesDestination)
+// function copyEmoji() {
+//   const emojiImages = path.join(projectRoot, 'gemoji', 'images', 'emoji')
+//   const emojiImagesDestination = path.join(outRoot, 'emoji')
+//   removeAndCopy(emojiImages, emojiImagesDestination)
 
-  const emojiJSON = path.join(projectRoot, 'gemoji', 'db', 'emoji.json')
-  const emojiJSONDestination = path.join(outRoot, 'emoji.json')
-  removeAndCopy(emojiJSON, emojiJSONDestination)
-}
+//   const emojiJSON = path.join(projectRoot, 'gemoji', 'db', 'emoji.json')
+//   const emojiJSONDestination = path.join(outRoot, 'emoji.json')
+//   removeAndCopy(emojiJSON, emojiJSONDestination)
+// }
 
 function copyStaticResources() {
   const dirName = process.platform

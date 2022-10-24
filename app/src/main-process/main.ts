@@ -342,6 +342,7 @@ app.on('ready', () => {
     const newMenu = buildDefaultMenu(labels)
 
     const currentMenu = Menu.getApplicationMenu()
+    console.log(currentMenu);
 
     // This shouldn't happen but whenever one says that it does
     // so here's the escape hatch when we can't merge the current
@@ -409,6 +410,7 @@ app.on('ready', () => {
    */
   ipcMain.on('execute-menu-item-by-id', (event, id) => {
     const currentMenu = Menu.getApplicationMenu()
+    console.log(currentMenu);
 
     if (currentMenu === null) {
       return
@@ -426,6 +428,7 @@ app.on('ready', () => {
     let sendMenuChangedEvent = false
 
     const currentMenu = Menu.getApplicationMenu()
+    console.log(currentMenu);
 
     if (currentMenu === null) {
       log.debug(`unable to get current menu, bailing out...`)

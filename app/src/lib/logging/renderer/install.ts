@@ -25,6 +25,7 @@ g.log = {
   },
   info(message: string, error?: Error) {
     log('info', message, error)
+    console.log('AFSDAF', message, error);
     console.info(formatLogMessage(message, error))
   },
   debug(message: string, error?: Error) {

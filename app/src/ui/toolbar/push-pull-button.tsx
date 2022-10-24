@@ -129,7 +129,7 @@ function publishRepositoryButton(onClick: () => void) {
   return (
     <ToolbarButton
       {...defaultProps}
-      title="Publish repository"
+      title="Publish repository hello"
       description="Publish this repository to GitHub"
       className="push-pull-button"
       icon={OcticonSymbol.upload}
@@ -199,7 +199,7 @@ function fetchButton(
   lastFetched: Date | null,
   onClick: () => void
 ) {
-  const title = `Fetch ${remoteName}`
+  const title = `Fetch hello ${remoteName}`
   return (
     <ToolbarButton
       {...defaultProps}

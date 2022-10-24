@@ -308,7 +308,7 @@ export class App extends React.Component<IAppProps, IAppState> {
   private async performDeferredLaunchActions() {
     // Loading emoji is super important but maybe less important that loading
     // the app. So defer it until we have some breathing space.
-    this.props.appStore.loadEmoji()
+    // this.props.appStore.loadEmoji()
 
     this.props.dispatcher.reportStats()
     setInterval(() => this.props.dispatcher.reportStats(), SendStatsInterval)
@@ -2930,6 +2930,7 @@ export class App extends React.Component<IAppProps, IAppState> {
           {this.renderRepositoryToolbarButton()}
         </div>
         {this.renderBranchToolbarButton()}
+        {<div>Hello hhhehehe</div>}
         {this.renderPushPullToolbarButton()}
       </Toolbar>
     )

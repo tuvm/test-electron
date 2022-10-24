@@ -14,7 +14,7 @@ import {
   getUpdatesURL,
   getIconFileName,
 } from './dist-info'
-import { isAppveyor, isGitHubActions } from './build-platforms'
+// import { isAppveyor, isGitHubActions } from './build-platforms'
 import { existsSync, rmSync } from 'fs'
 
 const distPath = getDistPath()
@@ -43,19 +43,19 @@ function packageOSX() {
 }
 
 function packageWindows() {
-  const setupCertificatePath = path.join(
-    __dirname,
-    'setup-windows-certificate.ps1'
-  )
-  const cleanupCertificatePath = path.join(
-    __dirname,
-    'cleanup-windows-certificate.ps1'
-  )
+  // const setupCertificatePath = path.join(
+  //   __dirname,
+  //   'setup-windows-certificate.ps1'
+  // )
+  // const cleanupCertificatePath = path.join(
+  //   __dirname,
+  //   'cleanup-windows-certificate.ps1'
+  // )
 
-  if (isAppveyor() || isGitHubActions()) {
-    console.log('Installing signing certificate…')
-    cp.execSync(`powershell ${setupCertificatePath}`, { stdio: 'inherit' })
-  }
+  // if (isAppveyor() || isGitHubActions()) {
+  //   console.log('Installing signing certificate…')
+  //   cp.execSync(`powershell ${setupCertificatePath}`, { stdio: 'inherit' })
+  // }
 
   const iconSource = path.join(
     __dirname,
@@ -83,8 +83,13 @@ function packageWindows() {
     process.exit(1)
   }
 
-  const iconUrl =
-    'https://desktop.githubusercontent.com/github-desktop/app-icon.ico'
+  // const iconUrl = 
+  // 'https://desktop.githubusercontent.com/github-desktop/app-icon.ico'
+
+  const iconUrl = path.resolve(
+    __dirname,
+    '../app/static/logos/app.ico'
+  )
 
   const nugetPkgName = getWindowsIdentifierName()
   const options: electronInstaller.Options = {
@@ -109,20 +114,20 @@ function packageWindows() {
     options.remoteReleases = url.toString()
   }
 
-  if (isAppveyor() || isGitHubActions()) {
-    const certificatePath = path.join(__dirname, 'windows-certificate.pfx')
-    options.signWithParams = `/f ${certificatePath} /p ${process.env.WINDOWS_CERT_PASSWORD} /tr http://timestamp.digicert.com /td sha256 /fd sha256`
-  }
+  // if (isAppveyor() || isGitHubActions()) {
+  //   const certificatePath = path.join(__dirname, 'windows-certificate.pfx')
+  //   options.signWithParams = `/f ${certificatePath} /p ${process.env.WINDOWS_CERT_PASSWORD} /tr http://timestamp.digicert.com /td sha256 /fd sha256`
+  // }
 
   console.log('Packaging for Windows…')
   electronInstaller
     .createWindowsInstaller(options)
     .then(() => {
       console.log(`Installers created in ${outputDir}`)
-      cp.execSync(`powershell ${cleanupCertificatePath}`)
+      // cp.execSync(`powershell ${cleanupCertificatePath}`)
     })
     .catch(e => {
-      cp.execSync(`powershell ${cleanupCertificatePath}`)
+      // cp.execSync(`powershell ${cleanupCertificatePath}`)
       console.error(`Error packaging: ${e}`)
       process.exit(1)
     })

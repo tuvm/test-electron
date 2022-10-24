@@ -501,11 +501,11 @@ export interface IAPIPullRequestReview {
   readonly html_url: string
   readonly submitted_at: string
   readonly state:
-    | 'APPROVED'
-    | 'DISMISSED'
-    | 'PENDING'
-    | 'COMMENTED'
-    | 'CHANGES_REQUESTED'
+  | 'APPROVED'
+  | 'DISMISSED'
+  | 'PENDING'
+  | 'COMMENTED'
+  | 'CHANGES_REQUESTED'
 }
 
 /** The metadata about a GitHub server. */
@@ -701,6 +701,7 @@ export class API {
    */
   public async getAliveDesktopChannel(): Promise<IAPIAliveSignedChannel | null> {
     try {
+      console.log('FAHFSADJFASNDFA')
       const res = await this.request('GET', '/desktop_internal/alive-channel')
       const signedChannel = await parsedResponse<IAPIAliveSignedChannel>(res)
       return signedChannel
@@ -738,6 +739,7 @@ export class API {
     owner: string,
     name: string
   ): Promise<IAPIFullRepository | null> {
+    console.log("FAHSDJFASDFAF");
     try {
       const response = await this.request('GET', `repos/${owner}/${name}`)
       if (response.status === HttpStatusCode.NotFound) {
@@ -1398,6 +1400,7 @@ export class API {
       reloadCache?: boolean
     } = {}
   ): Promise<Response> {
+    console.warn('HELLOO');
     const response = await request(
       this.endpoint,
       this.token,
@@ -1531,9 +1534,9 @@ export type AuthorizationResponse =
   | { kind: AuthorizationResponseKind.Authorized; token: string }
   | { kind: AuthorizationResponseKind.Failed; response: Response }
   | {
-      kind: AuthorizationResponseKind.TwoFactorAuthenticationRequired
-      type: AuthenticationMode
-    }
+    kind: AuthorizationResponseKind.TwoFactorAuthenticationRequired
+    type: AuthenticationMode
+  }
   | { kind: AuthorizationResponseKind.Error; response: Response }
   | { kind: AuthorizationResponseKind.UserRequiresVerification }
   | { kind: AuthorizationResponseKind.PersonalAccessTokenBlocked }
@@ -1617,7 +1620,7 @@ export async function createAuthorization(
       if (
         response.status === 403 &&
         apiError.message ===
-          'This API can only be accessed with username and password Basic Auth'
+        'This API can only be accessed with username and password Basic Auth'
       ) {
         // Authorization API does not support providing personal access tokens
         return { kind: AuthorizationResponseKind.PersonalAccessTokenBlocked }

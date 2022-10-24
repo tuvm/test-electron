@@ -284,6 +284,7 @@ export class AppWindow {
   /** Send the app menu to the renderer. */
   public sendAppMenu() {
     const appMenu = Menu.getApplicationMenu()
+    console.log(appMenu);
     if (appMenu) {
       const menu = menuFromElectronMenu(appMenu)
       ipcWebContents.send(this.window.webContents, 'app-menu', menu)

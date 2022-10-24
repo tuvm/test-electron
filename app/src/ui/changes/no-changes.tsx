@@ -19,6 +19,7 @@ import { Dispatcher } from '../dispatcher'
 import { SuggestedActionGroup } from '../suggested-actions'
 import { PreferencesTab } from '../../models/preferences'
 import { PopupType } from '../../models/popup'
+import { request } from '../../lib/http'
 
 function formatMenuItemLabel(text: string) {
   if (__WIN32__ || __LINUX__) {
@@ -690,11 +691,20 @@ export class NoChanges extends React.Component<
   }
 
   public componentDidMount() {
+    this.fetchApi();
     this.transitionTimer = window.setTimeout(() => {
       this.setState({ enableTransitions: true })
       this.transitionTimer = null
     }, 500)
   }
+
+  public fetchApi = async () => {
+    const res = await request('https://reqres.in/', '', 'GET', '/api/users?page=2');
+    console.log(res);
+    fetch('https://reqres.in/api/users?page=2').then(res => {
+      console.log(res);
+    })
+  };
 
   public componentWillUnmount() {
     if (this.transitionTimer !== null) {
