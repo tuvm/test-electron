@@ -10,8 +10,8 @@ import {
   getWindowsIdentifierName,
   getWindowsStandaloneName,
   getWindowsInstallerName,
-  shouldMakeDelta,
-  getUpdatesURL,
+  // shouldMakeDelta,
+  // getUpdatesURL,
   getIconFileName,
 } from './dist-info'
 // import { isAppveyor, isGitHubActions } from './build-platforms'
@@ -106,13 +106,13 @@ function packageWindows() {
     setupMsi: getWindowsInstallerName(),
   }
 
-  if (shouldMakeDelta()) {
-    const url = new URL(getUpdatesURL())
-    // Make sure Squirrel.Windows isn't affected by partially or completely
-    // disabled releases.
-    url.searchParams.set('bypassStaggeredRelease', '1')
-    options.remoteReleases = url.toString()
-  }
+  // if (shouldMakeDelta()) {
+  //   const url = new URL(getUpdatesURL())
+  //   // Make sure Squirrel.Windows isn't affected by partially or completely
+  //   // disabled releases.
+  //   url.searchParams.set('bypassStaggeredRelease', '1')
+  //   options.remoteReleases = url.toString()
+  // }
 
   // if (isAppveyor() || isGitHubActions()) {
   //   const certificatePath = path.join(__dirname, 'windows-certificate.pfx')

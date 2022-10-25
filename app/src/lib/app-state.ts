@@ -56,19 +56,21 @@ export enum SelectionType {
 
 export type PossibleSelections =
   | {
-      type: SelectionType.Repository
-      repository: Repository
-      state: IRepositoryState
-    }
+    type: SelectionType.Repository
+    repository: Repository
+    state: IRepositoryState
+  }
   | {
-      type: SelectionType.CloningRepository
-      repository: CloningRepository
-      progress: ICloneProgress
-    }
+    type: SelectionType.CloningRepository
+    repository: CloningRepository
+    progress: ICloneProgress
+  }
   | { type: SelectionType.MissingRepository; repository: Repository }
 
 /** All of the shared app state. */
 export interface IAppState {
+  readonly userList: any
+
   readonly accounts: ReadonlyArray<Account>
   /**
    * The current list of repositories tracked in the application

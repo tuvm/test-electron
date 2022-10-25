@@ -59,6 +59,7 @@ body {
 }
 
 :not(input):not(textarea) {
+
   &,
   &::after,
   &::before {
@@ -98,6 +99,12 @@ h5,
 h6 {
   margin-top: 0;
   margin-bottom: 0.5rem;
+}
+
+table,
+th,
+td {
+  border: 1px solid;
 }
 
 code,
@@ -159,6 +166,7 @@ button {
   outline: auto;
   outline-color: var(--focus-color);
 }
+
 .more-dropdown {
   color: var(--text-color) !important;
   margin-left: var(--spacing);

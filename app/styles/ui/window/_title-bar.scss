@@ -18,7 +18,8 @@
   @include win32 {
     height: var(--win32-title-bar-height);
     background: var(--win32-title-bar-background-color);
-    border-bottom: 1px solid #000;
+    // border-bottom: 1px solid #000;
+    box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
 
     .app-icon {
       color: var(--toolbar-button-secondary-color);

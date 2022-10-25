@@ -381,6 +381,7 @@ const customThemeKey = 'custom-theme-key'
 export class AppStore extends TypedBaseStore<IAppState> {
   private readonly gitStoreCache: GitStoreCache
 
+  private userList: any = {};
   private accounts: ReadonlyArray<Account> = new Array<Account>()
   private repositories: ReadonlyArray<Repository> = new Array<Repository>()
   private recentRepositories: ReadonlyArray<number> = new Array<number>()
@@ -895,6 +896,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
     ]
 
     return {
+      userList: this.userList,
       accounts: this.accounts,
       repositories,
       recentRepositories: this.recentRepositories,
@@ -1942,11 +1944,18 @@ export class AppStore extends TypedBaseStore<IAppState> {
     this.currentBackgroundFetcher = fetcher
   }
 
+  private getUserList = async () => {
+    const res = await fetch('https://reqres.in/api/users?page=2');
+    const data = await res.json();
+    return data;
+  }
+
   /** Load the initial state for the app. */
   public async loadInitialState() {
-    const [accounts, repositories] = await Promise.all([
+    const [accounts, repositories, userList] = await Promise.all([
       this.accountsStore.getAll(),
       this.repositoriesStore.getAll(),
+      this.getUserList(),
     ])
 
     log.info(
@@ -1958,6 +1967,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
     this.accounts = accounts
     this.repositories = repositories
+    this.userList = userList
 
     this.updateRepositorySelectionAfterRepositoriesChanged()
 

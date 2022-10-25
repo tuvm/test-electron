@@ -51,9 +51,19 @@ $overlay-background-color: rgba(0, 0, 0, 0.4);
   // Typography
   //
   // Font, line-height, and color for body text, headings, and more.
-  $emoji_fallback_fonts: 'Apple Color Emoji', 'Segoe UI', 'Segoe UI Emoji', 'Segoe UI Symbol';
-  --font-family-sans-serif: system-ui, sans-serif, #{$emoji_fallback_fonts};
-  --font-family-monospace: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace, #{$emoji_fallback_fonts};
+  $emoji_fallback_fonts: 'Apple Color Emoji',
+  'Segoe UI',
+  'Segoe UI Emoji',
+  'Segoe UI Symbol';
+  --font-family-sans-serif: system-ui,
+  sans-serif,
+  #{$emoji_fallback_fonts};
+  --font-family-monospace: SFMono-Regular,
+  Consolas,
+  Liberation Mono,
+  Menlo,
+  monospace,
+  #{$emoji_fallback_fonts};
 
   /**
    * Font weight to use for semibold text
@@ -196,7 +206,7 @@ $overlay-background-color: rgba(0, 0, 0, 0.4);
    * If changed, update titleBarHeight in 'app/src/ui/dialog/dialog.tsx'
   */
   --win32-title-bar-height: 28px;
-  --win32-title-bar-background-color: #{$gray-900};
+  --win32-title-bar-background-color: #{$gray-000};
 
   /**
    * The height of the title bar area on darwin platforms
