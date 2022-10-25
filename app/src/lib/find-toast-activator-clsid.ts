@@ -16,10 +16,10 @@ export function findToastActivatorClsid() {
       'Windows',
       'Start Menu',
       'Programs',
-      'GitHub, Inc',
-      'GitHub Desktop.lnk'
+      'VinBigData JSC',
+      'Vinpearl OCR.lnk'
     ),
-    path.join(os.homedir(), 'Desktop', 'GitHub Desktop.lnk'),
+    path.join(os.homedir(), 'Desktop', 'Vinpearl OCR.lnk'),
   ]
 
   for (const shortcutPath of shortcutPaths) {

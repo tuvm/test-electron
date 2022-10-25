@@ -136,8 +136,8 @@ export class CrashApp extends React.Component<ICrashAppProps, ICrashAppState> {
   private renderTitle() {
     const message =
       this.state.type === 'launch'
-        ? 'GitHub Desktop failed to launch'
-        : 'GitHub Desktop encountered an error'
+        ? 'Vinpearl OCR failed to launch'
+        : 'Vinpearl OCR encountered an error'
 
     return (
       <header>

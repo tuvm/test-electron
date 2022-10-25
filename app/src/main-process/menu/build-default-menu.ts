@@ -61,10 +61,10 @@ export function buildDefaultMenu({
 
   if (__DARWIN__) {
     template.push({
-      label: 'GitHub Desktop',
+      label: 'Vinpearl OCR',
       submenu: [
         {
-          label: 'About GitHub Desktop',
+          label: 'About Vinpearl OCR',
           click: emit('show-about'),
           id: 'about',
         },
@@ -310,8 +310,8 @@ export function buildDefaultMenu({
         label: __DARWIN__
           ? 'Show in Finder'
           : __WIN32__
-          ? 'Show in E&xplorer'
-          : 'Show in your File Manager',
+            ? 'Show in E&xplorer'
+            : 'Show in your File Manager',
         id: 'open-working-directory',
         accelerator: 'CmdOrCtrl+Shift+F',
         click: emit('open-working-directory'),
@@ -506,8 +506,8 @@ export function buildDefaultMenu({
   const showLogsLabel = __DARWIN__
     ? 'Show Logs in Finder'
     : __WIN32__
-    ? 'S&how logs in Explorer'
-    : 'S&how logs in your File Manager'
+      ? 'S&how logs in Explorer'
+      : 'S&how logs in your File Manager'
 
   const showLogsItem: Electron.MenuItemConstructorOptions = {
     label: showLogsLabel,
@@ -579,7 +579,7 @@ export function buildDefaultMenu({
         ...helpItems,
         separator,
         {
-          label: '&About GitHub Desktop',
+          label: '&About Vinpearl OCR',
           click: emit('show-about'),
           id: 'about',
         },

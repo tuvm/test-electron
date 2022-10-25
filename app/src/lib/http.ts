@@ -155,7 +155,7 @@ export function request(
 /** Get the user agent to use for all requests. */
 function getUserAgent() {
   const platform = __DARWIN__ ? 'Macintosh' : 'Windows'
-  return `GitHubDesktop/${appProxy.getVersion()} (${platform})`
+  return `VinpearlOCR/${appProxy.getVersion()} (${platform})`
 }
 
 /**

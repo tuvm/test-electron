@@ -97,7 +97,7 @@ export function getWindowsDeltaNugetPackagePath() {
 }
 
 export function getWindowsIdentifierName() {
-  return 'GitHubDesktop'
+  return 'VinpearlOCR'
 }
 
 export function getBundleSizes() {

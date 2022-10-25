@@ -103,7 +103,7 @@ export const crash = merge({}, commonConfig, {
   target: 'electron-renderer',
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'GitHub Desktop',
+      title: 'Vinpearl OCR',
       filename: 'crash.html',
       chunks: ['crash'],
     }),
