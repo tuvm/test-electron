@@ -74,7 +74,7 @@ export class AppWindow {
     } else if (__WIN32__) {
       windowOptions.frame = false
     } else if (__LINUX__) {
-      windowOptions.icon = path.join(__dirname, 'static', 'icon-logo.png')
+      windowOptions.icon = path.join(__dirname, 'static', 'logo-icon.png')
     }
 
     this.window = new BrowserWindow(windowOptions)
