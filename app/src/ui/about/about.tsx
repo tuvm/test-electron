@@ -18,8 +18,8 @@ import { ReleaseNotesUri } from '../lib/releases'
 import { encodePathAsUrl } from '../../lib/path'
 
 const logoPath = __DARWIN__
-  ? 'static/logo-64x64@2x.png'
-  : 'static/windows-logo-64x64@2x.png'
+  ? 'static/logo-icon.png'
+  : 'static/logo-icon.png'
 const DesktopLogo = encodePathAsUrl(__dirname, logoPath)
 
 interface IAboutProps {

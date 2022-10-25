@@ -73,7 +73,7 @@ function packageWindows() {
 
   const splashScreenPath = path.resolve(
     __dirname,
-    '../app/static/logos/win32-installer-splash.gif'
+    '../app/static/logos/win32-installer-splash.jpg'
   )
 
   if (!existsSync(splashScreenPath)) {
@@ -88,7 +88,7 @@ function packageWindows() {
 
   const iconUrl = path.resolve(
     __dirname,
-    '../app/static/logos/app.ico'
+    '../app/static/logos/logo-icon.ico'
   )
 
   const nugetPkgName = getWindowsIdentifierName()
