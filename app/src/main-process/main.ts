@@ -16,7 +16,7 @@ import { AppWindow } from './app-window'
 import { buildDefaultMenu, getAllMenuItems } from './menu'
 import { shellNeedsPatching, updateEnvironmentForProcess } from '../lib/shell'
 import { parseAppURL } from '../lib/parse-app-url'
-import { handleSquirrelEvent } from './squirrel-updater'
+// import { handleSquirrelEvent } from './squirrel-updater'
 import { fatalError } from '../lib/fatal-error'
 
 import { log as writeLog } from './log'
@@ -132,24 +132,24 @@ process.on('uncaughtException', (error: Error) => {
   handleUncaughtException(error)
 })
 
-let handlingSquirrelEvent = false
-if (__WIN32__ && process.argv.length > 1) {
-  const arg = process.argv[1]
+const handlingSquirrelEvent = false
+// if (__WIN32__ && process.argv.length > 1) {
+//   const arg = process.argv[1]
 
-  const promise = handleSquirrelEvent(arg)
-  if (promise) {
-    handlingSquirrelEvent = true
-    promise
-      .catch(e => {
-        log.error(`Failed handling Squirrel event: ${arg}`, e)
-      })
-      .then(() => {
-        app.quit()
-      })
-  } else {
-    handlePossibleProtocolLauncherArgs(process.argv)
-  }
-}
+//   const promise = handleSquirrelEvent(arg)
+//   if (promise) {
+//     handlingSquirrelEvent = true
+//     promise
+//       .catch(e => {
+//         log.error(`Failed handling Squirrel event: ${arg}`, e)
+//       })
+//       .then(() => {
+//         app.quit()
+//       })
+//   } else {
+//     handlePossibleProtocolLauncherArgs(process.argv)
+//   }
+// }
 
 initializeDesktopNotifications()
 

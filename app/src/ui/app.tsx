@@ -2936,7 +2936,7 @@ export class App extends React.Component<IAppProps, IAppState> {
     // const width = clamp(this.state.sidebarWidth)
 
     return (
-      <h3>Quản lý người dùng</h3>
+      <h3 style={{ marginTop: 50 }}>Quản lý người dùng</h3>
       // <Toolbar id="desktop-app-toolbar">
       //   <div className="sidebar-section" style={{ width }}>
       //     {this.renderRepositoryToolbarButton()}
