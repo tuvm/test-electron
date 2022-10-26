@@ -2,9 +2,9 @@ import * as React from 'react'
 
 import { TextBox } from '../lib/text-box'
 import { Row } from '../lib/row'
-import { Dialog, DialogContent, DialogFooter } from '../dialog'
+import { Dialog, DialogContent, DialogFooter } from '../common/dialog'
 import { RetryAction } from '../../models/retry-actions'
-import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
+import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 import { Ref } from '../lib/ref'
 import { LinkButton } from '../lib/link-button'
 

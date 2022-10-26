@@ -6,7 +6,7 @@ import { Branch, StartPoint } from '../../models/branch'
 import { Row } from '../lib/row'
 import { Ref } from '../lib/ref'
 import { LinkButton } from '../lib/link-button'
-import { Dialog, DialogError, DialogContent, DialogFooter } from '../dialog'
+import { Dialog, DialogError, DialogContent, DialogFooter } from '../common/dialog'
 import {
   VerticalSegmentedControl,
   ISegmentedItem,
@@ -20,7 +20,7 @@ import {
 import { assertNever } from '../../lib/fatal-error'
 import { renderBranchNameExistsOnRemoteWarning } from '../lib/branch-name-warnings'
 import { getStartPoint } from '../../lib/create-branch'
-import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
+import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 import { startTimer } from '../lib/timing'
 import { GitHubRepository } from '../../models/github-repository'
 import { RefNameTextBox } from '../lib/ref-name-text-box'

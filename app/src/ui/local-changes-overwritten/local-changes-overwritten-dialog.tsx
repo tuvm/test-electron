@@ -4,8 +4,8 @@ import {
   DialogContent,
   DialogFooter,
   DefaultDialogFooter,
-} from '../dialog'
-import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
+} from '../common/dialog'
+import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 import { Repository } from '../../models/repository'
 import { RetryAction, RetryActionType } from '../../models/retry-actions'
 import { Dispatcher } from '../dispatcher'

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { DialogContent } from '../dialog'
+import { DialogContent } from '../common/dialog'
 import { TextArea } from '../lib/text-area'
 import { LinkButton } from '../lib/link-button'
 import { Ref } from '../lib/ref'

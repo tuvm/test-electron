@@ -4,7 +4,7 @@ import * as React from 'react'
 import { getAppPath } from '../lib/app-proxy'
 import { Loading } from '../lib/loading'
 import { LinkButton } from '../lib/link-button'
-import { Dialog, DialogContent, DefaultDialogFooter } from '../dialog'
+import { Dialog, DialogContent, DefaultDialogFooter } from '../common/dialog'
 
 const WebsiteURL = 'https://desktop.github.com'
 const RepositoryURL = 'https://github.com/desktop/desktop'

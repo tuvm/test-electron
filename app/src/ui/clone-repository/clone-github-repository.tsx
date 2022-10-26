@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import { Account } from '../../models/account'
-import { DialogContent } from '../dialog'
+import { DialogContent } from '../common/dialog'
 import { TextBox } from '../lib/text-box'
 import { Row } from '../lib/row'
 import { Button } from '../lib/button'

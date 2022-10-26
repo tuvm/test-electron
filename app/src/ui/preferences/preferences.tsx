@@ -7,7 +7,7 @@ import { Accounts } from './accounts'
 import { Advanced } from './advanced'
 import { Git } from './git'
 import { assertNever } from '../../lib/fatal-error'
-import { Dialog, DialogFooter, DialogError } from '../dialog'
+import { Dialog, DialogFooter, DialogError } from '../common/dialog'
 import {
   getGlobalConfigValue,
   setGlobalConfigValue,
@@ -21,7 +21,7 @@ import {
 } from '../lib/identifier-rules'
 import { Appearance } from './appearance'
 import { ApplicationTheme, ICustomTheme } from '../lib/application-theme'
-import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
+import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 import { Integrations } from './integrations'
 import {
   UncommittedChangesStrategy,

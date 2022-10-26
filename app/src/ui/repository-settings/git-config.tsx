@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { DialogContent } from '../dialog'
+import { DialogContent } from '../common/dialog'
 import { Account } from '../../models/account'
 import { GitConfigUserForm } from '../lib/git-config-user-form'
 import { getDotComAPIEndpoint } from '../../lib/api'

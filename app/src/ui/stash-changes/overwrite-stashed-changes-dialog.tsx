@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { Dialog, DialogContent, DialogFooter } from '../dialog'
+import { Dialog, DialogContent, DialogFooter } from '../common/dialog'
 import { Repository } from '../../models/repository'
 import { Branch } from '../../models/branch'
 import { Dispatcher } from '../dispatcher'
 import { Row } from '../lib/row'
-import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
+import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 import { UncommittedChangesStrategy } from '../../models/uncommitted-changes-strategy'
 
 interface IOverwriteStashProps {

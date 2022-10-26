@@ -2,7 +2,7 @@ import * as React from 'react'
 import { TextBox } from '../lib/text-box'
 import { Button } from '../lib/button'
 import { Row } from '../lib/row'
-import { DialogContent } from '../dialog'
+import { DialogContent } from '../common/dialog'
 import { Ref } from '../lib/ref'
 
 interface ICloneGenericRepositoryProps {

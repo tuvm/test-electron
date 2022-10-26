@@ -7,7 +7,7 @@ import {
   ReleaseNoteHeaderRightUri,
 } from '../../lib/release-notes'
 import { ReleaseNote } from '../../models/release-notes'
-import { Dialog, DialogContent } from '../dialog'
+import { Dialog, DialogContent } from '../common/dialog'
 import { RichText } from '../lib/rich-text'
 
 interface IThankYouProps {

@@ -6,9 +6,9 @@ import {
 } from '../../models/repository'
 import { Dispatcher } from '../dispatcher'
 import { Row } from '../lib/row'
-import { Dialog, DialogContent, DialogFooter } from '../dialog'
+import { Dialog, DialogContent, DialogFooter } from '../common/dialog'
 
-import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
+import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 import { ForkContributionTarget } from '../../models/workflow-preferences'
 import { VerticalSegmentedControl } from '../lib/vertical-segmented-control'
 import { ForkSettingsDescription } from '../repository-settings/fork-contribution-target-description'

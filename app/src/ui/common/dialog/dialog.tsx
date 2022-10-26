@@ -1,8 +1,8 @@
 import * as React from 'react'
 import classNames from 'classnames'
 import { DialogHeader } from './header'
-import { createUniqueId, releaseUniqueId } from '../lib/id-pool'
-import { getTitleBarHeight } from '../window/title-bar'
+import { createUniqueId, releaseUniqueId } from '../../lib/id-pool'
+import { getTitleBarHeight } from '../../window/title-bar'
 
 /**
  * The time (in milliseconds) from when the dialog is mounted

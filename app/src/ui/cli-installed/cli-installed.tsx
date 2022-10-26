@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Dialog, DialogContent, DefaultDialogFooter } from '../dialog'
+import { Dialog, DialogContent, DefaultDialogFooter } from '../common/dialog'
 import { InstalledCLIPath } from '../lib/install-cli'
 
 interface ICLIInstalledProps {

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Branch } from '../../models/branch'
 import { BranchSelect } from '../branches/branch-select'
-import { DialogHeader } from '../dialog/header'
+import { DialogHeader } from '../common/dialog/header'
 import { createUniqueId } from '../lib/id-pool'
 import { Ref } from '../lib/ref'
 

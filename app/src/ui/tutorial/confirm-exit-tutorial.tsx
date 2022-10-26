@@ -1,7 +1,7 @@
 import * as React from 'react'
 
-import { DialogFooter, DialogContent, Dialog } from '../dialog'
-import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
+import { DialogFooter, DialogContent, Dialog } from '../common/dialog'
+import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 
 interface IConfirmExitTutorialProps {
   readonly onDismissed: () => void

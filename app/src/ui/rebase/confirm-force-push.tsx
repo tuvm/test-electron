@@ -3,9 +3,9 @@ import * as React from 'react'
 import { Repository } from '../../models/repository'
 import { Checkbox, CheckboxValue } from '../lib/checkbox'
 import { Dispatcher } from '../dispatcher'
-import { DialogFooter, DialogContent, Dialog } from '../dialog'
+import { DialogFooter, DialogContent, Dialog } from '../common/dialog'
 import { Ref } from '../lib/ref'
-import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
+import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 
 interface IConfirmForcePushProps {
   readonly dispatcher: Dispatcher

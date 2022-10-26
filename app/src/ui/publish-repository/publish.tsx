@@ -3,7 +3,7 @@ import { PublishRepository } from './publish-repository'
 import { Dispatcher } from '../dispatcher'
 import { Account } from '../../models/account'
 import { Repository } from '../../models/repository'
-import { Dialog, DialogFooter, DialogContent, DialogError } from '../dialog'
+import { Dialog, DialogFooter, DialogContent, DialogError } from '../common/dialog'
 import { TabBar } from '../tab-bar'
 import { getDotComAPIEndpoint } from '../../lib/api'
 import { assertNever, fatalError } from '../../lib/fatal-error'
@@ -15,7 +15,7 @@ import {
   RepositoryPublicationSettings,
   PublishSettingsType,
 } from '../../models/publish-settings'
-import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
+import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 
 enum PublishTab {
   DotCom = 0,

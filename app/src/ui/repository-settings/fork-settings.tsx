@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { DialogContent } from '../dialog'
+import { DialogContent } from '../common/dialog'
 import { ForkContributionTarget } from '../../models/workflow-preferences'
 import { RepositoryWithForkedGitHubRepository } from '../../models/repository'
 import { ForkSettingsDescription } from './fork-contribution-target-description'

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { DialogContent } from '../dialog'
+import { DialogContent } from '../common/dialog'
 import { SuggestedBranchNames } from '../../lib/helpers/default-branch'
 import { RefNameTextBox } from '../lib/ref-name-text-box'
 import { Ref } from '../lib/ref'

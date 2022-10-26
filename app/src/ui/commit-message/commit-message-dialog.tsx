@@ -4,7 +4,7 @@ import {
   isRepositoryWithGitHubRepository,
   Repository,
 } from '../../models/repository'
-import { Dialog, DialogContent } from '../dialog'
+import { Dialog, DialogContent } from '../common/dialog'
 import { ICommitContext } from '../../models/commit'
 import { CommitIdentity } from '../../models/commit-identity'
 import { ICommitMessage } from '../../models/commit-message'

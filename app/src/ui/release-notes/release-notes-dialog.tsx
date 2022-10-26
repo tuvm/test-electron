@@ -2,11 +2,11 @@ import * as React from 'react'
 import { ReleaseNote, ReleaseSummary } from '../../models/release-notes'
 import { updateStore } from '../lib/update-store'
 import { LinkButton } from '../lib/link-button'
-import { Dialog, DialogContent, DialogFooter } from '../dialog'
+import { Dialog, DialogContent, DialogFooter } from '../common/dialog'
 import { RichText } from '../lib/rich-text'
 import { shell } from '../../lib/app-shell'
 import { ReleaseNotesUri } from '../lib/releases'
-import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
+import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 import { DesktopFakeRepository } from '../../lib/desktop-fake-repository'
 import {
   ReleaseNoteHeaderLeftUri,

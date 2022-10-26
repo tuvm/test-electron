@@ -4,13 +4,13 @@ import {
   DialogContent,
   DialogFooter,
   DefaultDialogFooter,
-} from '../dialog'
+} from '../common/dialog'
 import { Dispatcher } from '../dispatcher'
 import {
   RepositoryWithGitHubRepository,
   isRepositoryWithForkedGitHubRepository,
 } from '../../models/repository'
-import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
+import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 import { sendNonFatalException } from '../../lib/helpers/non-fatal-exception'
 import { Account } from '../../models/account'
 import { API } from '../../lib/api'

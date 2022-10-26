@@ -14,11 +14,11 @@ import { Octicon } from '../octicons'
 import * as OcticonSymbol from '../octicons/octicons.generated'
 import { Row } from '../lib/row'
 import { TextBox } from '../lib/text-box'
-import { Dialog, DialogError, DialogContent, DialogFooter } from '../dialog'
+import { Dialog, DialogError, DialogContent, DialogFooter } from '../common/dialog'
 
 import { getWelcomeMessage } from '../../lib/2fa'
 import { getDotComAPIEndpoint } from '../../lib/api'
-import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
+import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 import { Button } from '../lib/button'
 
 interface ISignInProps {

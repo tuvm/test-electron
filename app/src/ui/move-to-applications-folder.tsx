@@ -4,7 +4,7 @@ import {
   DialogContent,
   DialogFooter,
   OkCancelButtonGroup,
-} from './dialog'
+} from './common/dialog'
 import { Dispatcher } from './dispatcher'
 import { Checkbox, CheckboxValue } from './lib/checkbox'
 

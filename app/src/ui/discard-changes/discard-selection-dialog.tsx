@@ -3,10 +3,10 @@ import * as React from 'react'
 import { Repository } from '../../models/repository'
 import { Dispatcher } from '../dispatcher'
 import { WorkingDirectoryFileChange } from '../../models/status'
-import { Dialog, DialogContent, DialogFooter } from '../dialog'
+import { Dialog, DialogContent, DialogFooter } from '../common/dialog'
 import { PathText } from '../lib/path-text'
 import { Checkbox, CheckboxValue } from '../lib/checkbox'
-import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
+import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 import { ITextDiff, DiffSelection } from '../../models/diff'
 
 interface IDiscardSelectionProps {

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { DialogContent } from '../dialog'
+import { DialogContent } from '../common/dialog'
 import { Checkbox, CheckboxValue } from '../lib/checkbox'
 import { LinkButton } from '../lib/link-button'
 import { SamplesURL } from '../../lib/stats'

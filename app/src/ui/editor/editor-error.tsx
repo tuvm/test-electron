@@ -6,7 +6,7 @@ import {
   DialogFooter,
   DefaultDialogFooter,
   OkCancelButtonGroup,
-} from '../dialog'
+} from '../common/dialog'
 import { shell } from '../../lib/app-shell'
 import { suggestedExternalEditor } from '../../lib/editors/shared'
 

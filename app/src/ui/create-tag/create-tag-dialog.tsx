@@ -2,9 +2,9 @@ import * as React from 'react'
 
 import { Repository } from '../../models/repository'
 import { Dispatcher } from '../dispatcher'
-import { Dialog, DialogError, DialogContent, DialogFooter } from '../dialog'
+import { Dialog, DialogError, DialogContent, DialogFooter } from '../common/dialog'
 
-import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
+import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 import { startTimer } from '../lib/timing'
 import { Ref } from '../lib/ref'
 import { RefNameTextBox } from '../lib/ref-name-text-box'

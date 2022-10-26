@@ -5,7 +5,7 @@ import {
   DialogContent,
   DialogFooter,
   OkCancelButtonGroup,
-} from '../dialog'
+} from '../common/dialog'
 
 interface IShellErrorProps {
   /**

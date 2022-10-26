@@ -11,10 +11,10 @@ import {
   getForkContributionTarget,
   isRepositoryWithForkedGitHubRepository,
 } from '../../models/repository'
-import { Dialog, DialogError, DialogFooter } from '../dialog'
+import { Dialog, DialogError, DialogFooter } from '../common/dialog'
 import { NoRemote } from './no-remote'
 import { readGitIgnoreAtRoot } from '../../lib/git'
-import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
+import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 import { ForkSettings } from './fork-settings'
 import { ForkContributionTarget } from '../../models/workflow-preferences'
 import { GitConfigLocation, GitConfig } from './git-config'

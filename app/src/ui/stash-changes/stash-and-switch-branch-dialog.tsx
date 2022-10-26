@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Dialog, DialogContent, DialogFooter } from '../dialog'
+import { Dialog, DialogContent, DialogFooter } from '../common/dialog'
 import { Repository } from '../../models/repository'
 import { Dispatcher } from '../dispatcher'
 import { VerticalSegmentedControl } from '../lib/vertical-segmented-control'
@@ -10,7 +10,7 @@ import { Octicon } from '../octicons'
 import * as OcticonSymbol from '../octicons/octicons.generated'
 import { PopupType } from '../../models/popup'
 import { startTimer } from '../lib/timing'
-import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
+import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 
 enum StashAction {
   StashOnCurrentBranch,

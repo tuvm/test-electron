@@ -6,7 +6,7 @@ import {
   DialogContent,
   DialogFooter,
   OkCancelButtonGroup,
-} from '../../dialog'
+} from '../../common/dialog'
 import {
   BranchList,
   IBranchListItem,

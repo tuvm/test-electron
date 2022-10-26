@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { Dialog, DialogContent, DialogFooter } from '../dialog'
-import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
+import { Dialog, DialogContent, DialogFooter } from '../common/dialog'
+import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 import { IRefCheck } from '../../lib/ci-checks/ci-checks'
 import { CICheckRunList } from './ci-check-run-list'
 import { GitHubRepository } from '../../models/github-repository'

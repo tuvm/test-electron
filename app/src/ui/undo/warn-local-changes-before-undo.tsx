@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { Dialog, DialogContent, DialogFooter } from '../dialog'
+import { Dialog, DialogContent, DialogFooter } from '../common/dialog'
 import { Repository } from '../../models/repository'
 import { Dispatcher } from '../dispatcher'
 import { Row } from '../lib/row'
 import { Checkbox, CheckboxValue } from '../lib/checkbox'
-import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
+import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 import { Commit } from '../../models/commit'
 
 interface IWarnLocalChangesBeforeUndoProps {

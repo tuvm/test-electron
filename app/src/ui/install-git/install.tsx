@@ -1,8 +1,8 @@
 import * as React from 'react'
 
-import { Dialog, DialogContent, DialogFooter } from '../dialog'
+import { Dialog, DialogContent, DialogFooter } from '../common/dialog'
 import { shell } from '../../lib/app-shell'
-import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
+import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 
 interface IInstallGitProps {
   /**

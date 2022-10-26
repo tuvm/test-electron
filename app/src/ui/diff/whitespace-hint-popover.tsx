@@ -4,7 +4,7 @@ import {
   PopoverCaretPosition,
   PopoverAppearEffect,
 } from '../lib/popover'
-import { OkCancelButtonGroup } from '../dialog'
+import { OkCancelButtonGroup } from '../common/dialog'
 
 interface IWhitespaceHintPopoverProps {
   readonly caretPosition: PopoverCaretPosition

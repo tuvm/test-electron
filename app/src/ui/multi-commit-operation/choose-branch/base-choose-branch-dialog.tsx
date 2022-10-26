@@ -3,7 +3,7 @@ import { Branch } from '../../../models/branch'
 import { Repository } from '../../../models/repository'
 import { IMatches } from '../../../lib/fuzzy-find'
 import { truncateWithEllipsis } from '../../../lib/truncate-with-ellipsis'
-import { Dialog, DialogContent, DialogFooter } from '../../dialog'
+import { Dialog, DialogContent, DialogFooter } from '../../common/dialog'
 import {
   BranchList,
   IBranchListItem,

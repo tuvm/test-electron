@@ -6,7 +6,7 @@ import {
   ICustomTheme,
 } from '../lib/application-theme'
 import { Row } from '../lib/row'
-import { DialogContent } from '../dialog'
+import { DialogContent } from '../common/dialog'
 import {
   VerticalSegmentedControl,
   ISegmentedItem,

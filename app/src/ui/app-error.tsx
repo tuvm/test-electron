@@ -5,12 +5,12 @@ import {
   DialogContent,
   DialogFooter,
   DefaultDialogFooter,
-} from './dialog'
+} from './common/dialog'
 import { dialogTransitionTimeout } from './app'
 import { GitError, isAuthFailureError } from '../lib/git/core'
 import { Popup, PopupType } from '../models/popup'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
-import { OkCancelButtonGroup } from './dialog/ok-cancel-button-group'
+import { OkCancelButtonGroup } from './common/dialog/ok-cancel-button-group'
 import { ErrorWithMetadata } from '../lib/error-with-metadata'
 import { RetryActionType, RetryAction } from '../models/retry-actions'
 import { Ref } from './lib/ref'

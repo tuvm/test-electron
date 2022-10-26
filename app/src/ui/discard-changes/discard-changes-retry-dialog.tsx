@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { Dialog, DialogContent, DialogFooter } from '../dialog'
-import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
+import { Dialog, DialogContent, DialogFooter } from '../common/dialog'
+import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 import { Dispatcher } from '../dispatcher'
 import { TrashNameLabel } from '../lib/context-menu'
 import { RetryAction } from '../../models/retry-actions'

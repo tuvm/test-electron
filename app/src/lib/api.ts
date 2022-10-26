@@ -701,7 +701,6 @@ export class API {
    */
   public async getAliveDesktopChannel(): Promise<IAPIAliveSignedChannel | null> {
     try {
-      console.log('FAHFSADJFASNDFA')
       const res = await this.request('GET', '/desktop_internal/alive-channel')
       const signedChannel = await parsedResponse<IAPIAliveSignedChannel>(res)
       return signedChannel
@@ -739,7 +738,6 @@ export class API {
     owner: string,
     name: string
   ): Promise<IAPIFullRepository | null> {
-    console.log("FAHSDJFASDFAF");
     try {
       const response = await this.request('GET', `repos/${owner}/${name}`)
       if (response.status === HttpStatusCode.NotFound) {

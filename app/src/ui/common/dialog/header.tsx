@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { Octicon, syncClockwise } from '../octicons'
-import * as OcticonSymbol from '../octicons/octicons.generated'
+import { Octicon, syncClockwise } from '../../octicons'
+import * as OcticonSymbol from '../../octicons/octicons.generated'
 
 interface IDialogHeaderProps {
   /**

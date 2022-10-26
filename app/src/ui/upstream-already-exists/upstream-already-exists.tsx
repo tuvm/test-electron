@@ -1,11 +1,11 @@
 import * as React from 'react'
-import { Dialog, DialogContent, DialogFooter } from '../dialog'
+import { Dialog, DialogContent, DialogFooter } from '../common/dialog'
 import { Repository } from '../../models/repository'
 import { IRemote } from '../../models/remote'
 import { Ref } from '../lib/ref'
 import { forceUnwrap } from '../../lib/fatal-error'
 import { UpstreamRemoteName } from '../../lib/stores'
-import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
+import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 
 interface IUpstreamAlreadyExistsProps {
   readonly repository: Repository

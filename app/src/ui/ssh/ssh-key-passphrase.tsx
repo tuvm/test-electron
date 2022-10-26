@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { Dialog, DialogContent, DialogFooter } from '../dialog'
+import { Dialog, DialogContent, DialogFooter } from '../common/dialog'
 import { Row } from '../lib/row'
-import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
+import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 import { TextBox } from '../lib/text-box'
 import { Checkbox, CheckboxValue } from '../lib/checkbox'
 

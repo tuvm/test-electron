@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { Repository } from '../../models/repository'
-import { Dialog, DialogContent, DialogFooter } from '../dialog'
+import { Dialog, DialogContent, DialogFooter } from '../common/dialog'
 import { PathText } from '../lib/path-text'
 import { LinkButton } from '../lib/link-button'
-import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
+import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 
 const LFSURL = 'https://git-lfs.github.com/'
 

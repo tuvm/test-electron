@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { Octicon } from '../octicons'
-import * as OcticonSymbol from '../octicons/octicons.generated'
+import { Octicon } from '../../octicons'
+import * as OcticonSymbol from '../../octicons/octicons.generated'
 
 /**
  * A component used for displaying short error messages inline

@@ -1,12 +1,12 @@
 import * as React from 'react'
-import { Dialog, DialogContent, DialogFooter } from '../dialog'
+import { Dialog, DialogContent, DialogFooter } from '../common/dialog'
 import { Dispatcher } from '../dispatcher'
 import { Repository } from '../../models/repository'
 import { ICommitContext } from '../../models/commit'
 import { WorkingDirectoryFileChange } from '../../models/status'
 import { PathText } from '../lib/path-text'
 import { DefaultCommitMessage } from '../../models/commit-message'
-import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
+import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 
 interface ICommitConflictsWarningProps {
   readonly dispatcher: Dispatcher

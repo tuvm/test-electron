@@ -5,7 +5,7 @@ import { Repository } from '../../models/repository'
 import { PopupType } from '../../models/popup'
 import { Octicon } from '../octicons'
 import * as OcticonSymbol from '../octicons/octicons.generated'
-import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
+import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 
 interface IStashDiffHeaderProps {
   readonly stashEntry: IStashEntry

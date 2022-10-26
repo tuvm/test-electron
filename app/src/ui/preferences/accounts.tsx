@@ -5,7 +5,7 @@ import { lookupPreferredEmail } from '../../lib/email'
 import { assertNever } from '../../lib/fatal-error'
 import { Button } from '../lib/button'
 import { Row } from '../lib/row'
-import { DialogContent } from '../dialog'
+import { DialogContent } from '../common/dialog'
 import { Avatar } from '../lib/avatar'
 import { CallToAction } from '../lib/call-to-action'
 

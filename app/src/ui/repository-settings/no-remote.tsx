@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { DialogContent } from '../dialog'
+import { DialogContent } from '../common/dialog'
 import { LinkButton } from '../lib/link-button'
 import { CallToAction } from '../lib/call-to-action'
 
