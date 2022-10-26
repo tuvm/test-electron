@@ -105,12 +105,12 @@ export class TitleBar extends React.Component<ITitleBarProps> {
 
     const logoSrc = encodePathAsUrl(
       __dirname,
-      'static/logo-icon.svg'
+      'static/logo-icon.png'
     )
 
-    const appIcon = this.props.showAppIcon ? (
+    const appIcon = this.props.showAppIcon || true ? (
       // <Octicon className="app-icon" symbol={OcticonSymbol.markGithub} />
-      <img src={logoSrc} alt="logo" />
+      <img className="app-icon" style={{ width: 24, height: 24 }} src={logoSrc} alt="logo" />
     ) : null
 
     const onTitlebarDoubleClick = __DARWIN__
