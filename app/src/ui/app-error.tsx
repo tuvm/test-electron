@@ -7,15 +7,12 @@ import {
   DefaultDialogFooter,
 } from './common/dialog'
 import { dialogTransitionTimeout } from './app'
-import { GitError, isAuthFailureError } from '../lib/git/core'
-import { Popup, PopupType } from '../models/popup'
+import { Popup } from '../models/popup'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import { OkCancelButtonGroup } from './common/dialog/ok-cancel-button-group'
 import { ErrorWithMetadata } from '../lib/error-with-metadata'
 import { RetryActionType, RetryAction } from '../models/retry-actions'
 import { Ref } from './lib/ref'
-import memoizeOne from 'memoize-one'
-import { parseCarriageReturn } from '../lib/parse-carriage-return'
 
 interface IAppErrorProps {
   /** The list of queued, app-wide, errors  */
@@ -48,7 +45,7 @@ interface IAppErrorState {
  */
 export class AppError extends React.Component<IAppErrorProps, IAppErrorState> {
   private dialogContent: HTMLDivElement | null = null
-  private formatGitErrorMessage = memoizeOne(parseCarriageReturn)
+  // private formatGitErrorMessage = memoizeOne(parseCarriageReturn)
 
   public constructor(props: IAppErrorProps) {
     super(props)
@@ -83,15 +80,15 @@ export class AppError extends React.Component<IAppErrorProps, IAppErrorState> {
     }
   }
 
-  private showPreferencesDialog = () => {
-    this.onDismissed()
+  // private showPreferencesDialog = () => {
+  //   this.onDismissed()
 
-    //This is a hacky solution to resolve multiple dialog windows
-    //being open at the same time.
-    window.setTimeout(() => {
-      this.props.onShowPopup({ type: PopupType.Preferences })
-    }, dialogTransitionTimeout.exit)
-  }
+  //   //This is a hacky solution to resolve multiple dialog windows
+  //   //being open at the same time.
+  //   window.setTimeout(() => {
+  //     this.props.onShowPopup({ type: PopupType.Preferences })
+  //   }, dialogTransitionTimeout.exit)
+  // }
 
   private onRetryAction = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
@@ -112,11 +109,6 @@ export class AppError extends React.Component<IAppErrorProps, IAppErrorState> {
 
     // If the error message is just the raw git output, display it in
     // fixed-width font
-    if (isRawGitError(e)) {
-      const formattedMessage = this.formatGitErrorMessage(e.message)
-      return <p className="monospace">{formattedMessage}</p>
-    }
-
     return <p>{e.message}</p>
   }
 
@@ -145,9 +137,6 @@ export class AppError extends React.Component<IAppErrorProps, IAppErrorState> {
         onSubmit={this.onDismissed}
         onDismissed={this.onDismissed}
         disabled={this.state.disabled}
-        className={
-          isRawGitError(this.state.error) ? 'raw-git-error' : undefined
-        }
       >
         <DialogContent onRef={this.onDialogContentRef}>
           {this.renderErrorMessage(error)}
@@ -184,12 +173,6 @@ export class AppError extends React.Component<IAppErrorProps, IAppErrorState> {
     if (this.dialogContent === null || this.state.error === null) {
       return
     }
-
-    const e = getUnderlyingError(this.state.error)
-
-    if (isRawGitError(e)) {
-      this.dialogContent.scrollTop = this.dialogContent.scrollHeight
-    }
   }
 
   public componentDidMount() {
@@ -215,15 +198,6 @@ export class AppError extends React.Component<IAppErrorProps, IAppErrorState> {
       return this.renderRetryCloneFooter()
     }
 
-    const underlyingError = getUnderlyingError(error)
-
-    if (isGitError(underlyingError)) {
-      const { gitError } = underlyingError.result
-      if (gitError !== null && isAuthFailureError(gitError)) {
-        return this.renderOpenPreferencesFooter()
-      }
-    }
-
     return this.renderDefaultFooter()
   }
 
@@ -239,18 +213,18 @@ export class AppError extends React.Component<IAppErrorProps, IAppErrorState> {
     )
   }
 
-  private renderOpenPreferencesFooter() {
-    return (
-      <DialogFooter>
-        <OkCancelButtonGroup
-          okButtonText="Close"
-          onOkButtonClick={this.onCloseButtonClick}
-          cancelButtonText={__DARWIN__ ? 'Open Preferences' : 'Open options'}
-          onCancelButtonClick={this.showPreferencesDialog}
-        />
-      </DialogFooter>
-    )
-  }
+  // private renderOpenPreferencesFooter() {
+  //   return (
+  //     <DialogFooter>
+  //       <OkCancelButtonGroup
+  //         okButtonText="Close"
+  //         onOkButtonClick={this.onCloseButtonClick}
+  //         cancelButtonText={__DARWIN__ ? 'Open Preferences' : 'Open options'}
+  //         onCancelButtonClick={this.showPreferencesDialog}
+  //       />
+  //     </DialogFooter>
+  //   )
+  // }
 
   private renderDefaultFooter() {
     return <DefaultDialogFooter onButtonClick={this.onCloseButtonClick} />
@@ -277,18 +251,6 @@ function getUnderlyingError(error: Error): Error {
 
 function isErrorWithMetaData(error: Error): error is ErrorWithMetadata {
   return error instanceof ErrorWithMetadata
-}
-
-function isGitError(error: Error): error is GitError {
-  return error instanceof GitError
-}
-
-function isRawGitError(error: Error | null) {
-  if (!error) {
-    return false
-  }
-  const e = getUnderlyingError(error)
-  return e instanceof GitError && e.isRawMessage
 }
 
 function isCloneError(error: Error) {

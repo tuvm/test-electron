@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { IAvatarUser } from '../../models/avatar'
 import { shallowEquals } from '../../lib/equality'
 import { generateGravatarUrl } from '../../lib/gravatar'
 import { Octicon } from '../octicons'
@@ -10,7 +9,7 @@ import { supportsAvatarsAPI } from '../../lib/endpoint-capabilities'
 
 interface IAvatarProps {
   /** The user whose avatar should be displayed. */
-  readonly user?: IAvatarUser
+  readonly user?: any
 
   /**
    * The title of the avatar.
@@ -27,7 +26,7 @@ interface IAvatarProps {
 }
 
 interface IAvatarState {
-  readonly user?: IAvatarUser
+  readonly user?: any
   readonly candidates: ReadonlyArray<string>
 }
 
@@ -56,7 +55,7 @@ const StealthEmailRegexp = /^(?:(\d+)\+)?(.+?)@users\.noreply\.(.*)$/i
  * given user.
  */
 function getAvatarUrlCandidates(
-  user: IAvatarUser | undefined,
+  user: any | undefined,
   size = 64
 ): ReadonlyArray<string> {
   const candidates = new Array<string>()

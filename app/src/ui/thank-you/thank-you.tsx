@@ -1,14 +1,12 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import * as React from 'react'
-import { DesktopFakeRepository } from '../../lib/desktop-fake-repository'
 import {
   ReleaseNoteHeaderLeftUri,
   ReleaseNoteHeaderRightUri,
 } from '../../lib/release-notes'
 import { ReleaseNote } from '../../models/release-notes'
 import { Dialog, DialogContent } from '../common/dialog'
-import { RichText } from '../lib/rich-text'
 
 interface IThankYouProps {
   readonly onDismissed: () => void
@@ -27,19 +25,6 @@ export class ThankYou extends React.Component<IThankYouProps, {}> {
     }
 
     const options = new Array<JSX.Element>()
-
-    for (const [i, entry] of releaseEntries.entries()) {
-      options.push(
-        <li key={i}>
-          <RichText
-            text={entry.message}
-            emoji={this.props.emoji}
-            renderUrlsAsLinks={true}
-            repository={DesktopFakeRepository}
-          />
-        </li>
-      )
-    }
 
     return (
       <div className="section">
@@ -78,11 +63,6 @@ export class ThankYou extends React.Component<IThankYouProps, {}> {
         <div className="title">
           <div className="thank-you">
             Thank you {this.props.friendlyName}!{' '}
-            <RichText
-              text={':tada:'}
-              emoji={this.props.emoji}
-              renderUrlsAsLinks={true}
-            />
           </div>
         </div>
       </div>

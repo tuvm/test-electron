@@ -1,7 +1,6 @@
 import * as React from 'react'
 import {
-  List,
-  SelectionSource,
+  // SelectionSource,
   findNextSelectableRow,
   SelectionDirection,
 } from '../lib/list'
@@ -159,9 +158,7 @@ export abstract class AutocompletingTextInput<
 
     const left = coordinates.left
     const top = coordinates.top + YOffset
-    const selectedRow = state.selectedItem
-      ? items.indexOf(state.selectedItem)
-      : -1
+   
     const rect = element.getBoundingClientRect()
     const popupAbsoluteTop = rect.top + coordinates.top
 
@@ -193,75 +190,62 @@ export abstract class AutocompletingTextInput<
     // remains the same. Additionally we need to be aware that different
     // providers can use different sorting behaviors which also might affect
     // rendering.
-    const searchText = state.rangeText
 
     const className = classNames('autocompletion-popup', state.provider.kind)
 
     return (
       <div className={className} style={{ top, left, height }}>
-        <List
-          rowCount={items.length}
-          rowHeight={RowHeight}
-          selectedRows={[selectedRow]}
-          rowRenderer={this.renderItem}
-          scrollToRow={selectedRow}
-          selectOnHover={true}
-          focusOnHover={false}
-          onRowMouseDown={this.onRowMouseDown}
-          onRowClick={this.insertCompletionOnClick}
-          onSelectedRowChanged={this.onSelectedRowChanged}
-          invalidationProps={searchText}
-        />
+       
       </div>
     )
   }
 
-  private onRowMouseDown = (row: number, event: React.MouseEvent<any>) => {
-    const currentAutoCompletionState = this.state.autocompletionState
+  // private onRowMouseDown = (row: number, event: React.MouseEvent<any>) => {
+  //   const currentAutoCompletionState = this.state.autocompletionState
 
-    if (!currentAutoCompletionState) {
-      return
-    }
+  //   if (!currentAutoCompletionState) {
+  //     return
+  //   }
 
-    const item = currentAutoCompletionState.items[row]
+  //   const item = currentAutoCompletionState.items[row]
 
-    if (item) {
-      this.insertCompletion(item, 'mouseclick')
-    }
-  }
+  //   if (item) {
+  //     this.insertCompletion(item, 'mouseclick')
+  //   }
+  // }
 
-  private onSelectedRowChanged = (row: number, source: SelectionSource) => {
-    const currentAutoCompletionState = this.state.autocompletionState
+  // private onSelectedRowChanged = (row: number, source: SelectionSource) => {
+  //   const currentAutoCompletionState = this.state.autocompletionState
 
-    if (!currentAutoCompletionState) {
-      return
-    }
+  //   if (!currentAutoCompletionState) {
+  //     return
+  //   }
 
-    const newSelectedItem = currentAutoCompletionState.items[row]
+  //   const newSelectedItem = currentAutoCompletionState.items[row]
 
-    const newAutoCompletionState = {
-      ...currentAutoCompletionState,
-      selectedItem: newSelectedItem,
-    }
+  //   const newAutoCompletionState = {
+  //     ...currentAutoCompletionState,
+  //     selectedItem: newSelectedItem,
+  //   }
 
-    this.setState({ autocompletionState: newAutoCompletionState })
-  }
+  //   this.setState({ autocompletionState: newAutoCompletionState })
+  // }
 
-  private insertCompletionOnClick = (row: number): void => {
-    const state = this.state.autocompletionState
-    if (!state) {
-      return
-    }
+  // private insertCompletionOnClick = (row: number): void => {
+  //   const state = this.state.autocompletionState
+  //   if (!state) {
+  //     return
+  //   }
 
-    const items = state.items
-    if (!items.length) {
-      return
-    }
+  //   const items = state.items
+  //   if (!items.length) {
+  //     return
+  //   }
 
-    const item = items[row]
+  //   const item = items[row]
 
-    this.insertCompletion(item, 'mouseclick')
-  }
+  //   this.insertCompletion(item, 'mouseclick')
+  // }
 
   private onContextMenu = (event: React.MouseEvent<any>) => {
     if (this.props.onContextMenu) {

@@ -1,7 +1,6 @@
 import * as React from 'react'
 import classNames from 'classnames'
 import { Avatar } from './avatar'
-import { IAvatarUser } from '../../models/avatar'
 
 /**
  * The maximum number of avatars to stack before hiding
@@ -11,7 +10,7 @@ import { IAvatarUser } from '../../models/avatar'
 const MaxDisplayedAvatars = 3
 
 interface IAvatarStackProps {
-  readonly users: ReadonlyArray<IAvatarUser>
+  readonly users: ReadonlyArray<any>
 }
 
 /**

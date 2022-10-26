@@ -1,8 +1,6 @@
 import * as React from 'react'
-import { join } from 'path'
 import { LinkButton } from '../lib/link-button'
 import { Button } from '../lib/button'
-import { Repository } from '../../models/repository'
 import { Dispatcher } from '../dispatcher'
 import { Octicon } from '../octicons'
 import * as OcticonSymbol from '../octicons/octicons.generated'
@@ -25,7 +23,6 @@ const TutorialPanelImage = encodePathAsUrl(
 
 interface ITutorialPanelProps {
   readonly dispatcher: Dispatcher
-  readonly repository: Repository
 
   /** name of the configured external editor
    * (`undefined` if none is configured.)
@@ -52,28 +49,6 @@ export class TutorialPanel extends React.Component<
   public constructor(props: ITutorialPanelProps) {
     super(props)
     this.state = { currentlyOpenSectionId: this.props.currentTutorialStep }
-  }
-
-  private openTutorialFileInEditor = () => {
-    this.props.dispatcher.openInExternalEditor(
-      // TODO: tie this filename to a shared constant
-      // for tutorial repos
-      join(this.props.repository.path, 'README.md')
-    )
-  }
-
-  private openPullRequest = () => {
-    this.props.dispatcher.createPullRequest(this.props.repository)
-  }
-
-  private skipEditorInstall = () => {
-    this.props.dispatcher.skipPickEditorTutorialStep(this.props.repository)
-  }
-
-  private skipCreatePR = () => {
-    this.props.dispatcher.markPullRequestTutorialStepAsComplete(
-      this.props.repository
-    )
   }
 
   private isStepComplete = (step: ValidTutorialStep) => {
@@ -109,7 +84,6 @@ export class TutorialPanel extends React.Component<
             isNextStepTodo={this.isStepNextTodo}
             sectionId={TutorialStep.PickEditor}
             currentlyOpenSectionId={this.state.currentlyOpenSectionId}
-            skipLinkButton={<SkipLinkButton onClick={this.skipEditorInstall} />}
             onSummaryClick={this.onStepSummaryClick}
           >
             {!this.isStepComplete(TutorialStep.PickEditor) ? (
@@ -133,7 +107,7 @@ export class TutorialPanel extends React.Component<
                   , but feel free to use any.
                 </p>
                 <div className="action">
-                  <LinkButton onClick={this.skipEditorInstall}>
+                  <LinkButton>
                     I have an editor
                   </LinkButton>
                 </div>
@@ -195,7 +169,7 @@ export class TutorialPanel extends React.Component<
             </p>
             {this.props.resolvedExternalEditor && (
               <div className="action">
-                <Button onClick={this.openTutorialFileInEditor}>
+                <Button>
                   {__DARWIN__ ? 'Open Editor' : 'Open editor'}
                 </Button>
                 {__DARWIN__ ? (
@@ -262,7 +236,6 @@ export class TutorialPanel extends React.Component<
             isNextStepTodo={this.isStepNextTodo}
             sectionId={TutorialStep.OpenPullRequest}
             currentlyOpenSectionId={this.state.currentlyOpenSectionId}
-            skipLinkButton={<SkipLinkButton onClick={this.skipCreatePR} />}
             onSummaryClick={this.onStepSummaryClick}
           >
             <p className="description">
@@ -272,7 +245,7 @@ export class TutorialPanel extends React.Component<
               private.
             </p>
             <div className="action">
-              <Button onClick={this.openPullRequest}>
+              <Button>
                 {__DARWIN__ ? 'Open Pull Request' : 'Open pull request'}
                 <Octicon symbol={OcticonSymbol.linkExternal} />
               </Button>
@@ -310,7 +283,3 @@ export class TutorialPanel extends React.Component<
     })
   }
 }
-
-const SkipLinkButton: React.FunctionComponent<{
-  onClick: () => void
-}> = props => <LinkButton onClick={props.onClick}>Skip</LinkButton>

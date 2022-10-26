@@ -6,22 +6,11 @@ import * as Path from 'path'
 import { App } from './app'
 import {
   Dispatcher,
-  gitAuthenticationErrorHandler,
   externalEditorErrorHandler,
   openShellErrorHandler,
-  mergeConflictHandler,
   lfsAttributeMismatchHandler,
   defaultErrorHandler,
-  missingRepositoryHandler,
   backgroundTaskHandler,
-  pushNeedsPullHandler,
-  upstreamAlreadyExistsHandler,
-  rebaseConflictsHandler,
-  localChangesOverwrittenHandler,
-  refusedWorkflowUpdate,
-  samlReauthRequired,
-  insufficientGitHubRepoPermissions,
-  discardChangesHandler,
 } from './dispatcher'
 import {
   AppStore,
@@ -29,10 +18,8 @@ import {
   CloningRepositoriesStore,
   IssuesStore,
   SignInStore,
-  RepositoriesStore,
   TokenStore,
   AccountsStore,
-  PullRequestStore,
 } from '../lib/stores'
 import { GitHubUserDatabase } from '../lib/databases'
 import { SelectionType, IAppState } from '../lib/app-state'
@@ -51,10 +38,8 @@ import {
   withSourceMappedStack,
 } from '../lib/source-map-support'
 import { UiActivityMonitor } from './lib/ui-activity-monitor'
-import { RepositoryStateCache } from '../lib/stores/repository-state-cache'
 import { ApiRepositoriesStore } from '../lib/stores/api-repositories-store'
 import { CommitStatusStore } from '../lib/stores/commit-status-store'
-import { PullRequestCoordinator } from '../lib/stores/pull-request-coordinator'
 
 // We're using a polyfill for the upcoming CSS4 `:focus-ring` pseudo-selector.
 // This allows us to not have to override default accessibility driven focus
@@ -74,8 +59,6 @@ import {
   supportsSystemThemeChanges,
 } from './lib/application-theme'
 import { trampolineUIHelper } from '../lib/trampoline/trampoline-ui-helper'
-import { AliveStore } from '../lib/stores/alive-store'
-import { NotificationsStore } from '../lib/stores/notifications-store'
 import * as ipcRenderer from '../lib/ipc-renderer'
 import { migrateRendererGUID } from '../lib/get-renderer-guid'
 import { initializeRendererNotificationHandler } from '../lib/notifications/notification-handler'
@@ -237,35 +220,9 @@ const statsStore = new StatsStore(
 const signInStore = new SignInStore()
 
 const accountsStore = new AccountsStore(localStorage, TokenStore)
-const repositoriesStore = new RepositoriesStore(
-  new RepositoriesDatabase('Database')
-)
 
-const pullRequestStore = new PullRequestStore(
-  new PullRequestDatabase('PullRequestDatabase'),
-  repositoriesStore
-)
-
-const pullRequestCoordinator = new PullRequestCoordinator(
-  pullRequestStore,
-  repositoriesStore
-)
-
-const repositoryStateManager = new RepositoryStateCache(statsStore)
-
-const apiRepositoriesStore = new ApiRepositoriesStore(accountsStore)
-
-const commitStatusStore = new CommitStatusStore(accountsStore)
 const aheadBehindStore = new AheadBehindStore()
 
-const aliveStore = new AliveStore(accountsStore)
-
-const notificationsStore = new NotificationsStore(
-  accountsStore,
-  aliveStore,
-  pullRequestCoordinator,
-  statsStore
-)
 
 const appStore = new AppStore(
   gitHubUserStore,
@@ -274,11 +231,6 @@ const appStore = new AppStore(
   statsStore,
   signInStore,
   accountsStore,
-  repositoriesStore,
-  pullRequestCoordinator,
-  repositoryStateManager,
-  apiRepositoriesStore,
-  notificationsStore
 )
 
 appStore.onDidUpdate(state => {
@@ -287,48 +239,25 @@ appStore.onDidUpdate(state => {
 
 const dispatcher = new Dispatcher(
   appStore,
-  repositoryStateManager,
-  statsStore,
-  commitStatusStore
+  statsStore
 )
 
 dispatcher.registerErrorHandler(defaultErrorHandler)
-dispatcher.registerErrorHandler(upstreamAlreadyExistsHandler)
 dispatcher.registerErrorHandler(externalEditorErrorHandler)
 dispatcher.registerErrorHandler(openShellErrorHandler)
-dispatcher.registerErrorHandler(mergeConflictHandler)
 dispatcher.registerErrorHandler(lfsAttributeMismatchHandler)
-dispatcher.registerErrorHandler(insufficientGitHubRepoPermissions)
-dispatcher.registerErrorHandler(gitAuthenticationErrorHandler)
-dispatcher.registerErrorHandler(pushNeedsPullHandler)
-dispatcher.registerErrorHandler(samlReauthRequired)
 dispatcher.registerErrorHandler(backgroundTaskHandler)
-dispatcher.registerErrorHandler(missingRepositoryHandler)
-dispatcher.registerErrorHandler(localChangesOverwrittenHandler)
-dispatcher.registerErrorHandler(rebaseConflictsHandler)
-dispatcher.registerErrorHandler(refusedWorkflowUpdate)
-dispatcher.registerErrorHandler(discardChangesHandler)
 
 document.body.classList.add(`platform-${process.platform}`)
 
 dispatcher.initializeAppFocusState()
 
-initializeRendererNotificationHandler(notificationsStore)
-
 // The trampoline UI helper needs a reference to the dispatcher before it's used
 trampolineUIHelper.setDispatcher(dispatcher)
 
 ipcRenderer.on('focus', () => {
-  const { selectedState } = appStore.getState()
-
   // Refresh the currently selected repository on focus (if
   // we have a selected repository, that is not cloning).
-  if (
-    selectedState &&
-    !(selectedState.type === SelectionType.CloningRepository)
-  ) {
-    dispatcher.refreshRepository(selectedState.repository)
-  }
 
   dispatcher.setAppFocusState(true)
 })

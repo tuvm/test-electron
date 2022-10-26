@@ -10,7 +10,6 @@ import { shell } from '../../lib/app-shell'
 import { ReleaseSummary } from '../../models/release-notes'
 import { Banner } from './banner'
 import { ReleaseNotesUri } from '../lib/releases'
-import { RichText } from '../lib/rich-text'
 
 interface IUpdateAvailableProps {
   readonly dispatcher: Dispatcher
@@ -67,11 +66,6 @@ export class UpdateAvailable extends React.Component<
 
       return (
         <span>
-          <RichText
-            className="banner-emoji"
-            text={':tada:'}
-            emoji={this.props.emoji}
-          />
           Exciting new features have been added{version}. See{' '}
           <LinkButton onClick={this.showReleaseNotes}>what's new</LinkButton> or{' '}
           <LinkButton onClick={this.dismissUpdateShowCaseVisibility}>
