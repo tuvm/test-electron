@@ -74,6 +74,7 @@ import { About } from './about'
 import { Publish } from './publish-repository'
 import { Acknowledgements } from './acknowledgements'
 import { UntrustedCertificate } from './untrusted-certificate'
+import { getTitleBarHeight } from './window/title-bar'
 // import { NoRepositoriesView } from './no-repositories'
 import { ConfirmRemoveRepository } from './remove-repository'
 import { TermsAndConditions } from './terms-and-conditions'
@@ -1359,7 +1360,9 @@ export class App extends React.Component<IAppProps, IAppState> {
         windowZoomFactor={this.state.windowZoomFactor}
       >
         {/* {this.renderAppMenuBar()} */}
-        Vinpearl OCR managerment
+        <div style={{ height: '100%', display: 'flex', alignItems: 'center' }}>
+          <b>Vinpearl OCR managerment</b>
+        </div>
       </TitleBar>
     )
   }
@@ -2497,6 +2500,7 @@ export class App extends React.Component<IAppProps, IAppState> {
     return (
       <div
         id="desktop-app-contents"
+        style={{ marginTop: getTitleBarHeight() }}
         className={this.getDesktopAppContentsClassNames()}
       >
         {this.renderToolbar()}
