@@ -10,10 +10,7 @@ import {
   CloningRepositoriesStore,
   IssuesStore,
   SignInStore,
-  RepositoriesStore,
   AccountsStore,
-  PullRequestStore,
-  PullRequestCoordinator,
 } from '../../src/lib/stores'
 import { InMemoryDispatcher } from '../helpers/in-memory-dispatcher'
 import {
@@ -21,23 +18,16 @@ import {
   TestStatsDatabase,
   TestIssuesDatabase,
   TestRepositoriesDatabase,
-  TestPullRequestDatabase,
 } from '../helpers/databases'
 import { StatsStore } from '../../src/lib/stats'
 import { InMemoryStore, AsyncInMemoryStore } from '../helpers/stores'
 import { TestActivityMonitor } from '../helpers/test-activity-monitor'
-import { RepositoryStateCache } from '../../src/lib/stores/repository-state-cache'
-import { ApiRepositoriesStore } from '../../src/lib/stores/api-repositories-store'
-import { CommitStatusStore } from '../../src/lib/stores/commit-status-store'
 import { AheadBehindStore } from '../../src/lib/stores/ahead-behind-store'
-import { AliveStore } from '../../src/lib/stores/alive-store'
-import { NotificationsStore } from '../../src/lib/stores/notifications-store'
 
 describe('App', () => {
   let appStore: AppStore
   let dispatcher: Dispatcher
   let statsStore: StatsStore
-  let repositoryStateManager: RepositoryStateCache
   let githubUserStore: GitHubUserStore
   let issuesStore: IssuesStore
   let aheadBehindStore: AheadBehindStore
@@ -55,36 +45,17 @@ describe('App', () => {
 
     const repositoriesDb = new TestRepositoriesDatabase()
     await repositoriesDb.reset()
-    const repositoriesStore = new RepositoriesStore(repositoriesDb)
 
     const accountsStore = new AccountsStore(
       new InMemoryStore(),
       new AsyncInMemoryStore()
     )
 
-    const pullRequestCoordinator = new PullRequestCoordinator(
-      new PullRequestStore(new TestPullRequestDatabase(), repositoriesStore),
-      repositoriesStore
-    )
 
     githubUserStore = new GitHubUserStore(db)
     issuesStore = new IssuesStore(issuesDb)
 
-    repositoryStateManager = new RepositoryStateCache(statsStore)
-
-    const apiRepositoriesStore = new ApiRepositoriesStore(accountsStore)
-    const commitStatusStore = new CommitStatusStore(accountsStore)
     aheadBehindStore = new AheadBehindStore()
-
-    const aliveStore = new AliveStore(accountsStore)
-
-    const notificationsStore = new NotificationsStore(
-      accountsStore,
-      aliveStore,
-      pullRequestCoordinator,
-      statsStore
-    )
-    notificationsStore.setNotificationsEnabled(false)
 
     appStore = new AppStore(
       githubUserStore,
@@ -93,18 +64,11 @@ describe('App', () => {
       statsStore,
       new SignInStore(),
       accountsStore,
-      repositoriesStore,
-      pullRequestCoordinator,
-      repositoryStateManager,
-      apiRepositoriesStore,
-      notificationsStore
     )
 
     dispatcher = new InMemoryDispatcher(
       appStore,
-      repositoryStateManager,
       statsStore,
-      commitStatusStore
     )
   })
 
@@ -113,7 +77,6 @@ describe('App', () => {
       <App
         dispatcher={dispatcher}
         appStore={appStore}
-        repositoryStateManager={repositoryStateManager}
         issuesStore={issuesStore}
         gitHubUserStore={githubUserStore}
         aheadBehindStore={aheadBehindStore}

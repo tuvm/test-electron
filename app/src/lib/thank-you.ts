@@ -1,6 +1,5 @@
 import { ILastThankYou } from '../models/last-thank-you'
 import { ReleaseNote } from '../models/release-notes'
-import { Dispatcher } from '../ui/dispatcher'
 import { getChangeLog, getReleaseSummary } from './release-notes'
 
 /**
@@ -18,30 +17,6 @@ export function hasUserAlreadyBeenCheckedOrThanked(
 
   const { version, checkedUsers } = lastThankYou
   return checkedUsers.includes(login) && version === currentVersion
-}
-
-/** Updates the local storage of version and users that have been checked for
- * external contributions. We do this regardless of contributions so that
- * we don't keep pinging for release notes. */
-export function updateLastThankYou(
-  dispatcher: Dispatcher,
-  lastThankYou: ILastThankYou | undefined,
-  login: string,
-  currentVersion: string
-): void {
-  const newCheckedUsers = [login]
-  // If new version, clear out last versions checked users.
-  const lastCheckedUsers =
-    lastThankYou === undefined || lastThankYou.version !== currentVersion
-      ? []
-      : lastThankYou.checkedUsers
-
-  const updatedLastThankYou = {
-    version: currentVersion,
-    checkedUsers: [...lastCheckedUsers, ...newCheckedUsers],
-  }
-
-  dispatcher.setLastThankYou(updatedLastThankYou)
 }
 
 export async function getThankYouByUser(

@@ -1,7 +1,6 @@
-import { shell } from './app-shell'
 import { Account } from '../models/account'
 import { fatalError } from './fatal-error'
-import { getOAuthAuthorizationURL, requestOAuthToken, fetchUser } from './api'
+import { requestOAuthToken, fetchUser } from './api'
 import { uuid } from './uuid'
 
 interface IOAuthState {
@@ -25,9 +24,6 @@ let oauthState: IOAuthState | null = null
 export function askUserToOAuth(endpoint: string) {
   return new Promise<Account>((resolve, reject) => {
     oauthState = { state: uuid(), endpoint, resolve, reject }
-
-    const oauthURL = getOAuthAuthorizationURL(endpoint, oauthState.state)
-    shell.openExternal(oauthURL)
   })
 }
 

@@ -1,223 +1,72 @@
-import * as Path from 'path'
 import {
   AccountsStore,
   CloningRepositoriesStore,
   GitHubUserStore,
-  GitStore,
-  IssuesStore,
   SignInStore,
 } from '.'
 import { Account } from '../../models/account'
-import { AppMenu, IMenu } from '../../models/app-menu'
-import { IAuthor } from '../../models/author'
+import { AppMenu } from '../../models/app-menu'
 import {
-  DiffSelection,
-  DiffSelectionType,
-  DiffType,
   ImageDiffType,
-  ITextDiff,
 } from '../../models/diff'
-import { FetchType } from '../../models/fetch'
-import {
-  GitHubRepository,
-  hasWritePermission,
-} from '../../models/github-repository'
-import {
-  forkPullRequestRemoteName,
-  IRemote,
-  remoteEquals,
-} from '../../models/remote'
-import {
-  CommittedFileChange,
-  WorkingDirectoryFileChange,
-  WorkingDirectoryStatus,
-  AppFileStatusKind,
-} from '../../models/status'
-import { TipState, tipEquals, IValidBranch } from '../../models/tip'
-import {
-  Progress,
-  ICheckoutProgress,
-  IFetchProgress,
-  IRevertProgress,
-  IMultiCommitOperationProgress,
-} from '../../models/progress'
-import { Popup, PopupType } from '../../models/popup'
-import { IGitAccount } from '../../models/git-account'
-import { themeChangeMonitor } from '../../ui/lib/theme-change-monitor'
+
+import { Popup } from '../../models/popup'
 // import { getAppPath } from '../../ui/lib/app-proxy'
 import {
   ApplicableTheme,
   ApplicationTheme,
-  getCurrentlyAppliedTheme,
-  getPersistedThemeName,
   ICustomTheme,
-  setPersistedTheme,
 } from '../../ui/lib/application-theme'
 import {
   getAppMenu,
   getCurrentWindowState,
   getCurrentWindowZoomFactor,
-  updatePreferredAppMenuItemLabels,
   updateAccounts,
   setWindowZoomFactor,
 } from '../../ui/main-process-proxy'
 import {
   API,
   getAccountForEndpoint,
-  getDotComAPIEndpoint,
-  IAPIOrganization,
-  getEndpointForRepository,
-  IAPIFullRepository,
 } from '../api'
-import { shell } from '../app-shell'
 import {
-  CompareAction,
-  HistoryTabMode,
   Foldout,
-  FoldoutType,
   IAppState,
-  ICompareBranch,
-  ICompareFormUpdate,
-  ICompareToBranch,
-  IDisplayHistory,
-  PossibleSelections,
-  RepositorySectionTab,
-  SelectionType,
-  IRepositoryState,
-  ChangesSelectionKind,
-  ChangesWorkingDirectorySelection,
-  isRebaseConflictState,
-  isCherryPickConflictState,
-  isMergeConflictState,
-  IMultiCommitOperationState,
   IConstrainedValue,
-  ICompareState,
 } from '../app-state'
-import {
-  findEditorOrDefault,
-  getAvailableEditors,
-  launchExternalEditor,
-} from '../editors'
-import { assertNever, fatalError, forceUnwrap } from '../fatal-error'
 
-import { formatCommitMessage } from '../format-commit-message'
-import { getGenericHostname, getGenericUsername } from '../generic-git-auth'
-import { getAccountForRepository } from '../get-account-for-repository'
-import { inferLastPushForRepository } from '../infer-last-push-for-repository'
 import { updateMenuState } from '../menu-update'
-import { merge } from '../merge'
-import {
-  IMatchedGitHubRepository,
-  matchGitHubRepository,
-  matchExistingRepository,
-  urlMatchesRemote,
-} from '../repository-matching'
-import { isCurrentBranchForcePush } from '../rebase'
-import { RetryAction, RetryActionType } from '../../models/retry-actions'
+
 import {
   Default as DefaultShell,
-  findShellOrDefault,
-  launchShell,
-  parse as parseShell,
-  Shell,
 } from '../shells'
-import { ILaunchStats, StatsStore } from '../stats'
-import { hasShownWelcomeFlow, markWelcomeFlowComplete } from '../welcome'
+import { StatsStore } from '../stats'
+import { hasShownWelcomeFlow } from '../welcome'
 import { WindowState } from '../window-state'
 import { TypedBaseStore } from './base-store'
-import { MergeTreeResult } from '../../models/merge'
-import { promiseWithMinimumTimeout } from '../promise'
-import { BackgroundFetcher } from './helpers/background-fetcher'
 // import { readEmoji } from '../read-emoji'
-import { GitStoreCache } from './git-store-cache'
-import { GitErrorContext } from '../git-error-context'
 import {
   setNumber,
   setBoolean,
   getBoolean,
-  getNumber,
-  getNumberArray,
-  setNumberArray,
-  getEnum,
-  getObject,
-  setObject,
   getFloatNumber,
 } from '../local-storage'
-import { ExternalEditorError, suggestedExternalEditor } from '../editors/shared'
-import { ApiRepositoriesStore } from './api-repositories-store'
-import { ManualConflictResolution } from '../../models/manual-conflict-resolution'
-import { enableMultiCommitDiffs } from '../feature-flag'
-import { Banner, BannerType } from '../../models/banner'
-import { ComputedAction } from '../../models/computed-action'
+
+import { Banner } from '../../models/banner'
 import {
-  UncommittedChangesStrategy,
   defaultUncommittedChangesStrategy,
 } from '../../models/uncommitted-changes-strategy'
-import { IStashEntry, StashedChangesLoadStates } from '../../models/stash-entry'
-import { arrayEquals } from '../equality'
-import { MenuLabelsEvent } from '../../models/menu-labels'
-import { updateRemoteUrl } from './updates/update-remote-url'
 import {
   TutorialStep,
-  orderedTutorialSteps,
-  isValidTutorialStep,
 } from '../../models/tutorial-step'
-import { OnboardingTutorialAssessor } from './helpers/tutorial-assessor'
-import { getUntrackedFiles } from '../status'
-import { isBranchPushable } from '../helpers/push-control'
-import {
-  findAssociatedPullRequest,
-  isPullRequestAssociatedWithBranch,
-} from '../helpers/pull-request-matching'
-import { parseRemote } from '../../lib/remote-parsing'
-import { sendNonFatalException } from '../helpers/non-fatal-exception'
-import { getDefaultDir } from '../../ui/lib/default-dir'
-import { WorkflowPreferences } from '../../models/workflow-preferences'
-import { isAttributableEmailFor } from '../email'
-import { TrashNameLabel } from '../../ui/lib/context-menu'
-import { GitError as DugiteError } from 'dugite'
-import {
-  ErrorWithMetadata,
-  CheckoutError,
-  DiscardChangesError,
-} from '../error-with-metadata'
 
 import { DragElement } from '../../models/drag-drop'
 import { ILastThankYou } from '../../models/last-thank-you'
-import { getTipSha } from '../tip'
 
-import { UseWindowsOpenSSHKey } from '../ssh/ssh'
-import { isConflictsFlow } from '../multi-commit-operation'
-import { clamp } from '../clamp'
 import { EndpointToken } from '../endpoint-token'
-import { IRefCheck } from '../ci-checks/ci-checks'
 
 import * as ipcRenderer from '../ipc-renderer'
-import { pathExists } from '../../ui/lib/path-exists'
-import { offsetFromNow } from '../offset-from'
-import { findContributionTargetDefaultBranch } from '../branch'
-import { ValidNotificationPullRequestReview } from '../valid-notification-pull-request-review'
-
-const LastSelectedRepositoryIDKey = 'last-selected-repository-id'
-
-const RecentRepositoriesKey = 'recently-selected-repositories'
-/**
- *  maximum number of repositories shown in the "Recent" repositories group
- *  in the repository switcher dropdown
- */
-const RecentRepositoriesLength = 3
 
 const defaultSidebarWidth: number = 250
-const sidebarWidthConfigKey: string = 'sidebar-width'
-
-const defaultCommitSummaryWidth: number = 250
-const commitSummaryWidthConfigKey: string = 'commit-summary-width'
-
-const defaultStashedFilesWidth: number = 250
-const stashedFilesWidthConfigKey: string = 'stashed-files-width'
-
-const defaultPullRequestFileListWidth: number = 250
-const pullRequestFileListConfigKey: string = 'pull-request-files-width'
 
 const askToMoveToApplicationsFolderDefault: boolean = true
 const confirmRepoRemovalDefault: boolean = true
@@ -226,65 +75,27 @@ const confirmDiscardChangesPermanentlyDefault: boolean = true
 const confirmDiscardStashDefault: boolean = true
 const askForConfirmationOnForcePushDefault = true
 const confirmUndoCommitDefault: boolean = true
-const askToMoveToApplicationsFolderKey: string = 'askToMoveToApplicationsFolder'
-const confirmRepoRemovalKey: string = 'confirmRepoRemoval'
-const confirmDiscardChangesKey: string = 'confirmDiscardChanges'
-const confirmDiscardStashKey: string = 'confirmDiscardStash'
-const confirmDiscardChangesPermanentlyKey: string =
-  'confirmDiscardChangesPermanentlyKey'
-const confirmForcePushKey: string = 'confirmForcePush'
-const confirmUndoCommitKey: string = 'confirmUndoCommit'
-
-const uncommittedChangesStrategyKey = 'uncommittedChangesStrategyKind'
-
-const externalEditorKey: string = 'externalEditor'
 
 const imageDiffTypeDefault = ImageDiffType.TwoUp
-const imageDiffTypeKey = 'image-diff-type'
 
 const hideWhitespaceInChangesDiffDefault = false
-const hideWhitespaceInChangesDiffKey = 'hide-whitespace-in-changes-diff'
 const hideWhitespaceInHistoryDiffDefault = false
-const hideWhitespaceInHistoryDiffKey = 'hide-whitespace-in-diff'
 const hideWhitespaceInPullRequestDiffDefault = false
-const hideWhitespaceInPullRequestDiffKey =
-  'hide-whitespace-in-pull-request-diff'
-
 const commitSpellcheckEnabledDefault = true
-const commitSpellcheckEnabledKey = 'commit-spellcheck-enabled'
-
-const shellKey = 'shell'
 
 const repositoryIndicatorsEnabledKey = 'enable-repository-indicators'
 
-// background fetching should occur hourly when Desktop is active, but this
-// lower interval ensures user interactions like switching repositories and
-// switching between apps does not result in excessive fetching in the app
-const BackgroundFetchMinimumInterval = 30 * 60 * 1000
-
-/**
- * Wait 2 minutes before refreshing repository indicators
- */
-const InitialRepositoryIndicatorTimeout = 2 * 60 * 1000
-
-const MaxInvalidFoldersToDisplay = 3
-
-const lastThankYouKey = 'version-and-users-of-last-thank-you'
-const customThemeKey = 'custom-theme-key'
 export class AppStore extends TypedBaseStore<IAppState> {
-  private readonly gitStoreCache: GitStoreCache
 
   private userList: any = {};
   private accounts: ReadonlyArray<Account> = new Array<Account>()
 
 
   /** The background fetcher for the currently selected repository. */
-  private currentBackgroundFetcher: BackgroundFetcher | null = null
 
 
 
   private showWelcomeFlow = false
-  private focusCommitMessage = false
   private currentPopup: Popup | null = null
   private currentFoldout: Foldout | null = null
   private currentBanner: Banner | null = null
@@ -314,9 +125,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
   private appIsFocused: boolean = false
 
   private sidebarWidth = constrain(defaultSidebarWidth)
-  private commitSummaryWidth = constrain(defaultCommitSummaryWidth)
-  private stashedFilesWidth = constrain(defaultStashedFilesWidth)
-  private pullRequestFileListWidth = constrain(defaultPullRequestFileListWidth)
 
   private windowState: WindowState | null = null
   private windowZoomFactor: number = 1
@@ -355,21 +163,16 @@ export class AppStore extends TypedBaseStore<IAppState> {
   /** The current repository filter text */
   private repositoryFilterText: string = ''
 
-  private currentMergeTreePromise: Promise<void> | null = null
-
   private selectedTheme = ApplicationTheme.System
   private customTheme?: ICustomTheme
   private currentTheme: ApplicableTheme = ApplicationTheme.Light
 
   private useWindowsOpenSSH: boolean = false
 
-  private hasUserViewedStash = false
-
   private repositoryIndicatorsEnabled: boolean
 
   /** Which step the user needs to complete next in the onboarding tutorial */
   private currentOnboardingTutorialStep = TutorialStep.NotApplicable
-  private readonly tutorialAssessor: OnboardingTutorialAssessor
 
   private currentDragElement: DragElement | null = null
   private lastThankYou: ILastThankYou | undefined
@@ -378,7 +181,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
   public constructor(
     private readonly gitHubUserStore: GitHubUserStore,
     private readonly cloningRepositoriesStore: CloningRepositoriesStore,
-    private readonly issuesStore: IssuesStore,
     private readonly statsStore: StatsStore,
     private readonly signInStore: SignInStore,
     private readonly accountsStore: AccountsStore,
@@ -387,38 +189,11 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
     this.showWelcomeFlow = !hasShownWelcomeFlow()
 
-    if (__WIN32__) {
-      const useWindowsOpenSSH = getBoolean(UseWindowsOpenSSHKey)
-
-      // If the user never selected whether to use Windows OpenSSH or not, use it
-      // by default if we have to show the welcome flow (i.e. if it's a new install)
-      if (useWindowsOpenSSH === undefined) {
-        this._setUseWindowsOpenSSH(this.showWelcomeFlow)
-      } else {
-        this.useWindowsOpenSSH = useWindowsOpenSSH
-      }
-    }
-
-    this.gitStoreCache = new GitStoreCache(
-      shell,
-      this.statsStore,
-      (repo, store) => this.onGitStoreUpdated(repo, store),
-      error => this.emitError(error)
-    )
-
-    window.addEventListener('resize', () => {
-      this.updateResizableConstraints()
-      this.emitUpdate()
-    })
-
     this.initializeWindowState()
     this.initializeZoomFactor()
     this.wireupIpcEventHandlers()
     this.wireupStoreEventHandlers()
     getAppMenu()
-    this.tutorialAssessor = new OnboardingTutorialAssessor(
-      this.getResolvedExternalEditor
-    )
 
     // We're considering flipping the default value and have new users
     // start off with repository indicators disabled. As such we'll start
@@ -495,50 +270,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
       return
     }
 
-    // If the token was invalidated for an account, sign out from that account
-    this._removeAccount(account)
-
-    this._showPopup({
-      type: PopupType.InvalidatedToken,
-      account,
-    })
-  }
-
-  private recordTutorialStepCompleted(step: TutorialStep): void {
-    if (!isValidTutorialStep(step)) {
-      return
-    }
-
-    this.statsStore.recordHighestTutorialStepCompleted(
-      orderedTutorialSteps.indexOf(step)
-    )
-
-    switch (step) {
-      case TutorialStep.PickEditor:
-        // don't need to record anything for the first step
-        break
-      case TutorialStep.CreateBranch:
-        this.statsStore.recordTutorialEditorInstalled()
-        break
-      case TutorialStep.EditFile:
-        this.statsStore.recordTutorialBranchCreated()
-        break
-      case TutorialStep.MakeCommit:
-        this.statsStore.recordTutorialFileEdited()
-        break
-      case TutorialStep.PushBranch:
-        this.statsStore.recordTutorialCommitCreated()
-        break
-      case TutorialStep.OpenPullRequest:
-        this.statsStore.recordTutorialBranchPushed()
-        break
-      case TutorialStep.AllDone:
-        this.statsStore.recordTutorialPrCreated()
-        this.statsStore.recordTutorialCompleted()
-        break
-      default:
-        assertNever(step, 'Unaccounted for step type')
-    }
   }
 
   private wireupIpcEventHandlers() {
@@ -566,7 +297,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
     this.cloningRepositoriesStore.onDidError(e => this.emitError(e))
 
     this.signInStore.onDidAuthenticate((account, method) => {
-      this._addAccount(account)
+      // this._addAccount(account)
 
       if (this.showWelcomeFlow) {
         this.statsStore.recordWelcomeWizardSignInMethod(method)
@@ -641,7 +372,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
     if (zoomFactor !== current) {
       setNumber('zoom-factor', zoomFactor)
-      this.updateResizableConstraints()
       this.emitUpdate()
     }
   }
@@ -660,9 +390,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
       showWelcomeFlow: this.showWelcomeFlow,
       emoji: this.emoji,
       sidebarWidth: this.sidebarWidth,
-      commitSummaryWidth: this.commitSummaryWidth,
-      stashedFilesWidth: this.stashedFilesWidth,
-      pullRequestFilesListWidth: this.pullRequestFileListWidth,
       appMenuState: this.appMenu ? this.appMenu.openMenus : [],
       highlightAccessKeys: this.highlightAccessKeys,
       isUpdateAvailableBannerVisible: this.isUpdateAvailableBannerVisible,
@@ -699,6 +426,17 @@ export class AppStore extends TypedBaseStore<IAppState> {
       lastThankYou: this.lastThankYou,
       showCIStatusPopover: this.showCIStatusPopover,
     }
+  }
+
+  private setAppMenu(menu: any): Promise<void> {
+    if (this.appMenu) {
+      this.appMenu = this.appMenu.withMenu(menu)
+    } else {
+      this.appMenu = AppMenu.fromMenu(menu)
+    }
+
+    this.emitUpdate()
+    return Promise.resolve()
   }
 }
 

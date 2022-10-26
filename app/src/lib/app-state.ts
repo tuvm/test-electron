@@ -10,7 +10,6 @@ import {
   IRevertProgress,
   Progress,
   ICheckoutProgress,
-  ICloneProgress,
   IMultiCommitOperationProgress,
 } from '../models/progress'
 import { Popup } from '../models/popup'
@@ -33,11 +32,6 @@ import { TutorialStep } from '../models/tutorial-step'
 import { UncommittedChangesStrategy } from '../models/uncommitted-changes-strategy'
 import { DragElement } from '../models/drag-drop'
 import { ILastThankYou } from '../models/last-thank-you'
-import {
-  MultiCommitOperationDetail,
-  MultiCommitOperationStep,
-} from '../models/multi-commit-operation'
-import { IChangesetData } from './git'
 
 export enum SelectionType {
   Repository,
@@ -45,40 +39,17 @@ export enum SelectionType {
   MissingRepository,
 }
 
-export type PossibleSelections =
-  | {
-    type: SelectionType.Repository
-    repository: Repository
-    state: IRepositoryState
-  }
-  | {
-    type: SelectionType.CloningRepository
-    repository: CloningRepository
-    progress: ICloneProgress
-  }
-  | { type: SelectionType.MissingRepository; repository: Repository }
 
 /** All of the shared app state. */
 export interface IAppState {
   readonly userList: any
 
   readonly accounts: ReadonlyArray<Account>
-  /**
-   * The current list of repositories tracked in the application
-   */
-  readonly repositories: ReadonlyArray<Repository | CloningRepository>
 
   /**
    * List of IDs of the most recently opened repositories (most recent first)
    */
   readonly recentRepositories: ReadonlyArray<number>
-
-  /**
-   * A cache of the latest repository state values, keyed by the repository id
-   */
-  readonly localRepositoryStateLookup: Map<number, ILocalRepositoryState>
-
-  readonly selectedState: PossibleSelections | null
 
   /**
    * The state of the ongoing (if any) sign in process. See SignInState
@@ -240,12 +211,6 @@ export interface IAppState {
 
   /** The current repository filter text. */
   readonly repositoryFilterText: string
-
-  /** The currently selected tab for Clone Repository. */
-  readonly selectedCloneRepositoryTab: CloneRepositoryTab
-
-  /** The currently selected tab for the Branches foldout. */
-  readonly selectedBranchesTab: BranchesTab
 
   /** The selected appearance (aka theme) preference */
   readonly selectedTheme: ApplicationTheme
@@ -439,12 +404,7 @@ export interface IRepositoryState {
    * updated between us reading it and a commit being made
    * (ie we don't currently use this value explicitly when committing)
    */
-  readonly commitAuthor: CommitIdentity | null
-
   readonly branchesState: IBranchesState
-
-  /** The commits loaded, keyed by their full SHA. */
-  readonly commitLookup: Map<string, Commit>
 
   /**
    * The ordered local commit SHAs. The commits themselves can be looked up in
@@ -455,9 +415,6 @@ export interface IRepositoryState {
   /** The remote currently associated with the repository, if defined in the configuration */
   readonly remote: IRemote | null
 
-  /** The state of the current branch in relation to its upstream. */
-  readonly aheadBehind: IAheadBehind | null
-
   /** The tags that will get pushed if the user performs a push operation. */
   readonly tagsToPush: ReadonlyArray<string> | null
 
@@ -466,9 +423,6 @@ export interface IRepositoryState {
 
   /** Is a commit in progress? */
   readonly isCommitting: boolean
-
-  /** Commit being amended, or null if none. */
-  readonly commitToAmend: Commit | null
 
   /** The date the repository was last fetched. */
   readonly lastFetched: Date | null
@@ -514,48 +468,6 @@ export interface IBranchesState {
    * detached) or an unborn branch (a branch with no commits).
    */
   readonly tip: Tip
-
-  /**
-   * The default branch for a given repository. Historically it's been
-   * common to use 'master' as the default branch but as of September 2020
-   * GitHub Desktop and GitHub.com default to using 'main' as the default branch.
-   *
-   * GitHub Desktop users are able to configure the `init.defaultBranch` Git
-   * setting in preferences.
-   *
-   * GitHub.com users are able to change their default branch in the web UI.
-   */
-  readonly defaultBranch: Branch | null
-
-  /**
-   * The default branch of the upstream remote in a forked GitHub repository
-   * with the ForkContributionTarget.Parent behavior, or null if it cannot be
-   * inferred or is another kind of repository.
-   */
-  readonly upstreamDefaultBranch: Branch | null
-
-  /**
-   * A list of all branches (remote and local) that's currently in
-   * the repository.
-   */
-  readonly allBranches: ReadonlyArray<Branch>
-
-  /**
-   * A list of zero to a few (at time of writing 5 but check loadRecentBranches
-   * in git-store for definitive answer) branches that have been checked out
-   * recently. This list is compiled by reading the reflog and tracking branch
-   * switches over the last couple of thousand reflog entries.
-   */
-  readonly recentBranches: ReadonlyArray<Branch>
-
-  /** The open pull requests in the repository. */
-  readonly openPullRequests: ReadonlyArray<PullRequest>
-
-  /** Are we currently loading pull requests? */
-  readonly isLoadingPullRequests: boolean
-
-  /** The pull request associated with the current branch. */
-  readonly currentPullRequest: PullRequest | null
 
   /**
    * Is the current branch configured to rebase on pull?
@@ -608,9 +520,6 @@ export interface ICommitSelection {
    * */
   readonly isContiguous: boolean
 
-  /** The changeset data associated with the selected commit */
-  readonly changesetData: IChangesetData
-
   /** The selected file inside the selected commit */
   readonly file: CommittedFileChange | null
 
@@ -650,9 +559,6 @@ export type ChangesSelection =
 
 export interface IChangesState {
   readonly workingDirectory: WorkingDirectoryStatus
-
-  /** The commit message for a work-in-progress commit in the changes view. */
-  readonly commitMessage: ICommitMessage
 
   /**
    * Whether or not to show a field for adding co-authors to
@@ -732,11 +638,6 @@ export interface ICompareBranch {
   /** The chosen comparison mode determines which commits to show */
   readonly comparisonMode: ComparisonMode.Ahead | ComparisonMode.Behind
 
-  /** The branch to compare against the base branch */
-  readonly comparisonBranch: Branch
-
-  /** The number of commits the selected branch is ahead/behind the current branch */
-  readonly aheadBehind: IAheadBehind
 }
 
 export interface ICompareState {
@@ -760,32 +661,6 @@ export interface ICompareState {
 
   /** The SHAs of commits to highlight in the compare list */
   readonly shasToHighlight: ReadonlyArray<string>
-
-  /**
-   * A list of branches (remote and local) except the current branch, and
-   * Desktop fork remote branches (see `Branch.isDesktopForkRemoteBranch`)
-   **/
-  readonly branches: ReadonlyArray<Branch>
-
-  /**
-   * A list of zero to a few (at time of writing 5 but check loadRecentBranches
-   * in git-store for definitive answer) branches that have been checked out
-   * recently. This list is compiled by reading the reflog and tracking branch
-   * switches over the last couple of thousand reflog entries.
-   */
-  readonly recentBranches: ReadonlyArray<Branch>
-
-  /**
-   * The default branch for a given repository. Historically it's been
-   * common to use 'master' as the default branch but as of September 2020
-   * GitHub Desktop and GitHub.com default to using 'main' as the default branch.
-   *
-   * GitHub Desktop users are able to configure the `init.defaultBranch` Git
-   * setting in preferences.
-   *
-   * GitHub.com users are able to change their default branch in the web UI.
-   */
-  readonly defaultBranch: Branch | null
 }
 
 export interface ICompareFormUpdate {
@@ -799,17 +674,6 @@ export interface ICompareFormUpdate {
 export interface IViewHistory {
   readonly kind: HistoryTabMode.History
 }
-
-export interface ICompareToBranch {
-  readonly kind: HistoryTabMode.Compare
-  readonly branch: Branch
-  readonly comparisonMode: ComparisonMode.Ahead | ComparisonMode.Behind
-}
-
-/**
- * An action to send to the application store to update the compare state
- */
-export type CompareAction = IViewHistory | ICompareToBranch
 
 /**
  * Undo state associated with a multi commit operation being performed on a
@@ -853,16 +717,7 @@ export function isCherryPickConflictState(
  * cherry-picking, and interactive rebase (squashing, reordering).
  */
 export interface IMultiCommitOperationState {
-  /**
-   * The current step of the operation the user is at.
-   * Examples: ChooseBranchStep, ChooseBranchStep, ShowConflictsStep, etc.
-   */
-  readonly step: MultiCommitOperationStep
 
-  /**
-   * This hold properties specific to the operation.
-   */
-  readonly operationDetail: MultiCommitOperationDetail
   /**
    * The underlying parsed Git information associated with the progress of the
    * current operation.
@@ -889,14 +744,6 @@ export interface IMultiCommitOperationState {
    */
   readonly originalBranchTip: string | null
 
-  /**
-   * The branch that is being modified during the operation.
-   *
-   * - Cherry-pick = the branch chosen to copy commits to; Maybe null when cherry-pick is in the choose branch step.
-   * - Rebase = the current branch the user is on.
-   * - Squash = the current branch the user is on.
-   */
-  readonly targetBranch: Branch | null
 }
 
 export type MultiCommitOperationConflictState = {
@@ -948,11 +795,6 @@ export interface IConstrainedValue {
  * The state of the current pull request view in the repository.
  */
 export interface IPullRequestState {
-  /**
-   * The base branch of a a pull request - the branch the currently checked out
-   * branch would merge into
-   */
-  readonly baseBranch: Branch
 
   /** The SHAs of commits of the pull request */
   readonly commitSHAs: ReadonlyArray<string> | null
