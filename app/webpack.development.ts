@@ -9,7 +9,6 @@ const config: webpack.Configuration = {
 }
 
 const mainConfig = merge({}, common.main, config)
-const cliConfig = merge({}, common.cli, config)
 const highlighterConfig = merge({}, common.highlighter, config)
 
 const getRendererEntryPoint = () => {
@@ -91,6 +90,5 @@ export default [
   mainConfig,
   rendererConfig,
   crashConfig,
-  cliConfig,
   highlighterConfig,
 ]

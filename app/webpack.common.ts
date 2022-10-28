@@ -115,18 +115,6 @@ export const crash = merge({}, commonConfig, {
   ],
 })
 
-export const cli = merge({}, commonConfig, {
-  entry: { cli: path.resolve(__dirname, 'src/cli/main') },
-  target: 'node',
-  plugins: [
-    new webpack.DefinePlugin(
-      Object.assign({}, replacements, {
-        __PROCESS_KIND__: JSON.stringify('cli'),
-      })
-    ),
-  ],
-})
-
 export const highlighter = merge({}, commonConfig, {
   entry: { highlighter: path.resolve(__dirname, 'src/highlighter/index') },
   output: {
