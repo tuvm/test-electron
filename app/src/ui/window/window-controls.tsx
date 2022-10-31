@@ -112,9 +112,9 @@ export class WindowControls extends React.Component<{}, IWindowControlState> {
 
   public render() {
     // We only know how to render fake Windows-y controls
-    // if (!__WIN32__) {
-    //   return <span />
-    // }
+    if (!__WIN32__) {
+      return <span />
+    }
 
     const min = this.renderButton('minimize', this.onMinimize, minimizePath)
     const maximizeOrRestore =

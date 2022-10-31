@@ -2,15 +2,15 @@ import * as React from 'react'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import {
   IAppState,
-  RepositorySectionTab,
+  // RepositorySectionTab,
   FoldoutType,
   SelectionType,
   HistoryTabMode,
 } from '../lib/app-state'
-import { defaultErrorHandler, Dispatcher } from './dispatcher'
-import { AppStore, GitHubUserStore, IssuesStore } from '../lib/stores'
+import { Dispatcher } from './dispatcher'
+import { AppStore } from '../lib/stores'
 import { assertNever } from '../lib/fatal-error'
-import { shell } from '../lib/app-shell'
+// import { shell } from '../lib/app-shell'
 import { updateStore, UpdateStatus } from './lib/update-store'
 import { RetryAction } from '../models/retry-actions'
 import { shouldRenderApplicationMenu } from './lib/features'
@@ -18,25 +18,25 @@ import { matchExistingRepository } from '../lib/repository-matching'
 import { getDotComAPIEndpoint } from '../lib/api'
 import { getVersion, getName } from './lib/app-proxy'
 import { getOS } from '../lib/get-os'
-import { MenuEvent } from '../main-process/menu'
+// import { MenuEvent } from '../main-process/menu'
 import {
   Repository,
-  getGitHubHtmlUrl,
-  getNonForkGitHubRepository,
-  isRepositoryWithGitHubRepository,
+  // getGitHubHtmlUrl,
+  // getNonForkGitHubRepository,
+  // isRepositoryWithGitHubRepository,
 } from '../models/repository'
 import { Branch } from '../models/branch'
 import { PreferencesTab } from '../models/preferences'
 import { findItemByAccessKey, itemIsSelectable } from '../models/app-menu'
 import { Account } from '../models/account'
-import { TipState } from '../models/tip'
+// import { TipState } from '../models/tip'
 import { CloneRepositoryTab } from '../models/clone-repository-tab'
 import { CloningRepository } from '../models/cloning-repository'
 
 import { TitleBar, ZoomInfo, FullScreenInfo } from './window'
 
 // import { RepositoriesList } from './repositories-list'
-import { RepositoryView } from './repository'
+// import { RepositoryView } from './repository'
 import { RenameBranch } from './rename-branch'
 import { DeleteBranch, DeleteRemoteBranch } from './delete-branch'
 // import { CloningRepositoryView } from './cloning-repository'
@@ -54,19 +54,19 @@ import {
   showCertificateTrustDialog,
   sendReady,
   isInApplicationFolder,
-  selectAllWindowContents,
+  // selectAllWindowContents,
 } from './main-process-proxy'
 import { DiscardChanges } from './discard-changes'
 // import { Welcome } from './welcome'
 // import { AppMenuBar } from './app-menu'
 import { renderBanner } from './banners'
 import { Preferences } from './preferences'
-import { RepositorySettings } from './repository-settings'
+// import { RepositorySettings } from './repository-settings'
 import { AppError } from './app-error'
 // import { MissingRepository } from './missing-repository'
 import { AddExistingRepository, CreateRepository } from './add-repository'
 import { CloneRepository } from './clone-repository'
-import { CreateBranch } from './create-branch'
+// import { CreateBranch } from './create-branch'
 import { SignIn } from './sign-in'
 import { InstallGit } from './install-git'
 import { EditorError } from './editor'
@@ -89,13 +89,12 @@ import { DeletePullRequest } from './delete-branch/delete-pull-request-dialog'
 import { CommitConflictsWarning } from './merge-conflicts'
 import { AppTheme } from './app-theme'
 import { ApplicationTheme } from './lib/application-theme'
-import { RepositoryStateCache } from '../lib/stores/repository-state-cache'
 import { PopupType, Popup } from '../models/popup'
 import { OversizedFiles } from './changes/oversized-files-warning'
 import { PushNeedsPullWarning } from './push-needs-pull'
 // import { isCurrentBranchForcePush } from '../lib/rebase'
 import { Banner, BannerType } from '../models/banner'
-import { StashAndSwitchBranch } from './stash-changes/stash-and-switch-branch-dialog'
+// import { StashAndSwitchBranch } from './stash-changes/stash-and-switch-branch-dialog'
 import { OverwriteStash } from './stash-changes/overwrite-stashed-changes-dialog'
 import { ConfirmDiscardStashDialog } from './stashing/confirm-discard-stash'
 import { CreateTutorialRepositoryDialog } from './no-repositories/create-tutorial-repository-dialog'
@@ -104,19 +103,18 @@ import { TutorialStep } from '../models/tutorial-step'
 import { WorkflowPushRejectedDialog } from './workflow-push-rejected/workflow-push-rejected'
 import { SAMLReauthRequiredDialog } from './saml-reauth-required/saml-reauth-required'
 import { CreateForkDialog } from './forks/create-fork-dialog'
-import { findContributionTargetDefaultBranch } from '../lib/branch'
-import {
-  GitHubRepository,
-  hasWritePermission,
-} from '../models/github-repository'
+// import { findContributionTargetDefaultBranch } from '../lib/branch'
+// import {
+//   // GitHubRepository,
+//   hasWritePermission,
+// } from '../models/github-repository'
 import { CreateTag } from './create-tag'
 import { DeleteTag } from './delete-tag'
 import { ChooseForkSettings } from './choose-fork-settings'
 import { DiscardSelection } from './discard-changes/discard-selection-dialog'
 import { LocalChangesOverwrittenDialog } from './local-changes-overwritten/local-changes-overwritten-dialog'
 import memoizeOne from 'memoize-one'
-import { AheadBehindStore } from '../lib/stores/ahead-behind-store'
-import { getAccountForRepository } from '../lib/get-account-for-repository'
+// import { getAccountForRepository } from '../lib/get-account-for-repository'
 // import { CommitOneLine } from '../models/commit'
 import { CommitDragElement } from './drag-elements/commit-drag-element'
 import classNames from 'classnames'
@@ -129,8 +127,8 @@ import {
   updateLastThankYou,
 } from '../lib/thank-you'
 import { ReleaseNote } from '../models/release-notes'
-import { CommitMessageDialog } from './commit-message/commit-message-dialog'
-import { buildAutocompletionProviders } from './autocompletion'
+// import { CommitMessageDialog } from './commit-message/commit-message-dialog'
+// import { buildAutocompletionProviders } from './autocompletion'
 import { DragType, DropTargetSelector } from '../models/drag-drop'
 import { dragAndDropManager } from '../lib/drag-and-drop-manager'
 import { MultiCommitOperation } from './multi-commit-operation/multi-commit-operation'
@@ -148,11 +146,11 @@ import { WarnForcePushDialog } from './multi-commit-operation/dialog/warn-force-
 // import { clamp } from '../lib/clamp'
 // import { generateRepositoryListContextMenu } from './repositories-list/repository-list-item-context-menu'
 import * as ipcRenderer from '../lib/ipc-renderer'
-import { showNotification } from '../lib/notifications/show-notification'
+// import { showNotification } from '../lib/notifications/show-notification'
 import { DiscardChangesRetryDialog } from './discard-changes/discard-changes-retry-dialog'
-import { generateDevReleaseSummary } from '../lib/release-notes'
+// import { generateDevReleaseSummary } from '../lib/release-notes'
 import { PullRequestReview } from './notifications/pull-request-review'
-import { getPullRequestCommitRef } from '../models/pull-request'
+// import { getPullRequestCommitRef } from '../models/pull-request'
 import { getRepositoryType } from '../lib/git'
 import { SSHUserPassword } from './ssh/ssh-user-password'
 // import { showContextualMenu } from '../lib/menu-item'
@@ -176,11 +174,11 @@ const SendStatsInterval = 4 * HourInMilliseconds
 
 interface IAppProps {
   readonly dispatcher: Dispatcher
-  readonly repositoryStateManager: RepositoryStateCache
+  // readonly repositoryStateManager: RepositoryStateCache
   readonly appStore: AppStore
-  readonly issuesStore: IssuesStore
-  readonly gitHubUserStore: GitHubUserStore
-  readonly aheadBehindStore: AheadBehindStore
+  // readonly issuesStore: IssuesStore
+  // readonly gitHubUserStore: GitHubUserStore
+  // readonly aheadBehindStore: AheadBehindStore
   readonly startTime: number
 }
 
@@ -209,7 +207,7 @@ export class App extends React.Component<IAppProps, IAppState> {
 
   private updateIntervalHandle?: number
 
-  private repositoryViewRef = React.createRef<RepositoryView>()
+  // private repositoryViewRef = React.createRef<RepositoryView>()
 
   /**
    * Gets a value indicating whether or not we're currently showing a
@@ -258,7 +256,7 @@ export class App extends React.Component<IAppProps, IAppState> {
       props.dispatcher.postError(error)
     })
 
-    ipcRenderer.on('menu-event', (_, name) => this.onMenuEvent(name))
+    // ipcRenderer.on('menu-event', (_, name) => this.onMenuEvent(name))
 
     updateStore.onDidChange(async state => {
       const status = state.status
@@ -347,246 +345,246 @@ export class App extends React.Component<IAppProps, IAppState> {
     this.checkIfThankYouIsInOrder()
   }
 
-  private onMenuEvent(name: MenuEvent): any {
-    // Don't react to menu events when an error dialog is shown.
-    if (this.state.errors.length) {
-      return
-    }
+  // private onMenuEvent(name: MenuEvent): any {
+  //   // Don't react to menu events when an error dialog is shown.
+  //   if (this.state.errors.length) {
+  //     return
+  //   }
 
-    switch (name) {
-      case 'push':
-        return this.push()
-      case 'force-push':
-        return this.push({ forceWithLease: true })
-      case 'pull':
-        return this.pull()
-      case 'show-changes':
-        return this.showChanges()
-      case 'show-history':
-        return this.showHistory()
-      case 'choose-repository':
-        return this.chooseRepository()
-      case 'add-local-repository':
-        return this.showAddLocalRepo()
-      case 'create-branch':
-        return this.showCreateBranch()
-      case 'show-branches':
-        return this.showBranches()
-      case 'remove-repository':
-        return this.removeRepository(this.getRepository())
-      case 'create-repository':
-        return this.showCreateRepository()
-      case 'rename-branch':
-        return this.renameBranch()
-      case 'delete-branch':
-        return this.deleteBranch()
-      case 'discard-all-changes':
-        return this.discardAllChanges()
-      case 'stash-all-changes':
-        return this.stashAllChanges()
-      case 'show-preferences':
-        return this.props.dispatcher.showPopup({ type: PopupType.Preferences })
-      case 'open-working-directory':
-        return this.openCurrentRepositoryWorkingDirectory()
-      case 'update-branch-with-contribution-target-branch':
-        this.props.dispatcher.recordMenuInitiatedUpdate()
-        return this.updateBranchWithContributionTargetBranch()
-      case 'compare-to-branch':
-        return this.showHistory(true)
-      case 'merge-branch':
-        this.props.dispatcher.recordMenuInitiatedMerge()
-        return this.mergeBranch()
-      case 'squash-and-merge-branch':
-        this.props.dispatcher.recordMenuInitiatedMerge(true)
-        return this.mergeBranch(true)
-      case 'rebase-branch':
-        this.props.dispatcher.recordMenuInitiatedRebase()
-        return this.showRebaseDialog()
-      case 'show-repository-settings':
-        return this.showRepositorySettings()
-      case 'view-repository-on-github':
-        return this.viewRepositoryOnGitHub()
-      case 'compare-on-github':
-        return this.openBranchOnGitub('compare')
-      case 'branch-on-github':
-        return this.openBranchOnGitub('tree')
-      case 'create-issue-in-repository-on-github':
-        return this.openIssueCreationOnGitHub()
-      case 'open-in-shell':
-        return this.openCurrentRepositoryInShell()
-      case 'clone-repository':
-        return this.showCloneRepo()
-      case 'show-about':
-        return this.showAbout()
-      case 'boomtown':
-        return this.boomtown()
-      case 'go-to-commit-message':
-        return this.goToCommitMessage()
-      case 'open-pull-request':
-        return this.openPullRequest()
-      case 'start-pull-request':
-        return this.startPullRequest()
-      case 'install-cli':
-        return this.props.dispatcher.installCLI()
-      case 'open-external-editor':
-        return this.openCurrentRepositoryInExternalEditor()
-      case 'select-all':
-        return this.selectAll()
-      case 'show-release-notes-popup':
-        return this.showFakeReleaseNotesPopup()
-      case 'show-stashed-changes':
-        return this.showStashedChanges()
-      case 'hide-stashed-changes':
-        return this.hideStashedChanges()
-      case 'test-show-notification':
-        return this.testShowNotification()
-      case 'test-prune-branches':
-        return this.testPruneBranches()
-      case 'find-text':
-        return this.findText()
-      case 'pull-request-check-run-failed':
-        return this.testPullRequestCheckRunFailed()
-      default:
-        return assertNever(name, `Unknown menu event name: ${name}`)
-    }
-  }
+  //   switch (name) {
+  //     case 'push':
+  //       return this.push()
+  //     case 'force-push':
+  //       return this.push({ forceWithLease: true })
+  //     case 'pull':
+  //       return this.pull()
+  //     case 'show-changes':
+  //       return this.showChanges()
+  //     case 'show-history':
+  //       return this.showHistory()
+  //     case 'choose-repository':
+  //       return this.chooseRepository()
+  //     case 'add-local-repository':
+  //       return this.showAddLocalRepo()
+  //     case 'create-branch':
+  //       return this.showCreateBranch()
+  //     case 'show-branches':
+  //       return this.showBranches()
+  //     case 'remove-repository':
+  //       return this.removeRepository(this.getRepository())
+  //     case 'create-repository':
+  //       return this.showCreateRepository()
+  //     case 'rename-branch':
+  //       return this.renameBranch()
+  //     case 'delete-branch':
+  //       return this.deleteBranch()
+  //     case 'discard-all-changes':
+  //       return this.discardAllChanges()
+  //     case 'stash-all-changes':
+  //       return this.stashAllChanges()
+  //     case 'show-preferences':
+  //       return this.props.dispatcher.showPopup({ type: PopupType.Preferences })
+  //     case 'open-working-directory':
+  //       return this.openCurrentRepositoryWorkingDirectory()
+  //     case 'update-branch-with-contribution-target-branch':
+  //       this.props.dispatcher.recordMenuInitiatedUpdate()
+  //       return this.updateBranchWithContributionTargetBranch()
+  //     case 'compare-to-branch':
+  //       return this.showHistory(true)
+  //     case 'merge-branch':
+  //       this.props.dispatcher.recordMenuInitiatedMerge()
+  //       return this.mergeBranch()
+  //     case 'squash-and-merge-branch':
+  //       this.props.dispatcher.recordMenuInitiatedMerge(true)
+  //       return this.mergeBranch(true)
+  //     case 'rebase-branch':
+  //       this.props.dispatcher.recordMenuInitiatedRebase()
+  //       return this.showRebaseDialog()
+  //     case 'show-repository-settings':
+  //       return this.showRepositorySettings()
+  //     case 'view-repository-on-github':
+  //       return this.viewRepositoryOnGitHub()
+  //     case 'compare-on-github':
+  //       return this.openBranchOnGitub('compare')
+  //     case 'branch-on-github':
+  //       return this.openBranchOnGitub('tree')
+  //     case 'create-issue-in-repository-on-github':
+  //       return this.openIssueCreationOnGitHub()
+  //     case 'open-in-shell':
+  //       return this.openCurrentRepositoryInShell()
+  //     case 'clone-repository':
+  //       return this.showCloneRepo()
+  //     case 'show-about':
+  //       return this.showAbout()
+  //     case 'boomtown':
+  //       return this.boomtown()
+  //     case 'go-to-commit-message':
+  //       return this.goToCommitMessage()
+  //     case 'open-pull-request':
+  //       return this.openPullRequest()
+  //     case 'start-pull-request':
+  //       return this.startPullRequest()
+  //     case 'install-cli':
+  //       return this.props.dispatcher.installCLI()
+  //     case 'open-external-editor':
+  //       return this.openCurrentRepositoryInExternalEditor()
+  //     case 'select-all':
+  //       return this.selectAll()
+  //     case 'show-release-notes-popup':
+  //       return this.showFakeReleaseNotesPopup()
+  //     case 'show-stashed-changes':
+  //       return this.showStashedChanges()
+  //     case 'hide-stashed-changes':
+  //       return this.hideStashedChanges()
+  //     case 'test-show-notification':
+  //       return this.testShowNotification()
+  //     case 'test-prune-branches':
+  //       return this.testPruneBranches()
+  //     case 'find-text':
+  //       return this.findText()
+  //     case 'pull-request-check-run-failed':
+  //       return this.testPullRequestCheckRunFailed()
+  //     default:
+  //       return assertNever(name, `Unknown menu event name: ${name}`)
+  //   }
+  // }
 
   /**
    * Show a release notes popup for a fake release, intended only to
    * make it easier to verify changes to the popup. Has no meaning
    * about a new release being available.
    */
-  private async showFakeReleaseNotesPopup() {
-    if (__DEV__) {
-      this.props.dispatcher.showPopup({
-        type: PopupType.ReleaseNotes,
-        newReleases: await generateDevReleaseSummary(),
-      })
-    }
-  }
+  // private async showFakeReleaseNotesPopup() {
+  //   if (__DEV__) {
+  //     this.props.dispatcher.showPopup({
+  //       type: PopupType.ReleaseNotes,
+  //       newReleases: await generateDevReleaseSummary(),
+  //     })
+  //   }
+  // }
 
-  private testShowNotification() {
-    if (
-      __RELEASE_CHANNEL__ !== 'development' &&
-      __RELEASE_CHANNEL__ !== 'test'
-    ) {
-      return
-    }
+  // private testShowNotification() {
+  //   if (
+  //     __RELEASE_CHANNEL__ !== 'development' &&
+  //     __RELEASE_CHANNEL__ !== 'test'
+  //   ) {
+  //     return
+  //   }
 
-    showNotification({
-      title: 'Test notification',
-      body: 'Click here! This is a test notification',
-      onClick: () => this.props.dispatcher.showPopup({ type: PopupType.About }),
-    })
-  }
+  //   showNotification({
+  //     title: 'Test notification',
+  //     body: 'Click here! This is a test notification',
+  //     onClick: () => this.props.dispatcher.showPopup({ type: PopupType.About }),
+  //   })
+  // }
 
-  private testPullRequestCheckRunFailed() {
-    if (
-      __RELEASE_CHANNEL__ !== 'development' &&
-      __RELEASE_CHANNEL__ !== 'test'
-    ) {
-      return
-    }
+  // private testPullRequestCheckRunFailed() {
+  //   if (
+  //     __RELEASE_CHANNEL__ !== 'development' &&
+  //     __RELEASE_CHANNEL__ !== 'test'
+  //   ) {
+  //     return
+  //   }
 
-    const { selectedState } = this.state
-    if (
-      selectedState == null ||
-      selectedState.type !== SelectionType.Repository
-    ) {
-      defaultErrorHandler(
-        new Error(
-          'You must be in a GitHub repo, on a pull request branch, and your branch tip must be in a valid state.'
-        ),
-        this.props.dispatcher
-      )
-      return
-    }
+  //   const { selectedState } = this.state
+  //   if (
+  //     selectedState == null ||
+  //     selectedState.type !== SelectionType.Repository
+  //   ) {
+  //     defaultErrorHandler(
+  //       new Error(
+  //         'You must be in a GitHub repo, on a pull request branch, and your branch tip must be in a valid state.'
+  //       ),
+  //       this.props.dispatcher
+  //     )
+  //     return
+  //   }
 
-    const {
-      repository,
-      state: {
-        branchesState: { currentPullRequest: pullRequest, tip },
-      },
-    } = selectedState
+  //   const {
+  //     repository,
+  //     state: {
+  //       branchesState: { currentPullRequest: pullRequest, tip },
+  //     },
+  //   } = selectedState
 
-    const currentBranchName =
-      tip.kind === TipState.Valid
-        ? tip.branch.upstreamWithoutRemote ?? tip.branch.name
-        : ''
+  //   const currentBranchName =
+  //     tip.kind === TipState.Valid
+  //       ? tip.branch.upstreamWithoutRemote ?? tip.branch.name
+  //       : ''
 
-    if (
-      !isRepositoryWithGitHubRepository(repository) ||
-      pullRequest === null ||
-      currentBranchName === ''
-    ) {
-      defaultErrorHandler(
-        new Error(
-          'You must be in a GitHub repo, on a pull request branch, and your branch tip must be in a valid state.'
-        ),
-        this.props.dispatcher
-      )
-      return
-    }
+  //   if (
+  //     !isRepositoryWithGitHubRepository(repository) ||
+  //     pullRequest === null ||
+  //     currentBranchName === ''
+  //   ) {
+  //     defaultErrorHandler(
+  //       new Error(
+  //         'You must be in a GitHub repo, on a pull request branch, and your branch tip must be in a valid state.'
+  //       ),
+  //       this.props.dispatcher
+  //     )
+  //     return
+  //   }
 
-    const cachedStatus = this.props.dispatcher.tryGetCommitStatus(
-      repository.gitHubRepository,
-      getPullRequestCommitRef(pullRequest.pullRequestNumber)
-    )
+  //   const cachedStatus = this.props.dispatcher.tryGetCommitStatus(
+  //     repository.gitHubRepository,
+  //     getPullRequestCommitRef(pullRequest.pullRequestNumber)
+  //   )
 
-    if (cachedStatus?.checks === undefined) {
-      // Probably be hard for this to happen as the checks start loading in the background for pr statuses
-      defaultErrorHandler(
-        new Error(
-          'Your pull request must have cached checks. Try opening the checks popover and then try again.'
-        ),
-        this.props.dispatcher
-      )
-      return
-    }
+  //   if (cachedStatus?.checks === undefined) {
+  //     // Probably be hard for this to happen as the checks start loading in the background for pr statuses
+  //     defaultErrorHandler(
+  //       new Error(
+  //         'Your pull request must have cached checks. Try opening the checks popover and then try again.'
+  //       ),
+  //       this.props.dispatcher
+  //     )
+  //     return
+  //   }
 
-    const { checks } = cachedStatus
+  //   const { checks } = cachedStatus
 
-    const popup: Popup = {
-      type: PopupType.PullRequestChecksFailed,
-      pullRequest,
-      repository,
-      shouldChangeRepository: true,
-      commitMessage: 'Adding this feature',
-      commitSha: pullRequest.head.sha,
-      checks,
-    }
+  //   const popup: Popup = {
+  //     type: PopupType.PullRequestChecksFailed,
+  //     pullRequest,
+  //     repository,
+  //     shouldChangeRepository: true,
+  //     commitMessage: 'Adding this feature',
+  //     commitSha: pullRequest.head.sha,
+  //     checks,
+  //   }
 
-    this.showPopup(popup)
-  }
+  //   this.showPopup(popup)
+  // }
 
-  private testPruneBranches() {
-    if (!__DEV__) {
-      return
-    }
+  // private testPruneBranches() {
+  //   if (!__DEV__) {
+  //     return
+  //   }
 
-    this.props.appStore._testPruneBranches()
-  }
+  //   this.props.appStore._testPruneBranches()
+  // }
 
-  /**
-   * Handler for the 'select-all' menu event, dispatches
-   * a custom DOM event originating from the element which
-   * currently has keyboard focus. Components have a chance
-   * to intercept this event and implement their own 'select
-   * all' logic.
-   */
-  private selectAll() {
-    const event = new CustomEvent('select-all', {
-      bubbles: true,
-      cancelable: true,
-    })
+  // /**
+  //  * Handler for the 'select-all' menu event, dispatches
+  //  * a custom DOM event originating from the element which
+  //  * currently has keyboard focus. Components have a chance
+  //  * to intercept this event and implement their own 'select
+  //  * all' logic.
+  //  */
+  // private selectAll() {
+  //   const event = new CustomEvent('select-all', {
+  //     bubbles: true,
+  //     cancelable: true,
+  //   })
 
-    if (
-      document.activeElement != null &&
-      document.activeElement.dispatchEvent(event)
-    ) {
-      selectAllWindowContents()
-    }
-  }
+  //   if (
+  //     document.activeElement != null &&
+  //     document.activeElement.dispatchEvent(event)
+  //   ) {
+  //     selectAllWindowContents()
+  //   }
+  // }
 
   /**
    * Handler for the 'find-text' menu event, dispatches
@@ -597,29 +595,29 @@ export class App extends React.Component<IAppProps, IAppState> {
    * example of this custom event is the text diff which
    * will trigger a search dialog when seeing this event.
    */
-  private findText() {
-    const event = new CustomEvent('find-text', {
-      bubbles: true,
-      cancelable: true,
-    })
+  // private findText() {
+  //   const event = new CustomEvent('find-text', {
+  //     bubbles: true,
+  //     cancelable: true,
+  //   })
 
-    if (document.activeElement != null) {
-      document.activeElement.dispatchEvent(event)
-    } else {
-      document.dispatchEvent(event)
-    }
-  }
+  //   if (document.activeElement != null) {
+  //     document.activeElement.dispatchEvent(event)
+  //   } else {
+  //     document.dispatchEvent(event)
+  //   }
+  // }
 
-  private boomtown() {
-    setImmediate(() => {
-      throw new Error('Boomtown!')
-    })
-  }
+  // private boomtown() {
+  //   setImmediate(() => {
+  //     throw new Error('Boomtown!')
+  //   })
+  // }
 
-  private async goToCommitMessage() {
-    await this.showChanges()
-    this.props.dispatcher.setCommitMessageFocus(true)
-  }
+  // private async goToCommitMessage() {
+  //   await this.showChanges()
+  //   this.props.dispatcher.setCommitMessageFocus(true)
+  // }
 
   private checkForUpdates(
     inBackground: boolean,
@@ -646,184 +644,184 @@ export class App extends React.Component<IAppProps, IAppState> {
     return enterpriseAccount || null
   }
 
-  private updateBranchWithContributionTargetBranch() {
-    const { selectedState } = this.state
-    if (
-      selectedState == null ||
-      selectedState.type !== SelectionType.Repository
-    ) {
-      return
-    }
+  // private updateBranchWithContributionTargetBranch() {
+  //   const { selectedState } = this.state
+  //   if (
+  //     selectedState == null ||
+  //     selectedState.type !== SelectionType.Repository
+  //   ) {
+  //     return
+  //   }
 
-    const { state, repository } = selectedState
+  //   const { state, repository } = selectedState
 
-    const contributionTargetDefaultBranch = findContributionTargetDefaultBranch(
-      repository,
-      state.branchesState
-    )
-    if (!contributionTargetDefaultBranch) {
-      return
-    }
+  //   const contributionTargetDefaultBranch = findContributionTargetDefaultBranch(
+  //     repository,
+  //     state.branchesState
+  //   )
+  //   if (!contributionTargetDefaultBranch) {
+  //     return
+  //   }
 
-    this.props.dispatcher.initializeMergeOperation(
-      repository,
-      false,
-      contributionTargetDefaultBranch
-    )
+  //   this.props.dispatcher.initializeMergeOperation(
+  //     repository,
+  //     false,
+  //     contributionTargetDefaultBranch
+  //   )
 
-    const { mergeStatus } = state.compareState
-    this.props.dispatcher.mergeBranch(
-      repository,
-      contributionTargetDefaultBranch,
-      mergeStatus
-    )
-  }
+  //   const { mergeStatus } = state.compareState
+  //   this.props.dispatcher.mergeBranch(
+  //     repository,
+  //     contributionTargetDefaultBranch,
+  //     mergeStatus
+  //   )
+  // }
 
-  private mergeBranch(isSquash: boolean = false) {
-    const selectedState = this.state.selectedState
-    if (
-      selectedState == null ||
-      selectedState.type !== SelectionType.Repository
-    ) {
-      return
-    }
-    const { repository } = selectedState
-    this.props.dispatcher.startMergeBranchOperation(repository, isSquash)
-  }
+  // private mergeBranch(isSquash: boolean = false) {
+  //   const selectedState = this.state.selectedState
+  //   if (
+  //     selectedState == null ||
+  //     selectedState.type !== SelectionType.Repository
+  //   ) {
+  //     return
+  //   }
+  //   const { repository } = selectedState
+  //   this.props.dispatcher.startMergeBranchOperation(repository, isSquash)
+  // }
 
-  private openBranchOnGitub(view: 'tree' | 'compare') {
-    const htmlURL = this.getCurrentRepositoryGitHubURL()
-    if (!htmlURL) {
-      return
-    }
+  // private openBranchOnGitub(view: 'tree' | 'compare') {
+  //   const htmlURL = this.getCurrentRepositoryGitHubURL()
+  //   if (!htmlURL) {
+  //     return
+  //   }
 
-    const state = this.state.selectedState
-    if (state == null || state.type !== SelectionType.Repository) {
-      return
-    }
+  //   const state = this.state.selectedState
+  //   if (state == null || state.type !== SelectionType.Repository) {
+  //     return
+  //   }
 
-    const branchTip = state.state.branchesState.tip
-    if (
-      branchTip.kind !== TipState.Valid ||
-      !branchTip.branch.upstreamWithoutRemote
-    ) {
-      return
-    }
+  //   const branchTip = state.state.branchesState.tip
+  //   if (
+  //     branchTip.kind !== TipState.Valid ||
+  //     !branchTip.branch.upstreamWithoutRemote
+  //   ) {
+  //     return
+  //   }
 
-    const urlEncodedBranchName = encodeURIComponent(
-      branchTip.branch.upstreamWithoutRemote
-    )
+  //   const urlEncodedBranchName = encodeURIComponent(
+  //     branchTip.branch.upstreamWithoutRemote
+  //   )
 
-    const url = `${htmlURL}/${view}/${urlEncodedBranchName}`
-    this.props.dispatcher.openInBrowser(url)
-  }
+  //   const url = `${htmlURL}/${view}/${urlEncodedBranchName}`
+  //   this.props.dispatcher.openInBrowser(url)
+  // }
 
-  private openCurrentRepositoryWorkingDirectory() {
-    const state = this.state.selectedState
-    if (state == null || state.type !== SelectionType.Repository) {
-      return
-    }
+  // private openCurrentRepositoryWorkingDirectory() {
+  //   const state = this.state.selectedState
+  //   if (state == null || state.type !== SelectionType.Repository) {
+  //     return
+  //   }
 
-    this.showRepository(state.repository)
-  }
+  //   this.showRepository(state.repository)
+  // }
 
-  private renameBranch() {
-    const state = this.state.selectedState
-    if (state == null || state.type !== SelectionType.Repository) {
-      return
-    }
+  // private renameBranch() {
+  //   const state = this.state.selectedState
+  //   if (state == null || state.type !== SelectionType.Repository) {
+  //     return
+  //   }
 
-    const tip = state.state.branchesState.tip
-    if (tip.kind === TipState.Valid) {
-      this.props.dispatcher.showPopup({
-        type: PopupType.RenameBranch,
-        repository: state.repository,
-        branch: tip.branch,
-      })
-    }
-  }
+  //   const tip = state.state.branchesState.tip
+  //   if (tip.kind === TipState.Valid) {
+  //     this.props.dispatcher.showPopup({
+  //       type: PopupType.RenameBranch,
+  //       repository: state.repository,
+  //       branch: tip.branch,
+  //     })
+  //   }
+  // }
 
-  private deleteBranch() {
-    const state = this.state.selectedState
-    if (state === null || state.type !== SelectionType.Repository) {
-      return
-    }
+  // private deleteBranch() {
+  //   const state = this.state.selectedState
+  //   if (state === null || state.type !== SelectionType.Repository) {
+  //     return
+  //   }
 
-    const tip = state.state.branchesState.tip
+  //   const tip = state.state.branchesState.tip
 
-    if (tip.kind === TipState.Valid) {
-      const currentPullRequest = state.state.branchesState.currentPullRequest
-      if (currentPullRequest !== null) {
-        this.props.dispatcher.showPopup({
-          type: PopupType.DeletePullRequest,
-          repository: state.repository,
-          branch: tip.branch,
-          pullRequest: currentPullRequest,
-        })
-      } else {
-        const existsOnRemote = state.state.aheadBehind !== null
+  //   if (tip.kind === TipState.Valid) {
+  //     const currentPullRequest = state.state.branchesState.currentPullRequest
+  //     if (currentPullRequest !== null) {
+  //       this.props.dispatcher.showPopup({
+  //         type: PopupType.DeletePullRequest,
+  //         repository: state.repository,
+  //         branch: tip.branch,
+  //         pullRequest: currentPullRequest,
+  //       })
+  //     } else {
+  //       const existsOnRemote = state.state.aheadBehind !== null
 
-        this.props.dispatcher.showPopup({
-          type: PopupType.DeleteBranch,
-          repository: state.repository,
-          branch: tip.branch,
-          existsOnRemote: existsOnRemote,
-        })
-      }
-    }
-  }
+  //       this.props.dispatcher.showPopup({
+  //         type: PopupType.DeleteBranch,
+  //         repository: state.repository,
+  //         branch: tip.branch,
+  //         existsOnRemote: existsOnRemote,
+  //       })
+  //     }
+  //   }
+  // }
 
-  private discardAllChanges() {
-    const state = this.state.selectedState
+  // private discardAllChanges() {
+  //   const state = this.state.selectedState
 
-    if (state == null || state.type !== SelectionType.Repository) {
-      return
-    }
+  //   if (state == null || state.type !== SelectionType.Repository) {
+  //     return
+  //   }
 
-    const { workingDirectory } = state.state.changesState
+  //   const { workingDirectory } = state.state.changesState
 
-    this.props.dispatcher.showPopup({
-      type: PopupType.ConfirmDiscardChanges,
-      repository: state.repository,
-      files: workingDirectory.files,
-      showDiscardChangesSetting: false,
-      discardingAllChanges: true,
-    })
-  }
+  //   this.props.dispatcher.showPopup({
+  //     type: PopupType.ConfirmDiscardChanges,
+  //     repository: state.repository,
+  //     files: workingDirectory.files,
+  //     showDiscardChangesSetting: false,
+  //     discardingAllChanges: true,
+  //   })
+  // }
 
-  private stashAllChanges() {
-    const repository = this.getRepository()
+  // private stashAllChanges() {
+  //   const repository = this.getRepository()
 
-    if (repository !== null && repository instanceof Repository) {
-      this.props.dispatcher.createStashForCurrentBranch(repository)
-    }
-  }
+  //   if (repository !== null && repository instanceof Repository) {
+  //     this.props.dispatcher.createStashForCurrentBranch(repository)
+  //   }
+  // }
 
-  private showAddLocalRepo = () => {
-    return this.props.dispatcher.showPopup({ type: PopupType.AddRepository })
-  }
+  // private showAddLocalRepo = () => {
+  //   return this.props.dispatcher.showPopup({ type: PopupType.AddRepository })
+  // }
 
-  private showCreateRepository = () => {
-    this.props.dispatcher.showPopup({
-      type: PopupType.CreateRepository,
-    })
-  }
+  // private showCreateRepository = () => {
+  //   this.props.dispatcher.showPopup({
+  //     type: PopupType.CreateRepository,
+  //   })
+  // }
 
-  private showCloneRepo = (cloneUrl?: string) => {
-    let initialURL: string | null = null
+  // private showCloneRepo = (cloneUrl?: string) => {
+  //   let initialURL: string | null = null
 
-    if (cloneUrl !== undefined) {
-      this.props.dispatcher.changeCloneRepositoriesTab(
-        CloneRepositoryTab.Generic
-      )
-      initialURL = cloneUrl
-    }
+  //   if (cloneUrl !== undefined) {
+  //     this.props.dispatcher.changeCloneRepositoriesTab(
+  //       CloneRepositoryTab.Generic
+  //     )
+  //     initialURL = cloneUrl
+  //   }
 
-    return this.props.dispatcher.showPopup({
-      type: PopupType.CloneRepository,
-      initialURL,
-    })
-  }
+  //   return this.props.dispatcher.showPopup({
+  //     type: PopupType.CloneRepository,
+  //     initialURL,
+  //   })
+  // }
 
   // private showCreateTutorialRepositoryPopup = () => {
   //   const account = this.getDotComAccount() || this.getEnterpriseAccount()
@@ -860,114 +858,114 @@ export class App extends React.Component<IAppProps, IAppState> {
     return isTutorialRepository ? selectedRepository : null
   }
 
-  private showAbout() {
-    this.props.dispatcher.showPopup({ type: PopupType.About })
-  }
+  // private showAbout() {
+  //   this.props.dispatcher.showPopup({ type: PopupType.About })
+  // }
 
-  private async showHistory(showBranchList: boolean = false) {
-    const state = this.state.selectedState
-    if (state == null || state.type !== SelectionType.Repository) {
-      return
-    }
+  // private async showHistory(showBranchList: boolean = false) {
+  //   const state = this.state.selectedState
+  //   if (state == null || state.type !== SelectionType.Repository) {
+  //     return
+  //   }
 
-    await this.props.dispatcher.closeCurrentFoldout()
+  //   await this.props.dispatcher.closeCurrentFoldout()
 
-    await this.props.dispatcher.initializeCompare(state.repository, {
-      kind: HistoryTabMode.History,
-    })
+  //   await this.props.dispatcher.initializeCompare(state.repository, {
+  //     kind: HistoryTabMode.History,
+  //   })
 
-    await this.props.dispatcher.changeRepositorySection(
-      state.repository,
-      RepositorySectionTab.History
-    )
+  //   await this.props.dispatcher.changeRepositorySection(
+  //     state.repository,
+  //     RepositorySectionTab.History
+  //   )
 
-    await this.props.dispatcher.updateCompareForm(state.repository, {
-      filterText: '',
-      showBranchList,
-    })
-  }
+  //   await this.props.dispatcher.updateCompareForm(state.repository, {
+  //     filterText: '',
+  //     showBranchList,
+  //   })
+  // }
 
-  private showChanges() {
-    const state = this.state.selectedState
-    if (state == null || state.type !== SelectionType.Repository) {
-      return
-    }
+  // private showChanges() {
+  //   const state = this.state.selectedState
+  //   if (state == null || state.type !== SelectionType.Repository) {
+  //     return
+  //   }
 
-    this.props.dispatcher.closeCurrentFoldout()
-    return this.props.dispatcher.changeRepositorySection(
-      state.repository,
-      RepositorySectionTab.Changes
-    )
-  }
+  //   this.props.dispatcher.closeCurrentFoldout()
+  //   return this.props.dispatcher.changeRepositorySection(
+  //     state.repository,
+  //     RepositorySectionTab.Changes
+  //   )
+  // }
 
-  private chooseRepository() {
-    if (
-      this.state.currentFoldout &&
-      this.state.currentFoldout.type === FoldoutType.Repository
-    ) {
-      return this.props.dispatcher.closeFoldout(FoldoutType.Repository)
-    }
+  // private chooseRepository() {
+  //   if (
+  //     this.state.currentFoldout &&
+  //     this.state.currentFoldout.type === FoldoutType.Repository
+  //   ) {
+  //     return this.props.dispatcher.closeFoldout(FoldoutType.Repository)
+  //   }
 
-    return this.props.dispatcher.showFoldout({
-      type: FoldoutType.Repository,
-    })
-  }
+  //   return this.props.dispatcher.showFoldout({
+  //     type: FoldoutType.Repository,
+  //   })
+  // }
 
-  private showBranches() {
-    const state = this.state.selectedState
-    if (state == null || state.type !== SelectionType.Repository) {
-      return
-    }
+  // private showBranches() {
+  //   const state = this.state.selectedState
+  //   if (state == null || state.type !== SelectionType.Repository) {
+  //     return
+  //   }
 
-    if (
-      this.state.currentFoldout &&
-      this.state.currentFoldout.type === FoldoutType.Branch
-    ) {
-      return this.props.dispatcher.closeFoldout(FoldoutType.Branch)
-    }
+  //   if (
+  //     this.state.currentFoldout &&
+  //     this.state.currentFoldout.type === FoldoutType.Branch
+  //   ) {
+  //     return this.props.dispatcher.closeFoldout(FoldoutType.Branch)
+  //   }
 
-    return this.props.dispatcher.showFoldout({ type: FoldoutType.Branch })
-  }
+  //   return this.props.dispatcher.showFoldout({ type: FoldoutType.Branch })
+  // }
 
-  private push(options?: { forceWithLease: boolean }) {
-    const state = this.state.selectedState
-    if (state == null || state.type !== SelectionType.Repository) {
-      return
-    }
+  // private push(options?: { forceWithLease: boolean }) {
+  //   const state = this.state.selectedState
+  //   if (state == null || state.type !== SelectionType.Repository) {
+  //     return
+  //   }
 
-    if (options && options.forceWithLease) {
-      this.props.dispatcher.confirmOrForcePush(state.repository)
-    } else {
-      this.props.dispatcher.push(state.repository)
-    }
-  }
+  //   if (options && options.forceWithLease) {
+  //     this.props.dispatcher.confirmOrForcePush(state.repository)
+  //   } else {
+  //     this.props.dispatcher.push(state.repository)
+  //   }
+  // }
 
-  private async pull() {
-    const state = this.state.selectedState
-    if (state == null || state.type !== SelectionType.Repository) {
-      return
-    }
+  // private async pull() {
+  //   const state = this.state.selectedState
+  //   if (state == null || state.type !== SelectionType.Repository) {
+  //     return
+  //   }
 
-    this.props.dispatcher.pull(state.repository)
-  }
+  //   this.props.dispatcher.pull(state.repository)
+  // }
 
-  private showStashedChanges() {
-    const state = this.state.selectedState
-    if (state == null || state.type !== SelectionType.Repository) {
-      return
-    }
+  // private showStashedChanges() {
+  //   const state = this.state.selectedState
+  //   if (state == null || state.type !== SelectionType.Repository) {
+  //     return
+  //   }
 
-    this.props.dispatcher.selectStashedFile(state.repository)
-  }
+  //   this.props.dispatcher.selectStashedFile(state.repository)
+  // }
 
-  private hideStashedChanges() {
-    const state = this.state.selectedState
-    if (state == null || state.type !== SelectionType.Repository) {
-      return
-    }
+  // private hideStashedChanges() {
+  //   const state = this.state.selectedState
+  //   if (state == null || state.type !== SelectionType.Repository) {
+  //     return
+  //   }
 
-    this.props.dispatcher.hideStashedChanges(state.repository)
-  }
+  //   this.props.dispatcher.hideStashedChanges(state.repository)
+  // }
 
   // private getUserList = async () => {
   //   const res = await fetch('https://reqres.in/api/users?page=2');
@@ -1160,27 +1158,27 @@ export class App extends React.Component<IAppProps, IAppState> {
     }
   }
 
-  private removeRepository = (
-    repository: Repository | CloningRepository | null
-  ) => {
-    if (!repository) {
-      return
-    }
+  // private removeRepository = (
+  //   repository: Repository | CloningRepository | null
+  // ) => {
+  //   if (!repository) {
+  //     return
+  //   }
 
-    if (repository instanceof CloningRepository || repository.missing) {
-      this.props.dispatcher.removeRepository(repository, false)
-      return
-    }
+  //   if (repository instanceof CloningRepository || repository.missing) {
+  //     this.props.dispatcher.removeRepository(repository, false)
+  //     return
+  //   }
 
-    if (this.state.askForConfirmationOnRepositoryRemoval) {
-      this.props.dispatcher.showPopup({
-        type: PopupType.RemoveRepository,
-        repository,
-      })
-    } else {
-      this.props.dispatcher.removeRepository(repository, false)
-    }
-  }
+  //   if (this.state.askForConfirmationOnRepositoryRemoval) {
+  //     this.props.dispatcher.showPopup({
+  //       type: PopupType.RemoveRepository,
+  //       repository,
+  //     })
+  //   } else {
+  //     this.props.dispatcher.removeRepository(repository, false)
+  //   }
+  // }
 
   private onConfirmRepoRemoval = async (
     repository: Repository,
@@ -1198,61 +1196,61 @@ export class App extends React.Component<IAppProps, IAppState> {
     return state.repository
   }
 
-  private showRebaseDialog() {
-    const repository = this.getRepository()
+  // private showRebaseDialog() {
+  //   const repository = this.getRepository()
 
-    if (!repository || repository instanceof CloningRepository) {
-      return
-    }
+  //   if (!repository || repository instanceof CloningRepository) {
+  //     return
+  //   }
 
-    this.props.dispatcher.showRebaseDialog(repository)
-  }
+  //   this.props.dispatcher.showRebaseDialog(repository)
+  // }
 
-  private showRepositorySettings() {
-    const repository = this.getRepository()
+  // private showRepositorySettings() {
+  //   const repository = this.getRepository()
 
-    if (!repository || repository instanceof CloningRepository) {
-      return
-    }
-    this.props.dispatcher.showPopup({
-      type: PopupType.RepositorySettings,
-      repository,
-    })
-  }
+  //   if (!repository || repository instanceof CloningRepository) {
+  //     return
+  //   }
+  //   this.props.dispatcher.showPopup({
+  //     type: PopupType.RepositorySettings,
+  //     repository,
+  //   })
+  // }
 
   /**
    * Opens a browser to the issue creation page
    * of the current GitHub repository.
    */
-  private openIssueCreationOnGitHub() {
-    const repository = this.getRepository()
-    // this will likely never be null since we disable the
-    // issue creation menu item for non-GitHub repositories
-    if (repository instanceof Repository) {
-      this.props.dispatcher.openIssueCreationPage(repository)
-    }
-  }
+  // private openIssueCreationOnGitHub() {
+  //   const repository = this.getRepository()
+  //   // this will likely never be null since we disable the
+  //   // issue creation menu item for non-GitHub repositories
+  //   if (repository instanceof Repository) {
+  //     this.props.dispatcher.openIssueCreationPage(repository)
+  //   }
+  // }
 
-  private viewRepositoryOnGitHub() {
-    const repository = this.getRepository()
+  // private viewRepositoryOnGitHub() {
+  //   const repository = this.getRepository()
 
-    this.viewOnGitHub(repository)
-  }
+  //   this.viewOnGitHub(repository)
+  // }
 
   /** Returns the URL to the current repository if hosted on GitHub */
-  private getCurrentRepositoryGitHubURL() {
-    const repository = this.getRepository()
+  // private getCurrentRepositoryGitHubURL() {
+  //   const repository = this.getRepository()
 
-    if (
-      !repository ||
-      repository instanceof CloningRepository ||
-      !repository.gitHubRepository
-    ) {
-      return null
-    }
+  //   if (
+  //     !repository ||
+  //     repository instanceof CloningRepository ||
+  //     !repository.gitHubRepository
+  //   ) {
+  //     return null
+  //   }
 
-    return repository.gitHubRepository.htmlURL
-  }
+  //   return repository.gitHubRepository.htmlURL
+  // }
 
   private openCurrentRepositoryInShell = () => {
     const repository = this.getRepository()
@@ -1263,14 +1261,14 @@ export class App extends React.Component<IAppProps, IAppState> {
     this.openInShell(repository)
   }
 
-  private openCurrentRepositoryInExternalEditor() {
-    const repository = this.getRepository()
-    if (!repository) {
-      return
-    }
+  // private openCurrentRepositoryInExternalEditor() {
+  //   const repository = this.getRepository()
+  //   if (!repository) {
+  //     return
+  //   }
 
-    this.openInExternalEditor(repository)
-  }
+  //   this.openInExternalEditor(repository)
+  // }
 
   /**
    * Conditionally renders a menu bar. The menu bar is currently only rendered
@@ -1510,26 +1508,26 @@ export class App extends React.Component<IAppProps, IAppState> {
             repositoryIndicatorsEnabled={this.state.repositoryIndicatorsEnabled}
           />
         )
-      case PopupType.RepositorySettings: {
-        const repository = popup.repository
-        const state = this.props.repositoryStateManager.get(repository)
-        const repositoryAccount = getAccountForRepository(
-          this.state.accounts,
-          repository
-        )
+      // case PopupType.RepositorySettings: {
+      //   const repository = popup.repository
+      //   const state = this.props.repositoryStateManager.get(repository)
+      //   const repositoryAccount = getAccountForRepository(
+      //     this.state.accounts,
+      //     repository
+      //   )
 
-        return (
-          <RepositorySettings
-            key={`repository-settings-${repository.hash}`}
-            initialSelectedTab={popup.initialSelectedTab}
-            remote={state.remote}
-            dispatcher={this.props.dispatcher}
-            repository={repository}
-            repositoryAccount={repositoryAccount}
-            onDismissed={onPopupDismissedFn}
-          />
-        )
-      }
+      //   return (
+      //     <RepositorySettings
+      //       key={`repository-settings-${repository.hash}`}
+      //       initialSelectedTab={popup.initialSelectedTab}
+      //       remote={state.remote}
+      //       dispatcher={this.props.dispatcher}
+      //       repository={repository}
+      //       repositoryAccount={repositoryAccount}
+      //       onDismissed={onPopupDismissedFn}
+      //     />
+      //   )
+      // }
       case PopupType.SignIn:
         return (
           <SignIn
@@ -1572,41 +1570,41 @@ export class App extends React.Component<IAppProps, IAppState> {
             onRefreshRepositories={this.onRefreshRepositories}
           />
         )
-      case PopupType.CreateBranch: {
-        const state = this.props.repositoryStateManager.get(popup.repository)
-        const branchesState = state.branchesState
-        const repository = popup.repository
+      // case PopupType.CreateBranch: {
+      //   const state = this.props.repositoryStateManager.get(popup.repository)
+      //   const branchesState = state.branchesState
+      //   const repository = popup.repository
 
-        if (branchesState.tip.kind === TipState.Unknown) {
-          onPopupDismissedFn()
-          return null
-        }
+      //   if (branchesState.tip.kind === TipState.Unknown) {
+      //     onPopupDismissedFn()
+      //     return null
+      //   }
 
-        let upstreamGhRepo: GitHubRepository | null = null
-        let upstreamDefaultBranch: Branch | null = null
+      //   let upstreamGhRepo: GitHubRepository | null = null
+      //   let upstreamDefaultBranch: Branch | null = null
 
-        if (isRepositoryWithGitHubRepository(repository)) {
-          upstreamGhRepo = getNonForkGitHubRepository(repository)
-          upstreamDefaultBranch = branchesState.upstreamDefaultBranch
-        }
+      //   if (isRepositoryWithGitHubRepository(repository)) {
+      //     upstreamGhRepo = getNonForkGitHubRepository(repository)
+      //     upstreamDefaultBranch = branchesState.upstreamDefaultBranch
+      //   }
 
-        return (
-          <CreateBranch
-            key="create-branch"
-            tip={branchesState.tip}
-            defaultBranch={branchesState.defaultBranch}
-            upstreamDefaultBranch={upstreamDefaultBranch}
-            allBranches={branchesState.allBranches}
-            repository={repository}
-            targetCommit={popup.targetCommit}
-            upstreamGitHubRepository={upstreamGhRepo}
-            onBranchCreatedFromCommit={this.onBranchCreatedFromCommit}
-            onDismissed={onPopupDismissedFn}
-            dispatcher={this.props.dispatcher}
-            initialName={popup.initialName || ''}
-          />
-        )
-      }
+      //   return (
+      //     <CreateBranch
+      //       key="create-branch"
+      //       tip={branchesState.tip}
+      //       defaultBranch={branchesState.defaultBranch}
+      //       upstreamDefaultBranch={upstreamDefaultBranch}
+      //       allBranches={branchesState.allBranches}
+      //       repository={repository}
+      //       targetCommit={popup.targetCommit}
+      //       upstreamGitHubRepository={upstreamGhRepo}
+      //       onBranchCreatedFromCommit={this.onBranchCreatedFromCommit}
+      //       onDismissed={onPopupDismissedFn}
+      //       dispatcher={this.props.dispatcher}
+      //       initialName={popup.initialName || ''}
+      //     />
+      //   )
+      // }
       case PopupType.InstallGit:
         return (
           <InstallGit
@@ -1814,31 +1812,31 @@ export class App extends React.Component<IAppProps, IAppState> {
           />
         )
       }
-      case PopupType.StashAndSwitchBranch: {
-        const { repository, branchToCheckout } = popup
-        const { branchesState, changesState } =
-          this.props.repositoryStateManager.get(repository)
-        const { tip } = branchesState
+      // case PopupType.StashAndSwitchBranch: {
+      //   const { repository, branchToCheckout } = popup
+      //   const { branchesState, changesState } =
+      //     this.props.repositoryStateManager.get(repository)
+      //   const { tip } = branchesState
 
-        if (tip.kind !== TipState.Valid) {
-          return null
-        }
+      //   if (tip.kind !== TipState.Valid) {
+      //     return null
+      //   }
 
-        const currentBranch = tip.branch
-        const hasAssociatedStash = changesState.stashEntry !== null
+      //   const currentBranch = tip.branch
+      //   const hasAssociatedStash = changesState.stashEntry !== null
 
-        return (
-          <StashAndSwitchBranch
-            key="stash-and-switch-branch"
-            dispatcher={this.props.dispatcher}
-            repository={popup.repository}
-            currentBranch={currentBranch}
-            branchToCheckout={branchToCheckout}
-            hasAssociatedStash={hasAssociatedStash}
-            onDismissed={onPopupDismissedFn}
-          />
-        )
-      }
+      //   return (
+      //     <StashAndSwitchBranch
+      //       key="stash-and-switch-branch"
+      //       dispatcher={this.props.dispatcher}
+      //       repository={popup.repository}
+      //       currentBranch={currentBranch}
+      //       branchToCheckout={branchToCheckout}
+      //       hasAssociatedStash={hasAssociatedStash}
+      //       onDismissed={onPopupDismissedFn}
+      //     />
+      //   )
+      // }
       case PopupType.ConfirmOverwriteStash: {
         const { repository, branchToCheckout: branchToCheckout } = popup
         return (
@@ -1995,57 +1993,57 @@ export class App extends React.Component<IAppProps, IAppState> {
             onDismissed={onPopupDismissedFn}
           />
         )
-      case PopupType.CommitMessage:
-        const repositoryState = this.props.repositoryStateManager.get(
-          popup.repository
-        )
+      // case PopupType.CommitMessage:
+      //   const repositoryState = this.props.repositoryStateManager.get(
+      //     popup.repository
+      //   )
 
-        const { tip } = repositoryState.branchesState
-        const currentBranchName: string | null =
-          tip.kind === TipState.Valid ? tip.branch.name : null
+      //   const { tip } = repositoryState.branchesState
+      //   const currentBranchName: string | null =
+      //     tip.kind === TipState.Valid ? tip.branch.name : null
 
-        const hasWritePermissionForRepository =
-          popup.repository.gitHubRepository === null ||
-          hasWritePermission(popup.repository.gitHubRepository)
+      //   const hasWritePermissionForRepository =
+      //     popup.repository.gitHubRepository === null ||
+      //     hasWritePermission(popup.repository.gitHubRepository)
 
-        const autocompletionProviders = buildAutocompletionProviders(
-          popup.repository,
-          this.props.dispatcher,
-          this.state.emoji,
-          this.props.issuesStore,
-          this.props.gitHubUserStore,
-          this.state.accounts
-        )
+      //   const autocompletionProviders = buildAutocompletionProviders(
+      //     popup.repository,
+      //     this.props.dispatcher,
+      //     this.state.emoji,
+      //     this.props.issuesStore,
+      //     this.props.gitHubUserStore,
+      //     this.state.accounts
+      //   )
 
-        const repositoryAccount = getAccountForRepository(
-          this.state.accounts,
-          popup.repository
-        )
+      //   const repositoryAccount = getAccountForRepository(
+      //     this.state.accounts,
+      //     popup.repository
+      //   )
 
-        return (
-          <CommitMessageDialog
-            key="commit-message"
-            autocompletionProviders={autocompletionProviders}
-            branch={currentBranchName}
-            coAuthors={popup.coAuthors}
-            commitAuthor={repositoryState.commitAuthor}
-            commitMessage={popup.commitMessage}
-            commitSpellcheckEnabled={this.state.commitSpellcheckEnabled}
-            dialogButtonText={popup.dialogButtonText}
-            dialogTitle={popup.dialogTitle}
-            dispatcher={this.props.dispatcher}
-            prepopulateCommitSummary={popup.prepopulateCommitSummary}
-            repository={popup.repository}
-            showBranchProtected={
-              repositoryState.changesState.currentBranchProtected
-            }
-            showCoAuthoredBy={popup.showCoAuthoredBy}
-            showNoWriteAccess={!hasWritePermissionForRepository}
-            onDismissed={onPopupDismissedFn}
-            onSubmitCommitMessage={popup.onSubmitCommitMessage}
-            repositoryAccount={repositoryAccount}
-          />
-        )
+      //   return (
+      //     <CommitMessageDialog
+      //       key="commit-message"
+      //       autocompletionProviders={autocompletionProviders}
+      //       branch={currentBranchName}
+      //       coAuthors={popup.coAuthors}
+      //       commitAuthor={repositoryState.commitAuthor}
+      //       commitMessage={popup.commitMessage}
+      //       commitSpellcheckEnabled={this.state.commitSpellcheckEnabled}
+      //       dialogButtonText={popup.dialogButtonText}
+      //       dialogTitle={popup.dialogTitle}
+      //       dispatcher={this.props.dispatcher}
+      //       prepopulateCommitSummary={popup.prepopulateCommitSummary}
+      //       repository={popup.repository}
+      //       showBranchProtected={
+      //         repositoryState.changesState.currentBranchProtected
+      //       }
+      //       showCoAuthoredBy={popup.showCoAuthoredBy}
+      //       showNoWriteAccess={!hasWritePermissionForRepository}
+      //       onDismissed={onPopupDismissedFn}
+      //       onSubmitCommitMessage={popup.onSubmitCommitMessage}
+      //       repositoryAccount={repositoryAccount}
+      //     />
+      //   )
       case PopupType.MultiCommitOperation: {
         const { selectedState, emoji } = this.state
 
@@ -2306,7 +2304,7 @@ export class App extends React.Component<IAppProps, IAppState> {
         )
       }
       default:
-        return assertNever(popup, `Unknown popup type: ${popup}`)
+        return assertNever(popup as never, `Unknown popup type: ${popup}`)
     }
   }
 
@@ -2377,12 +2375,12 @@ export class App extends React.Component<IAppProps, IAppState> {
     })
   }
 
-  private onBranchCreatedFromCommit = () => {
-    const repositoryView = this.repositoryViewRef.current
-    if (repositoryView !== null) {
-      repositoryView.scrollCompareListToTop()
-    }
-  }
+  // private onBranchCreatedFromCommit = () => {
+  //   const repositoryView = this.repositoryViewRef.current
+  //   if (repositoryView !== null) {
+  //     repositoryView.scrollCompareListToTop()
+  //   }
+  // }
 
   private onOpenShellIgnoreWarning = (path: string) => {
     this.props.dispatcher.openShell(path, true)
@@ -2513,19 +2511,19 @@ export class App extends React.Component<IAppProps, IAppState> {
     )
   }
 
-  private viewOnGitHub = (
-    repository: Repository | CloningRepository | null
-  ) => {
-    if (!(repository instanceof Repository)) {
-      return
-    }
+  // private viewOnGitHub = (
+  //   repository: Repository | CloningRepository | null
+  // ) => {
+  //   if (!(repository instanceof Repository)) {
+  //     return
+  //   }
 
-    const url = getGitHubHtmlUrl(repository)
+  //   const url = getGitHubHtmlUrl(repository)
 
-    if (url) {
-      this.props.dispatcher.openInBrowser(url)
-    }
-  }
+  //   if (url) {
+  //     this.props.dispatcher.openInBrowser(url)
+  //   }
+  // }
 
   private openInShell = (repository: Repository | CloningRepository) => {
     if (!(repository instanceof Repository)) {
@@ -2539,75 +2537,75 @@ export class App extends React.Component<IAppProps, IAppState> {
     this.props.dispatcher.openInExternalEditor(fullPath)
   }
 
-  private openInExternalEditor = (
-    repository: Repository | CloningRepository
-  ) => {
-    if (!(repository instanceof Repository)) {
-      return
-    }
+  // private openInExternalEditor = (
+  //   repository: Repository | CloningRepository
+  // ) => {
+  //   if (!(repository instanceof Repository)) {
+  //     return
+  //   }
 
-    this.props.dispatcher.openInExternalEditor(repository.path)
-  }
+  //   this.props.dispatcher.openInExternalEditor(repository.path)
+  // }
 
-  private showRepository = (repository: Repository | CloningRepository) => {
-    if (!(repository instanceof Repository)) {
-      return
-    }
+  // private showRepository = (repository: Repository | CloningRepository) => {
+  //   if (!(repository instanceof Repository)) {
+  //     return
+  //   }
 
-    shell.showFolderContents(repository.path)
-  }
+  //   shell.showFolderContents(repository.path)
+  // }
 
-  private showCreateBranch = () => {
-    const selection = this.state.selectedState
+  // private showCreateBranch = () => {
+  //   const selection = this.state.selectedState
 
-    // NB: This should never happen but in the case someone
-    // manages to delete the last repository while the drop down is
-    // open we'll just bail here.
-    if (!selection || selection.type !== SelectionType.Repository) {
-      return
-    }
+  //   // NB: This should never happen but in the case someone
+  //   // manages to delete the last repository while the drop down is
+  //   // open we'll just bail here.
+  //   if (!selection || selection.type !== SelectionType.Repository) {
+  //     return
+  //   }
 
-    // We explicitly disable the menu item in this scenario so this
-    // should never happen.
-    if (selection.state.branchesState.tip.kind === TipState.Unknown) {
-      return
-    }
+  //   // We explicitly disable the menu item in this scenario so this
+  //   // should never happen.
+  //   if (selection.state.branchesState.tip.kind === TipState.Unknown) {
+  //     return
+  //   }
 
-    const repository = selection.repository
+  //   const repository = selection.repository
 
-    return this.props.dispatcher.showPopup({
-      type: PopupType.CreateBranch,
-      repository,
-    })
-  }
+  //   return this.props.dispatcher.showPopup({
+  //     type: PopupType.CreateBranch,
+  //     repository,
+  //   })
+  // }
 
-  private openPullRequest = () => {
-    const state = this.state.selectedState
+  // private openPullRequest = () => {
+  //   const state = this.state.selectedState
 
-    if (state == null || state.type !== SelectionType.Repository) {
-      return
-    }
+  //   if (state == null || state.type !== SelectionType.Repository) {
+  //     return
+  //   }
 
-    const currentPullRequest = state.state.branchesState.currentPullRequest
-    const dispatcher = this.props.dispatcher
+  //   const currentPullRequest = state.state.branchesState.currentPullRequest
+  //   const dispatcher = this.props.dispatcher
 
-    if (currentPullRequest == null) {
-      dispatcher.createPullRequest(state.repository)
-      dispatcher.recordCreatePullRequest()
-    } else {
-      dispatcher.showPullRequest(state.repository)
-    }
-  }
+  //   if (currentPullRequest == null) {
+  //     dispatcher.createPullRequest(state.repository)
+  //     dispatcher.recordCreatePullRequest()
+  //   } else {
+  //     dispatcher.showPullRequest(state.repository)
+  //   }
+  // }
 
-  private startPullRequest = () => {
-    const state = this.state.selectedState
+  // private startPullRequest = () => {
+  //   const state = this.state.selectedState
 
-    if (state == null || state.type !== SelectionType.Repository) {
-      return
-    }
+  //   if (state == null || state.type !== SelectionType.Repository) {
+  //     return
+  //   }
 
-    this.props.dispatcher.startPullRequest(state.repository)
-  }
+  //   this.props.dispatcher.startPullRequest(state.repository)
+  // }
 
   private openCreatePullRequestInBrowser = (
     repository: Repository,

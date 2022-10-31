@@ -68,7 +68,7 @@ import 'wicg-focus-ring'
 
 import { sendNonFatalException } from '../lib/helpers/non-fatal-exception'
 import { enableUnhandledRejectionReporting } from '../lib/feature-flag'
-import { AheadBehindStore } from '../lib/stores/ahead-behind-store'
+// import { AheadBehindStore } from '../lib/stores/ahead-behind-store'
 import {
   ApplicationTheme,
   supportsSystemThemeChanges,
@@ -256,7 +256,7 @@ const repositoryStateManager = new RepositoryStateCache(statsStore)
 const apiRepositoriesStore = new ApiRepositoriesStore(accountsStore)
 
 const commitStatusStore = new CommitStatusStore(accountsStore)
-const aheadBehindStore = new AheadBehindStore()
+// const aheadBehindStore = new AheadBehindStore()
 
 const aliveStore = new AliveStore(accountsStore)
 
@@ -349,10 +349,10 @@ ReactDOM.render(
   <App
     dispatcher={dispatcher}
     appStore={appStore}
-    repositoryStateManager={repositoryStateManager}
-    issuesStore={issuesStore}
-    gitHubUserStore={gitHubUserStore}
-    aheadBehindStore={aheadBehindStore}
+    // repositoryStateManager={repositoryStateManager}
+    // issuesStore={issuesStore}
+    // gitHubUserStore={gitHubUserStore}
+    // aheadBehindStore={aheadBehindStore}
     startTime={startTime}
   />,
   document.getElementById('desktop-app-container')!
