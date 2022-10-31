@@ -13,11 +13,11 @@ import * as Fs from 'fs'
 import * as URL from 'url'
 
 import { AppWindow } from './app-window'
-import { buildDefaultMenu, getAllMenuItems } from './menu'
+// import { buildDefaultMenu, getAllMenuItems } from './menu'
 import { shellNeedsPatching, updateEnvironmentForProcess } from '../lib/shell'
 import { parseAppURL } from '../lib/parse-app-url'
 // import { handleSquirrelEvent } from './squirrel-updater'
-import { fatalError } from '../lib/fatal-error'
+// import { fatalError } from '../lib/fatal-error'
 
 import { log as writeLog } from './log'
 import { UNSAFE_openDirectory } from './shell'
@@ -320,144 +320,146 @@ app.on('ready', () => {
   // Adds an authorization header for requests of avatars on GHES
   const updateAccounts = installAuthenticatedAvatarFilter(orderedWebRequest)
 
-  Menu.setApplicationMenu(
-    buildDefaultMenu({
-      selectedShell: null,
-      selectedExternalEditor: null,
-      askForConfirmationOnRepositoryRemoval: false,
-      askForConfirmationOnForcePush: false,
-    })
-  )
+  Menu.setApplicationMenu(null)
+
+  // Menu.setApplicationMenu(
+  //   buildDefaultMenu({
+  //     selectedShell: null,
+  //     selectedExternalEditor: null,
+  //     askForConfirmationOnRepositoryRemoval: false,
+  //     askForConfirmationOnForcePush: false,
+  //   })
+  // )
 
   ipcMain.on('update-accounts', (_, accounts) => updateAccounts(accounts))
 
-  ipcMain.on('update-preferred-app-menu-item-labels', (_, labels) => {
-    // The current application menu is mutable and we frequently
-    // change whether particular items are enabled or not through
-    // the update-menu-state IPC event. This menu that we're creating
-    // now will have all the items enabled so we need to merge the
-    // current state with the new in order to not get a temporary
-    // race conditions where menu items which shouldn't be enabled
-    // are.
-    const newMenu = buildDefaultMenu(labels)
+  // ipcMain.on('update-preferred-app-menu-item-labels', (_, labels) => {
+  //   // The current application menu is mutable and we frequently
+  //   // change whether particular items are enabled or not through
+  //   // the update-menu-state IPC event. This menu that we're creating
+  //   // now will have all the items enabled so we need to merge the
+  //   // current state with the new in order to not get a temporary
+  //   // race conditions where menu items which shouldn't be enabled
+  //   // are.
+  //   const newMenu = buildDefaultMenu(labels)
 
-    const currentMenu = Menu.getApplicationMenu()
-    console.log(currentMenu);
+  //   const currentMenu = Menu.getApplicationMenu()
+  //   console.log(currentMenu);
 
-    // This shouldn't happen but whenever one says that it does
-    // so here's the escape hatch when we can't merge the current
-    // menu with the new one; we just use the new one.
-    if (currentMenu === null) {
-      // https://github.com/electron/electron/issues/2717
-      Menu.setApplicationMenu(newMenu)
+  //   // This shouldn't happen but whenever one says that it does
+  //   // so here's the escape hatch when we can't merge the current
+  //   // menu with the new one; we just use the new one.
+  //   if (currentMenu === null) {
+  //     // https://github.com/electron/electron/issues/2717
+  //     Menu.setApplicationMenu(newMenu)
 
-      if (mainWindow !== null) {
-        mainWindow.sendAppMenu()
-      }
+  //     if (mainWindow !== null) {
+  //       mainWindow.sendAppMenu()
+  //     }
 
-      return
-    }
+  //     return
+  //   }
 
-    // It's possible that after rebuilding the menu we'll end up
-    // with the exact same structural menu as we had before so we
-    // keep track of whether anything has actually changed in order
-    // to avoid updating the global menu and telling the renderer
-    // about it.
-    let menuHasChanged = false
+  //   // It's possible that after rebuilding the menu we'll end up
+  //   // with the exact same structural menu as we had before so we
+  //   // keep track of whether anything has actually changed in order
+  //   // to avoid updating the global menu and telling the renderer
+  //   // about it.
+  //   let menuHasChanged = false
 
-    for (const newItem of getAllMenuItems(newMenu)) {
-      // Our menu items always have ids and Electron.MenuItem takes on whatever
-      // properties was defined on the MenuItemOptions template used to create it
-      // but doesn't surface those in the type declaration.
-      const id = (newItem as any).id
+  //   for (const newItem of getAllMenuItems(newMenu)) {
+  //     // Our menu items always have ids and Electron.MenuItem takes on whatever
+  //     // properties was defined on the MenuItemOptions template used to create it
+  //     // but doesn't surface those in the type declaration.
+  //     const id = (newItem as any).id
 
-      if (!id) {
-        continue
-      }
+  //     if (!id) {
+  //       continue
+  //     }
 
-      const currentItem = currentMenu.getMenuItemById(id)
+  //     const currentItem = currentMenu.getMenuItemById(id)
 
-      // Unfortunately the type information for getMenuItemById
-      // doesn't specify if it'll return null or undefined when
-      // the item doesn't exist so we'll do a falsy check here.
-      if (!currentItem) {
-        menuHasChanged = true
-      } else {
-        if (currentItem.label !== newItem.label) {
-          menuHasChanged = true
-        }
+  //     // Unfortunately the type information for getMenuItemById
+  //     // doesn't specify if it'll return null or undefined when
+  //     // the item doesn't exist so we'll do a falsy check here.
+  //     if (!currentItem) {
+  //       menuHasChanged = true
+  //     } else {
+  //       if (currentItem.label !== newItem.label) {
+  //         menuHasChanged = true
+  //       }
 
-        // Copy the enabled property from the existing menu
-        // item since it'll be the most recent reflection of
-        // what the renderer wants.
-        if (currentItem.enabled !== newItem.enabled) {
-          newItem.enabled = currentItem.enabled
-          menuHasChanged = true
-        }
-      }
-    }
+  //       // Copy the enabled property from the existing menu
+  //       // item since it'll be the most recent reflection of
+  //       // what the renderer wants.
+  //       if (currentItem.enabled !== newItem.enabled) {
+  //         newItem.enabled = currentItem.enabled
+  //         menuHasChanged = true
+  //       }
+  //     }
+  //   }
 
-    if (menuHasChanged && mainWindow) {
-      // https://github.com/electron/electron/issues/2717
-      Menu.setApplicationMenu(newMenu)
-      mainWindow.sendAppMenu()
-    }
-  })
+  //   if (menuHasChanged && mainWindow) {
+  //     // https://github.com/electron/electron/issues/2717
+  //     Menu.setApplicationMenu(newMenu)
+  //     mainWindow.sendAppMenu()
+  //   }
+  // })
 
   /**
    * An event sent by the renderer asking that the menu item with the given id
    * is executed (ie clicked).
    */
-  ipcMain.on('execute-menu-item-by-id', (event, id) => {
-    const currentMenu = Menu.getApplicationMenu()
-    console.log(currentMenu);
+  // ipcMain.on('execute-menu-item-by-id', (event, id) => {
+  //   const currentMenu = Menu.getApplicationMenu()
+  //   console.log(currentMenu);
 
-    if (currentMenu === null) {
-      return
-    }
+  //   if (currentMenu === null) {
+  //     return
+  //   }
 
-    const menuItem = currentMenu.getMenuItemById(id)
-    if (menuItem) {
-      const window = BrowserWindow.fromWebContents(event.sender) || undefined
-      const fakeEvent = { preventDefault: () => {}, sender: event.sender }
-      menuItem.click(fakeEvent, window, event.sender)
-    }
-  })
+  //   const menuItem = currentMenu.getMenuItemById(id)
+  //   if (menuItem) {
+  //     const window = BrowserWindow.fromWebContents(event.sender) || undefined
+  //     const fakeEvent = { preventDefault: () => {}, sender: event.sender }
+  //     menuItem.click(fakeEvent, window, event.sender)
+  //   }
+  // })
 
-  ipcMain.on('update-menu-state', (_, items) => {
-    let sendMenuChangedEvent = false
+  // ipcMain.on('update-menu-state', (_, items) => {
+  //   let sendMenuChangedEvent = false
 
-    const currentMenu = Menu.getApplicationMenu()
-    console.log(currentMenu);
+  //   const currentMenu = Menu.getApplicationMenu()
+  //   console.log(currentMenu);
 
-    if (currentMenu === null) {
-      log.debug(`unable to get current menu, bailing out...`)
-      return
-    }
+  //   if (currentMenu === null) {
+  //     log.debug(`unable to get current menu, bailing out...`)
+  //     return
+  //   }
 
-    for (const item of items) {
-      const { id, state } = item
+  //   for (const item of items) {
+  //     const { id, state } = item
 
-      const menuItem = currentMenu.getMenuItemById(id)
+  //     const menuItem = currentMenu.getMenuItemById(id)
 
-      if (menuItem) {
-        // Only send the updated app menu when the state actually changes
-        // or we might end up introducing a never ending loop between
-        // the renderer and the main process
-        if (state.enabled !== undefined && menuItem.enabled !== state.enabled) {
-          menuItem.enabled = state.enabled
-          sendMenuChangedEvent = true
-        }
-      } else {
-        fatalError(`Unknown menu id: ${id}`)
-      }
-    }
+  //     if (menuItem) {
+  //       // Only send the updated app menu when the state actually changes
+  //       // or we might end up introducing a never ending loop between
+  //       // the renderer and the main process
+  //       if (state.enabled !== undefined && menuItem.enabled !== state.enabled) {
+  //         menuItem.enabled = state.enabled
+  //         sendMenuChangedEvent = true
+  //       }
+  //     } else {
+  //       fatalError(`Unknown menu id: ${id}`)
+  //     }
+  //   }
 
-    if (sendMenuChangedEvent && mainWindow) {
-      Menu.setApplicationMenu(currentMenu)
-      mainWindow.sendAppMenu()
-    }
-  })
+  //   if (sendMenuChangedEvent && mainWindow) {
+  //     Menu.setApplicationMenu(currentMenu)
+  //     mainWindow.sendAppMenu()
+  //   }
+  // })
 
   /**
    * Handle the action to show a contextual menu.
@@ -526,7 +528,7 @@ app.on('ready', () => {
    * An event sent by the renderer asking for a copy of the current
    * application menu.
    */
-  ipcMain.on('get-app-menu', () => mainWindow?.sendAppMenu())
+  // ipcMain.on('get-app-menu', () => mainWindow?.sendAppMenu())
 
   ipcMain.on('show-certificate-trust-dialog', (_, certificate, message) => {
     // This API is only implemented for macOS and Windows right now.

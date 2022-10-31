@@ -8,7 +8,7 @@
 
   display: flex;
   flex-direction: row;
-  box-shadow: rgba(33, 35, 38, 0.3) 0px 10px 10px -10px;
+  box-shadow: rgba(33, 35, 38, 0.3) 0px 0px 10px 0px;
 
   @include darwin {
     height: var(--darwin-title-bar-height);
@@ -20,7 +20,7 @@
     height: var(--win32-title-bar-height);
     background: var(--win32-title-bar-background-color);
     // border-bottom: 1px solid #000;
-    box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
+    box-shadow: rgba(33, 35, 38, 0.1) 0px 0px 10px 0px;
 
     .app-icon {
       color: var(--toolbar-button-secondary-color);
@@ -44,6 +44,22 @@
       width: 3px;
       height: var(--win32-title-bar-height);
     }
+  }
+
+  .title {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .logo-wrapper {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    margin-left: 5px;
   }
 
   // Window controls is the container for the three buttons minimize,

@@ -1,5 +1,5 @@
 import {
-  Menu,
+  // Menu,
   app,
   dialog,
   BrowserWindow,
@@ -15,7 +15,7 @@ import {
 import { MenuEvent } from './menu'
 import { URLActionType } from '../lib/parse-app-url'
 import { ILaunchStats } from '../lib/stats'
-import { menuFromElectronMenu } from '../models/app-menu'
+// import { menuFromElectronMenu } from '../models/app-menu'
 import { now } from './now'
 import * as path from 'path'
 import windowStateKeeper from 'electron-window-state'
@@ -282,14 +282,14 @@ export class AppWindow {
   }
 
   /** Send the app menu to the renderer. */
-  public sendAppMenu() {
-    const appMenu = Menu.getApplicationMenu()
-    console.log(appMenu);
-    if (appMenu) {
-      const menu = menuFromElectronMenu(appMenu)
-      ipcWebContents.send(this.window.webContents, 'app-menu', menu)
-    }
-  }
+  // public sendAppMenu() {
+  //   const appMenu = Menu.getApplicationMenu()
+  //   console.log(appMenu);
+  //   if (appMenu) {
+  //     const menu = menuFromElectronMenu(appMenu)
+  //     ipcWebContents.send(this.window.webContents, 'app-menu', menu)
+  //   }
+  // }
 
   /** Send a certificate error to the renderer. */
   public sendCertificateError(

@@ -85,7 +85,7 @@ export class TitleBar extends React.Component<ITitleBarProps> {
     const isMaximized = this.props.windowState === 'maximized'
 
     // No Windows controls when we're in full-screen mode.
-    const winControls = __WIN32__ && !inFullScreen ? <WindowControls /> : null
+    const winControls = !inFullScreen ? <WindowControls /> : null
 
     // On Windows it's not possible to resize a frameless window if the
     // element that sits flush along the window edge has -webkit-app-region: drag.
@@ -93,10 +93,10 @@ export class TitleBar extends React.Component<ITitleBarProps> {
     // window controls need to disable dragging so we add a 3px tall element which
     // disables drag while still letting users drag the app by the titlebar below
     // those 3px.
-    const topResizeHandle = __WIN32__ && !isMaximized ? <div className="resize-handle top" /> : null
+    const topResizeHandle = !isMaximized ? <div className="resize-handle top" /> : null
 
     // And a 3px wide element on the left hand side.
-    const leftResizeHandle = __WIN32__ && !isMaximized ? <div className="resize-handle left" /> : null
+    const leftResizeHandle = !isMaximized ? <div className="resize-handle left" /> : null
 
     const titleBarClass =
       this.props.titleBarStyle === 'light' ? 'light-title-bar' : ''
@@ -108,7 +108,9 @@ export class TitleBar extends React.Component<ITitleBarProps> {
 
     const appIcon = this.props.showAppIcon || true ? (
       // <Octicon className="app-icon" symbol={OcticonSymbol.markGithub} />
-      <img className="app-icon" style={{ width: 24, height: 24 }} src={logoSrc} alt="logo" />
+      <div className="logo-wrapper">
+        <img className="app-icon" style={{ width: 24, height: 24 }} src={logoSrc} alt="logo" />
+      </div>
     ) : null
 
     const onTitlebarDoubleClick = __DARWIN__
