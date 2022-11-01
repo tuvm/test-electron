@@ -30,7 +30,6 @@ import { WindowState } from './window-state'
 import { Shell } from './shells'
 
 import {
-  ApplicableTheme,
   ApplicationTheme,
   ICustomTheme,
 } from '../ui/lib/application-theme'
@@ -263,7 +262,7 @@ export interface IAppState {
   readonly customTheme?: ICustomTheme
 
   /** The currently applied appearance (aka theme) */
-  readonly currentTheme: ApplicableTheme
+  readonly currentTheme: ApplicationTheme
 
   /**
    * A map keyed on a user account (GitHub.com or GitHub Enterprise)

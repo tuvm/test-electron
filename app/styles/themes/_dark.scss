@@ -20,6 +20,7 @@ body.theme-dark {
   --text-color: #{$gray-300};
   --text-secondary-color: #{$gray-400};
   --text-secondary-color-muted: #{darken($gray-500, 10%)};
+  --base-background-color: #{$gray-900};
   --background-color: #{$gray-900};
 
   --button-background: #{$blue};
@@ -144,6 +145,8 @@ body.theme-dark {
    */
   --co-author-tag-background-color: #{$blue-800};
   --co-author-tag-border-color: #{$blue-700};
+
+  --win32-title-bar-background-color: var(--box-background-color);
 
   --base-border: 1px solid var(--box-border-color);
 

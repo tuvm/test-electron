@@ -74,7 +74,7 @@ import { About } from './about'
 import { Publish } from './publish-repository'
 import { Acknowledgements } from './acknowledgements'
 import { UntrustedCertificate } from './untrusted-certificate'
-import { getTitleBarHeight } from './window/title-bar'
+// import { getTitleBarHeight } from './window/title-bar'
 // import { NoRepositoriesView } from './no-repositories'
 import { ConfirmRemoveRepository } from './remove-repository'
 import { TermsAndConditions } from './terms-and-conditions'
@@ -155,6 +155,7 @@ import { SSHUserPassword } from './ssh/ssh-user-password'
 import { UnreachableCommitsDialog } from './history/unreachable-commits-dialog'
 import { OpenPullRequestDialog } from './open-pull-request/open-pull-request-dialog'
 import { sendNonFatalException } from '../lib/helpers/non-fatal-exception'
+import { Button } from './lib/button'
 // import { createCommitURL } from '../lib/commit-url'
 
 const MinuteInMilliseconds = 1000 * 60
@@ -1600,11 +1601,14 @@ export class App extends React.Component<IAppProps, IAppState> {
     })
   }
 
+  private editUser = () => {
+    this.showPopup({ type: PopupType.Preferences })
+  }
+
   private renderApp() {
     return (
       <div
         id="desktop-app-contents"
-        style={{ marginTop: getTitleBarHeight() }}
         className={this.getDesktopAppContentsClassNames()}
       >
         {this.renderToolbar()}
@@ -1711,6 +1715,7 @@ export class App extends React.Component<IAppProps, IAppState> {
               <th>Tên</th>
               <th>Họ</th>
               <th>Email</th>
+              <th>Hành động</th>
             </tr>
           </thead>
           <tbody>
@@ -1720,6 +1725,13 @@ export class App extends React.Component<IAppProps, IAppState> {
                 <td>{it?.first_name}</td>
                 <td>{it?.last_name}</td>
                 <td>{it?.email}</td>
+                <td>
+                  <Button
+                    onClick={this.editUser}
+                  >
+                    open
+                  </Button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -1746,9 +1758,7 @@ export class App extends React.Component<IAppProps, IAppState> {
 
     const className = this.state.appIsFocused ? 'focused' : 'blurred'
 
-    const currentTheme = this.state.showWelcomeFlow
-      ? ApplicationTheme.Light
-      : this.state.currentTheme
+    const currentTheme = this.state.currentTheme
 
     return (
       <div id="desktop-app-chrome" className={className}>

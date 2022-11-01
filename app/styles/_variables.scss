@@ -21,6 +21,7 @@ $overlay-background-color: rgba(0, 0, 0, 0.4);
   --text-color: #{$gray-900};
   --text-secondary-color: #{$gray-500};
   --text-secondary-color-muted: #{lighten($gray-500, 30%)};
+  --base-background-color: #{$gray-200};
   --background-color: #{$white};
 
   --button-height: 25px;
@@ -206,7 +207,7 @@ $overlay-background-color: rgba(0, 0, 0, 0.4);
    * If changed, update titleBarHeight in 'app/src/ui/dialog/dialog.tsx'
   */
   --win32-title-bar-height: 28px;
-  --win32-title-bar-background-color: #{$gray-000};
+  --win32-title-bar-background-color: var(--background-color);
 
   /**
    * The height of the title bar area on darwin platforms

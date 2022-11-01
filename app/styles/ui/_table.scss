@@ -1,14 +1,14 @@
 table {
   overflow: hidden;
   border-radius: 10px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--box-border-color);
 
   *,
   ::after,
   ::before {
     border-width: 0;
     border-style: solid;
-    border-color: #e2e8f0;
+    border-color: var(--box-border-color);
   }
 
   td {
@@ -18,7 +18,7 @@ table {
     padding-right: 1.25rem;
     padding-top: 0.75rem;
     padding-bottom: 0.75rem;
-    background-color: #fff;
+    background-color: var(--box-background-color);
 
     &:first-child {
       border-left-width: 1px;
@@ -40,8 +40,8 @@ table {
     padding-right: 1.25rem;
     padding-top: 0.75rem;
     padding-bottom: 0.75rem;
-    background-color: #e5e5e5;
-    color: #4a5568;
+    background-color: var(--box-alt-background-color);
+    color: var(--text-color);
 
     &:first-child {
       border-left-width: 1px;
@@ -55,7 +55,7 @@ table {
   }
 
   tr:hover td {
-    background-color: #fafafa;
+    background-color: var(--box-hover-background-color);
     transition: all 0.3s;
   }
 }

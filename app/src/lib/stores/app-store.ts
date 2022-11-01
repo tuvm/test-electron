@@ -63,9 +63,7 @@ import { IGitAccount } from '../../models/git-account'
 import { themeChangeMonitor } from '../../ui/lib/theme-change-monitor'
 // import { getAppPath } from '../../ui/lib/app-proxy'
 import {
-  ApplicableTheme,
   ApplicationTheme,
-  getCurrentlyAppliedTheme,
   getPersistedThemeName,
   ICustomTheme,
   setPersistedTheme,
@@ -485,7 +483,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
   private selectedBranchesTab = BranchesTab.Branches
   private selectedTheme = ApplicationTheme.System
   private customTheme?: ICustomTheme
-  private currentTheme: ApplicableTheme = ApplicationTheme.Light
+  private currentTheme: ApplicationTheme = ApplicationTheme.Light
 
   private useWindowsOpenSSH: boolean = false
 
@@ -2065,10 +2063,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
     // Make sure the persisted theme is applied
     setPersistedTheme(this.selectedTheme)
 
-    this.currentTheme =
-      this.selectedTheme !== ApplicationTheme.HighContrast
-        ? await getCurrentlyAppliedTheme()
-        : this.selectedTheme
+    this.currentTheme = this.selectedTheme
 
     themeChangeMonitor.onThemeChanged(theme => {
       this.currentTheme = theme
@@ -6245,9 +6240,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
   public _setSelectedTheme(theme: ApplicationTheme) {
     setPersistedTheme(theme)
     this.selectedTheme = theme
-    if (theme === ApplicationTheme.HighContrast) {
-      this.currentTheme = theme
-    }
+    this.currentTheme = theme
     this.emitUpdate()
 
     return Promise.resolve()
