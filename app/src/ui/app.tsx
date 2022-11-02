@@ -547,6 +547,7 @@ export class App extends React.Component<IAppProps, IAppState> {
         titleBarStyle={titleBarStyle}
         windowState={this.state.windowState}
         windowZoomFactor={this.state.windowZoomFactor}
+        onAboutClick={this.showAbout}
       >
         {/* {this.renderAppMenuBar()} */}
         <div className="title">
@@ -935,6 +936,10 @@ export class App extends React.Component<IAppProps, IAppState> {
 
   private editUser = () => {
     this.showPopup({ type: PopupType.Preferences })
+  }
+
+  private showAbout = () => {
+    this.showPopup({ type: PopupType.About })
   }
 
   private renderApp() {

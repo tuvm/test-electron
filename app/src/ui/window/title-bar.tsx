@@ -2,8 +2,8 @@ import * as React from 'react'
 import memoizeOne from 'memoize-one'
 import { WindowState } from '../../lib/window-state'
 import { WindowControls } from './window-controls'
-// import { Octicon } from '../octicons/octicon'
-// import * as OcticonSymbol from '../octicons/octicons.generated'
+import { Octicon } from '../octicons/octicon'
+import * as OcticonSymbol from '../octicons/octicons.generated'
 import { isMacOSBigSurOrLater } from '../../lib/get-os'
 import { encodePathAsUrl } from '../../lib/path'
 import {
@@ -13,6 +13,7 @@ import {
   minimizeWindow,
   restoreWindow,
 } from '../main-process-proxy'
+import { LinkButton } from '../lib/link-button';
 
 /** Get the height (in pixels) of the title bar depending on the platform */
 export function getTitleBarHeight() {
@@ -44,6 +45,8 @@ interface ITitleBarProps {
    * regardless of the zoom factor.
    */
   readonly windowZoomFactor?: number
+
+  readonly onAboutClick?: () => void
 }
 
 export class TitleBar extends React.Component<ITitleBarProps> {
@@ -80,6 +83,12 @@ export class TitleBar extends React.Component<ITitleBarProps> {
     }
   }
 
+  private handleOpenAbout = () => {
+    if (this.props.onAboutClick) {
+      this.props.onAboutClick();
+    }
+  }
+
   public render() {
     const inFullScreen = this.props.windowState === 'full-screen'
     const isMaximized = this.props.windowState === 'maximized'
@@ -113,6 +122,12 @@ export class TitleBar extends React.Component<ITitleBarProps> {
       </div>
     ) : null
 
+    const aboutIcon = (
+      <LinkButton className="logo-wrapper about-icon" onClick={this.handleOpenAbout}>
+        <Octicon symbol={OcticonSymbol.question} className="file-octicon" />
+      </LinkButton>
+    )
+
     const onTitlebarDoubleClick = __DARWIN__
       ? this.onTitlebarDoubleClickDarwin
       : undefined
@@ -128,6 +143,7 @@ export class TitleBar extends React.Component<ITitleBarProps> {
         {leftResizeHandle}
         {appIcon}
         {this.props.children}
+        {aboutIcon}
         {winControls}
       </div>
     )
