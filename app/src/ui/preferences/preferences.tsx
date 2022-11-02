@@ -529,14 +529,6 @@ export class Preferences extends React.Component<
         await setDefaultBranch(this.state.defaultBranch)
       }
 
-      if (
-        this.props.repositoryIndicatorsEnabled !==
-        this.state.repositoryIndicatorsEnabled
-      ) {
-        this.props.dispatcher.setRepositoryIndicatorsEnabled(
-          this.state.repositoryIndicatorsEnabled
-        )
-      }
     } catch (e) {
       if (isConfigFileLockError(e)) {
         const lockFilePath = parseConfigLockFilePathFromError(e.result)

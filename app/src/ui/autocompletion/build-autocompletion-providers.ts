@@ -6,18 +6,16 @@ import {
 import {
   EmojiAutocompletionProvider,
   IAutocompletionProvider,
-  IssuesAutocompletionProvider,
   UserAutocompletionProvider,
 } from '.'
 import { Dispatcher } from '../dispatcher'
-import { GitHubUserStore, IssuesStore } from '../../lib/stores'
+import { GitHubUserStore } from '../../lib/stores'
 import { Account } from '../../models/account'
 
 export function buildAutocompletionProviders(
   repository: Repository,
   dispatcher: Dispatcher,
   emoji: Map<string, string>,
-  issuesStore: IssuesStore,
   gitHubUserStore: GitHubUserStore,
   accounts: ReadonlyArray<Account>
 ): IAutocompletionProvider<any>[] {
@@ -31,13 +29,6 @@ export function buildAutocompletionProviders(
     : null
 
   if (gitHubRepository !== null) {
-    autocompletionProviders.push(
-      new IssuesAutocompletionProvider(
-        issuesStore,
-        gitHubRepository,
-        dispatcher
-      )
-    )
 
     const account = accounts.find(a => a.endpoint === gitHubRepository.endpoint)
 

@@ -1,13 +1,10 @@
 import * as React from 'react'
-import { Commit } from '../../models/commit'
 import { lookupPreferredEmail } from '../../lib/email'
 import {
   getGlobalConfigValue,
   setGlobalConfigValue,
 } from '../../lib/git/config'
-import { CommitListItem } from '../history/commit-list-item'
 import { Account } from '../../models/account'
-import { CommitIdentity } from '../../models/commit-identity'
 import { Form } from '../lib/form'
 import { Button } from '../lib/button'
 import { TextBox } from '../lib/text-box'
@@ -176,12 +173,6 @@ export class ConfigureGitUser extends React.Component<
     return this.props.accounts[0]
   }
 
-  private dateWithMinuteOffset(date: Date, minuteOffset: number): Date {
-    const copy = new Date(date.getTime())
-    copy.setTime(copy.getTime() + minuteOffset * 60 * 1000)
-    return copy
-  }
-
   public render() {
     const error =
       this.state.existingLockFilePath !== undefined ? (
@@ -208,53 +199,11 @@ export class ConfigureGitUser extends React.Component<
   }
 
   private renderExampleCommit() {
-    const now = new Date()
-
-    let name = this.state.manualName
-    let email = this.state.manualEmail
-
-    if (this.state.useGitHubAuthorInfo) {
-      name = this.state.gitHubName
-      email = this.state.gitHubEmail
-    }
-
-    // NB: We're using the name as the commit SHA:
-    //  1. `Commit` is referentially transparent wrt the SHA. So in order to get
-    //     it to update when we name changes, we need to change the SHA.
-    //  2. We don't display the SHA so the user won't ever know our secret.
-    const author = new CommitIdentity(
-      name,
-      email,
-      this.dateWithMinuteOffset(now, -30)
-    )
-    const dummyCommit = new Commit(
-      name,
-      name.slice(0, 7),
-      'Fix all the things',
-      '',
-      author,
-      author,
-      [],
-      [],
-      []
-    )
-    const emoji = new Map()
 
     return (
       <div id="commit-list" className="commit-list-example">
         <div className="header">Example commit</div>
 
-        <CommitListItem
-          commit={dummyCommit}
-          emoji={emoji}
-          gitHubRepository={null}
-          canBeUndone={false}
-          canBeAmended={false}
-          canBeResetTo={false}
-          isLocal={false}
-          showUnpushedIndicator={false}
-          selectedCommits={[dummyCommit]}
-        />
       </div>
     )
   }

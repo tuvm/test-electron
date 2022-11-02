@@ -16,7 +16,6 @@ import {
 import { DiffParser } from '../../src/lib/diff-parser'
 import { formatPatch } from '../../src/lib/patch-formatter'
 import { getWorkingDirectoryDiff, convertDiff } from '../../src/lib/git'
-import { setupFixtureRepository } from '../helpers/repositories'
 
 async function parseDiff(diff: string): Promise<ITextDiff> {
   const parser = new DiffParser()
@@ -34,10 +33,6 @@ describe('patch formatting', () => {
   let repository: Repository
 
   describe('formatPatchesForModifiedFile', () => {
-    beforeEach(async () => {
-      const testRepoPath = await setupFixtureRepository('repo-with-changes')
-      repository = new Repository(testRepoPath, -1, null, false)
-    })
 
     it('creates right patch when first hunk is selected', async () => {
       const modifiedFile = 'modified-file.md'

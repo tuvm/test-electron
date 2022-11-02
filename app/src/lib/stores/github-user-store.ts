@@ -2,9 +2,9 @@ import { Account } from '../../models/account'
 import { GitHubRepository } from '../../models/github-repository'
 import { API } from '../api'
 import {
-  GitHubUserDatabase,
+  UserDatabase,
   IMentionableUser,
-} from '../databases/github-user-database'
+} from '../databases/user-database'
 
 import { compare } from '../compare'
 import { BaseStore } from './base-store'
@@ -33,7 +33,7 @@ export class GitHubUserStore extends BaseStore {
   private queryCache: IQueryCache | null = null
   private pruneQueryCacheTimeoutId: number | null = null
 
-  public constructor(private readonly database: GitHubUserDatabase) {
+  public constructor(private readonly database: UserDatabase) {
     super()
   }
 

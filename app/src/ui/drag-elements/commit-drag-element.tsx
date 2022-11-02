@@ -6,7 +6,6 @@ import { assertNever } from '../../lib/fatal-error'
 import { Commit } from '../../models/commit'
 import { DragType, DropTarget, DropTargetType } from '../../models/drag-drop'
 import { GitHubRepository } from '../../models/github-repository'
-import { CommitListItem } from '../history/commit-list-item'
 import { Octicon } from '../octicons'
 import * as OcticonSymbol from '../octicons/octicons.generated'
 
@@ -165,7 +164,7 @@ export class CommitDragElement extends React.Component<
   }
 
   public render() {
-    const { commit, gitHubRepository, selectedCommits, emoji } = this.props
+    const { selectedCommits } = this.props
     const count = selectedCommits.length
 
     const className = classNames({ 'multiple-selected': count > 1 })
@@ -173,17 +172,6 @@ export class CommitDragElement extends React.Component<
       <div id="commit-drag-element" className={className}>
         <div className="commit-box">
           <div className="count">{count}</div>
-          <CommitListItem
-            gitHubRepository={gitHubRepository}
-            commit={commit}
-            selectedCommits={selectedCommits}
-            emoji={emoji}
-            canBeUndone={false}
-            canBeAmended={false}
-            canBeResetTo={false}
-            isLocal={false}
-            showUnpushedIndicator={false}
-          />
         </div>
         {this.renderDragToolTip()}
       </div>

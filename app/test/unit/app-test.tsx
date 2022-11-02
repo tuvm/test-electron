@@ -8,20 +8,13 @@ import {
   AppStore,
   GitHubUserStore,
   CloningRepositoriesStore,
-  IssuesStore,
   SignInStore,
-  RepositoriesStore,
   AccountsStore,
-  PullRequestStore,
-  PullRequestCoordinator,
 } from '../../src/lib/stores'
 import { InMemoryDispatcher } from '../helpers/in-memory-dispatcher'
 import {
-  TestGitHubUserDatabase,
+  TestUserDatabase,
   TestStatsDatabase,
-  TestIssuesDatabase,
-  TestRepositoriesDatabase,
-  TestPullRequestDatabase,
 } from '../helpers/databases'
 import { StatsStore } from '../../src/lib/stats'
 import { InMemoryStore, AsyncInMemoryStore } from '../helpers/stores'
@@ -39,36 +32,22 @@ describe('App', () => {
   let statsStore: StatsStore
   let repositoryStateManager: RepositoryStateCache
   let githubUserStore: GitHubUserStore
-  let issuesStore: IssuesStore
   // let aheadBehindStore: AheadBehindStore
 
   beforeEach(async () => {
-    const db = new TestGitHubUserDatabase()
+    const db = new TestUserDatabase()
     await db.reset()
-
-    const issuesDb = new TestIssuesDatabase()
-    await issuesDb.reset()
 
     const statsDb = new TestStatsDatabase()
     await statsDb.reset()
     statsStore = new StatsStore(statsDb, new TestActivityMonitor())
-
-    const repositoriesDb = new TestRepositoriesDatabase()
-    await repositoriesDb.reset()
-    const repositoriesStore = new RepositoriesStore(repositoriesDb)
 
     const accountsStore = new AccountsStore(
       new InMemoryStore(),
       new AsyncInMemoryStore()
     )
 
-    const pullRequestCoordinator = new PullRequestCoordinator(
-      new PullRequestStore(new TestPullRequestDatabase(), repositoriesStore),
-      repositoriesStore
-    )
-
     githubUserStore = new GitHubUserStore(db)
-    issuesStore = new IssuesStore(issuesDb)
 
     repositoryStateManager = new RepositoryStateCache(statsStore)
 
@@ -79,22 +58,20 @@ describe('App', () => {
     const aliveStore = new AliveStore(accountsStore)
 
     const notificationsStore = new NotificationsStore(
-      accountsStore,
+      // accountsStore,
       aliveStore,
-      pullRequestCoordinator,
-      statsStore
+      // statsStore
     )
     notificationsStore.setNotificationsEnabled(false)
 
     appStore = new AppStore(
       githubUserStore,
       new CloningRepositoriesStore(),
-      issuesStore,
       statsStore,
       new SignInStore(),
       accountsStore,
-      repositoriesStore,
-      pullRequestCoordinator,
+      // repositoriesStore,
+      // pullRequestCoordinator,
       repositoryStateManager,
       apiRepositoriesStore,
       notificationsStore

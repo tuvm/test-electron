@@ -12,7 +12,6 @@ import {
   mergeConflictHandler,
   lfsAttributeMismatchHandler,
   defaultErrorHandler,
-  missingRepositoryHandler,
   backgroundTaskHandler,
   pushNeedsPullHandler,
   upstreamAlreadyExistsHandler,
@@ -27,21 +26,13 @@ import {
   AppStore,
   GitHubUserStore,
   CloningRepositoriesStore,
-  IssuesStore,
   SignInStore,
-  RepositoriesStore,
   TokenStore,
   AccountsStore,
-  PullRequestStore,
 } from '../lib/stores'
-import { GitHubUserDatabase } from '../lib/databases'
+import { UserDatabase } from '../lib/databases'
 import { SelectionType, IAppState } from '../lib/app-state'
 import { StatsDatabase, StatsStore } from '../lib/stats'
-import {
-  IssuesDatabase,
-  RepositoriesDatabase,
-  PullRequestDatabase,
-} from '../lib/databases'
 import { shellNeedsPatching, updateEnvironmentForProcess } from '../lib/shell'
 import { installDevGlobals } from './install-globals'
 import { reportUncaughtException, sendErrorReport } from './main-process-proxy'
@@ -54,7 +45,6 @@ import { UiActivityMonitor } from './lib/ui-activity-monitor'
 import { RepositoryStateCache } from '../lib/stores/repository-state-cache'
 import { ApiRepositoriesStore } from '../lib/stores/api-repositories-store'
 import { CommitStatusStore } from '../lib/stores/commit-status-store'
-import { PullRequestCoordinator } from '../lib/stores/pull-request-coordinator'
 
 // We're using a polyfill for the upcoming CSS4 `:focus-ring` pseudo-selector.
 // This allows us to not have to override default accessibility driven focus
@@ -226,10 +216,10 @@ window.addEventListener('unhandledrejection', ev => {
 })
 
 const gitHubUserStore = new GitHubUserStore(
-  new GitHubUserDatabase('GitHubUserDatabase')
+  new UserDatabase('UserDatabase')
 )
 const cloningRepositoriesStore = new CloningRepositoriesStore()
-const issuesStore = new IssuesStore(new IssuesDatabase('IssuesDatabase'))
+// const issuesStore = new IssuesStore(new IssuesDatabase('IssuesDatabase'))
 const statsStore = new StatsStore(
   new StatsDatabase('StatsDatabase'),
   new UiActivityMonitor()
@@ -237,19 +227,6 @@ const statsStore = new StatsStore(
 const signInStore = new SignInStore()
 
 const accountsStore = new AccountsStore(localStorage, TokenStore)
-const repositoriesStore = new RepositoriesStore(
-  new RepositoriesDatabase('Database')
-)
-
-const pullRequestStore = new PullRequestStore(
-  new PullRequestDatabase('PullRequestDatabase'),
-  repositoriesStore
-)
-
-const pullRequestCoordinator = new PullRequestCoordinator(
-  pullRequestStore,
-  repositoriesStore
-)
 
 const repositoryStateManager = new RepositoryStateCache(statsStore)
 
@@ -261,21 +238,19 @@ const commitStatusStore = new CommitStatusStore(accountsStore)
 const aliveStore = new AliveStore(accountsStore)
 
 const notificationsStore = new NotificationsStore(
-  accountsStore,
+  // accountsStore,
   aliveStore,
-  pullRequestCoordinator,
-  statsStore
+  // pullRequestCoordinator,
+  // statsStore
 )
 
 const appStore = new AppStore(
   gitHubUserStore,
   cloningRepositoriesStore,
-  issuesStore,
+  // issuesStore,
   statsStore,
   signInStore,
   accountsStore,
-  repositoriesStore,
-  pullRequestCoordinator,
   repositoryStateManager,
   apiRepositoriesStore,
   notificationsStore
@@ -303,7 +278,6 @@ dispatcher.registerErrorHandler(gitAuthenticationErrorHandler)
 dispatcher.registerErrorHandler(pushNeedsPullHandler)
 dispatcher.registerErrorHandler(samlReauthRequired)
 dispatcher.registerErrorHandler(backgroundTaskHandler)
-dispatcher.registerErrorHandler(missingRepositoryHandler)
 dispatcher.registerErrorHandler(localChangesOverwrittenHandler)
 dispatcher.registerErrorHandler(rebaseConflictsHandler)
 dispatcher.registerErrorHandler(refusedWorkflowUpdate)
@@ -319,16 +293,16 @@ initializeRendererNotificationHandler(notificationsStore)
 trampolineUIHelper.setDispatcher(dispatcher)
 
 ipcRenderer.on('focus', () => {
-  const { selectedState } = appStore.getState()
+  // const { selectedState } = appStore.getState()
 
   // Refresh the currently selected repository on focus (if
   // we have a selected repository, that is not cloning).
-  if (
-    selectedState &&
-    !(selectedState.type === SelectionType.CloningRepository)
-  ) {
-    dispatcher.refreshRepository(selectedState.repository)
-  }
+  // if (
+  //   selectedState &&
+  //   !(selectedState.type === SelectionType.CloningRepository)
+  // ) {
+  //   dispatcher.refreshRepository(selectedState.repository)
+  // }
 
   dispatcher.setAppFocusState(true)
 })

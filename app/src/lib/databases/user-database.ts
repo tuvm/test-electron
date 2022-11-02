@@ -59,7 +59,7 @@ export interface IMentionableCacheEntry {
   readonly eTag: string | undefined
 }
 
-export class GitHubUserDatabase extends BaseDatabase {
+export class UserDatabase extends BaseDatabase {
   public declare mentionables: Dexie.Table<IDBMentionableUser, number>
   public declare mentionableCache: Dexie.Table<IMentionableCacheEntry, number>
 

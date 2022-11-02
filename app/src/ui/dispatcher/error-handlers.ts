@@ -1,6 +1,5 @@
 import {
   GitError as DugiteError,
-  RepositoryDoesNotExistErrorCode,
 } from 'dugite'
 
 import { Dispatcher } from '.'
@@ -22,31 +21,6 @@ import {
 import { hasWritePermission } from '../../models/github-repository'
 import { RetryActionType } from '../../models/retry-actions'
 import { parseFilesToBeOverwritten } from '../lib/parse-files-to-be-overwritten'
-
-/** An error which also has a code property. */
-interface IErrorWithCode extends Error {
-  readonly code: string
-}
-
-/**
- * A type-guard method which determines whether the given object is an
- * Error instance with a `code` string property. This type of error
- * is commonly returned by NodeJS process- and file system libraries
- * as well as Dugite.
- *
- * See https://nodejs.org/api/util.html#util_util_getsystemerrorname_err
- */
-function isErrorWithCode(error: any): error is IErrorWithCode {
-  return error instanceof Error && typeof (error as any).code === 'string'
-}
-
-/**
- * Cast the error to an error containing a code if it has a code. Otherwise
- * return null.
- */
-function asErrorWithCode(error: Error): IErrorWithCode | null {
-  return isErrorWithCode(error) ? error : null
-}
 
 /**
  * Cast the error to an error with metadata if possible. Otherwise return null.
@@ -84,39 +58,6 @@ export async function defaultErrorHandler(
   await dispatcher.presentError(e)
 
   return null
-}
-
-/** Handler for when a repository disappears 😱. */
-export async function missingRepositoryHandler(
-  error: Error,
-  dispatcher: Dispatcher
-): Promise<Error | null> {
-  const e = asErrorWithMetadata(error)
-  if (!e) {
-    return error
-  }
-
-  const repository = e.metadata.repository
-  if (!repository || !(repository instanceof Repository)) {
-    return error
-  }
-
-  if (repository.missing) {
-    return null
-  }
-
-  const errorWithCode = asErrorWithCode(e.underlyingError)
-  const gitError = asGitError(e.underlyingError)
-  const missing =
-    (gitError && gitError.result.gitError === DugiteError.NotAGitRepository) ||
-    (errorWithCode && errorWithCode.code === RepositoryDoesNotExistErrorCode)
-
-  if (missing) {
-    await dispatcher.updateRepositoryMissing(repository, true)
-    return null
-  }
-
-  return error
 }
 
 /** Handle errors that happen as a result of a background task. */
