@@ -265,12 +265,14 @@ function copyStaticResources() {
   const dirName = process.platform
   const platformSpecific = path.join(projectRoot, 'app', 'static', dirName)
   const common = path.join(projectRoot, 'app', 'static', 'common')
+  const icons = path.join(projectRoot, 'app', 'static', 'icons')
   const destination = path.join(outRoot, 'static')
   rmSync(destination, { recursive: true, force: true })
   if (existsSync(platformSpecific)) {
     copySync(platformSpecific, destination)
   }
   copySync(common, destination, { overwrite: false })
+  copySync(icons, destination, { overwrite: false })
 }
 
 function moveAnalysisFiles() {

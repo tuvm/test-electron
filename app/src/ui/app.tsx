@@ -551,7 +551,7 @@ export class App extends React.Component<IAppProps, IAppState> {
       >
         {/* {this.renderAppMenuBar()} */}
         <div className="title">
-          <b>Vinpearl OCR managerment</b>
+          <b>VINPEARL OCR MANAGERMENT</b>
         </div>
       </TitleBar>
     )

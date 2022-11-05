@@ -19,6 +19,8 @@
     color: var(--toolbar-button-secondary-color);
     margin: 0 var(--spacing);
     align-self: center;
+    width: 30px;
+    height: 30px;
   }
 
   .about-icon {
@@ -47,9 +49,12 @@
     height: 100%;
     display: flex;
     align-items: center;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+    color: var(--win32-title-bar-text-color);
+    font-size: 14px;
+    font-weight: 600;
+    // position: absolute;
+    // left: 50%;
+    // transform: translateX(-50%);
   }
 
   .logo-wrapper {
@@ -80,13 +85,14 @@
       padding: 0;
       margin: 0;
       overflow: hidden;
+      cursor: pointer;
 
       // Reset styles from global buttons
       border: none;
       box-shadow: none;
       border-radius: 0;
 
-      color: #a0a0a0;
+      color: #fff;
       background-color: transparent;
       transition: background-color 0.25s ease;
 
@@ -99,8 +105,9 @@
       }
 
       &:hover {
-        background-color: #888;
-        color: #fff;
+        // background-color: #888;
+        // color: #fff;
+        background: var(--win32-title-bar-background-color-hover);
 
         // Doing :hover:active as oposed to just :active is
         // a conscious choice to match how the real Windows
@@ -150,8 +157,7 @@
   .window-controls {
     button {
       &:hover {
-        background-color: #e5e5e5;
-        color: #000;
+        background: var(--win32-title-bar-background-color-hover);
 
         &:active {
           background-color: #cccccc;
@@ -159,7 +165,7 @@
       }
 
       &.close:hover {
-        background-color: #e81123;
+        background: #e81123;
 
         svg {
           fill: #fff;

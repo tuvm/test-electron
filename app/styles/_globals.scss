@@ -50,8 +50,9 @@ html {
 
 body {
   // https://css-tricks.com/html-vs-body-in-css/
-  font-family: var(--font-family-sans-serif);
+  font-family: var(--font-family-inter);
   font-size: var(--font-size);
+  letter-spacing: 0.005em;
   line-height: 1.5;
 
   color: var(--text-color);

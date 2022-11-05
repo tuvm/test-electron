@@ -2,8 +2,8 @@ import * as React from 'react'
 import memoizeOne from 'memoize-one'
 import { WindowState } from '../../lib/window-state'
 import { WindowControls } from './window-controls'
-import { Octicon } from '../octicons/octicon'
-import * as OcticonSymbol from '../octicons/octicons.generated'
+// import { Octicon } from '../octicons/octicon'
+// import * as OcticonSymbol from '../octicons/octicons.generated'
 import { isMacOSBigSurOrLater } from '../../lib/get-os'
 import { encodePathAsUrl } from '../../lib/path'
 import {
@@ -22,7 +22,7 @@ export function getTitleBarHeight() {
     return isMacOSBigSurOrLater() ? 26 : 22
   }
 
-  return 28
+  return 48
 }
 
 interface ITitleBarProps {
@@ -112,19 +112,24 @@ export class TitleBar extends React.Component<ITitleBarProps> {
 
     const logoSrc = encodePathAsUrl(
       __dirname,
-      'static/logo-icon.png'
+      'static/logo-icon-inverse.png'
+    )
+
+    const aboutIconSrc = encodePathAsUrl(
+      __dirname,
+      'static/about.svg'
     )
 
     const appIcon = this.props.showAppIcon || true ? (
       // <Octicon className="app-icon" symbol={OcticonSymbol.markGithub} />
       <div className="logo-wrapper">
-        <img className="app-icon" style={{ width: 24, height: 24 }} src={logoSrc} alt="logo" />
+        <img className="app-icon" src={logoSrc} alt="logo" />
       </div>
     ) : null
 
     const aboutIcon = (
       <LinkButton className="logo-wrapper about-icon" onClick={this.handleOpenAbout}>
-        <Octicon symbol={OcticonSymbol.question} className="file-octicon" />
+        <img src={aboutIconSrc} alt="about-icon" />
       </LinkButton>
     )
 
