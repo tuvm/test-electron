@@ -1946,4 +1946,20 @@ export class Dispatcher {
   public updatePullRequestBaseBranch(repository: Repository, branch: Branch) {
     this.appStore._updatePullRequestBaseBranch(repository, branch)
   }
+
+  /**
+   * Device register actions
+   */
+
+  public beginDeviceRegister(): Promise<void> {
+    return this.appStore._beginDeviceRegister();
+  }
+
+  public registerDevice(
+    hotel: string,
+    deviceName: string,
+    deviceDescription: string
+  ): Promise<void> {
+    return this.appStore._registerDevice(hotel, deviceName, deviceDescription);
+  }
 }

@@ -4365,6 +4365,19 @@ export class AppStore extends TypedBaseStore<IAppState> {
       }
     )
   }
+
+  public _beginDeviceRegister(): Promise<void> {
+    this.deviceRegisterStore.beginDeviceRegister();
+    return Promise.resolve();
+  }
+
+  public _registerDevice(
+    hotel: string,
+    deviceName: string,
+    deviceDescription: string
+  ): Promise<void> {
+    return this.deviceRegisterStore.registerDevice(hotel, deviceName, deviceDescription);
+  }
 }
 
 /**

@@ -14,14 +14,14 @@ export const BrowserRedirectMessage =
 
 interface IRegisterProps {
   /**
-   * A callback which is invoked once the user has entered a username
-   * and password and submitted those either by clicking on the submit
+   * A callback which is invoked once the user has entered device and hotel info
+   * and submitted those either by clicking on the submit
    * button or by submitting the form through other means (ie hitting Enter).
    */
   readonly onSubmit: (hotel: string, deviceName: string, deviceDescription: string) => void
 
   /**
-   * An array of additional buttons to render after the "Sign In" button.
+   * An array of additional buttons to render after the "Register" button.
    * (Usually, a 'cancel' button)
    */
   readonly additionalButtons?: ReadonlyArray<JSX.Element>
@@ -34,7 +34,7 @@ interface IRegisterProps {
   readonly error?: Error | null
 
   /**
-   * A value indicating whether or not the sign in store is
+   * A value indicating whether or not the device register store is
    * busy processing a request. While this value is true all
    * form inputs and actions save for a cancel action will
    * be disabled.
@@ -49,7 +49,6 @@ interface IRegisterState {
   readonly deviceDescription: string
 }
 
-/** The GitHub authentication component. */
 export class Register extends React.Component<
   IRegisterProps,
   IRegisterState
@@ -61,17 +60,16 @@ export class Register extends React.Component<
   }
 
   public render() {
-    const content = this.renderSignInForm()
-      // : this.renderEndpointRequiresWebFlow()
+    const content = this.renderRegisterForm()
 
     return (
-      <Form className="sign-in-form" onSubmit={this.signIn}>
+      <Form className="sign-in-form" onSubmit={this.register}>
         {content}
       </Form>
     )
   }
 
-  private renderUsernamePassword() {
+  private renderRegisterForm() {
     const disabled = this.props.loading
     return (
       <>
@@ -107,7 +105,7 @@ export class Register extends React.Component<
   }
 
   private renderActions() {
-    const signInDisabled = Boolean(
+    const registerDisabled = Boolean(
       !this.state.hotel.length ||
         !this.state.deviceName.length ||
         !this.state.deviceDescription.length ||
@@ -115,23 +113,11 @@ export class Register extends React.Component<
     )
     return (
       <div className="actions">
-        <Button type="submit" disabled={signInDisabled}>
+        <Button type="submit" disabled={registerDisabled}>
           {this.props.loading ? <Loading /> : null} Đăng ký
         </Button>
       </div>
     )
-  }
-
-  /**
-   * Show the sign in locally form
-   *
-   * Also displays an option to sign in with browser for
-   * enterprise users (but not for dot com users since
-   * they will have already been offered this option
-   * earlier in the UI flow).
-   */
-  private renderSignInForm() {
-    return this.renderUsernamePassword()
   }
 
   private renderError() {
@@ -155,7 +141,7 @@ export class Register extends React.Component<
     this.setState({ deviceDescription })
   }
 
-  private signIn = () => {
+  private register = () => {
     this.props.onSubmit(this.state.hotel, this.state.deviceName, this.state.deviceDescription)
   }
 }

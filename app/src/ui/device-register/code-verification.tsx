@@ -11,7 +11,7 @@ interface ICodeVerificationProps {
    * OTP token and submitted it either by clicking on the submit
    * button or by submitting the form through other means (ie hitting Enter).
    */
-  readonly onOTPEntered: (otp: string) => void
+  readonly onCodeEntered: (code: string) => void
 
   /** An array of additional buttons to render after the "Sign In" button. */
   readonly additionalButtons?:
@@ -44,7 +44,7 @@ interface ICodeVerificationProps {
 }
 
 interface ICodeVerificationState {
-  readonly otp: string
+  readonly code: string
 }
 
 /** The two-factor authentication component. */
@@ -55,14 +55,14 @@ ICodeVerificationState
   public constructor(props: ICodeVerificationProps) {
     super(props)
 
-    this.state = { otp: '' }
+    this.state = { code: '' }
   }
 
   public render() {
     const textEntryDisabled = this.props.loading
 
     // ensure user has entered non-whitespace characters
-    const codeProvided = /\S+/.test(this.state.otp)
+    const codeProvided = /\S+/.test(this.state.code)
     const signInDisabled = !codeProvided || this.props.loading
     const errors = this.props.error ? (
       <Errors>{this.props.error.message}</Errors>
@@ -72,13 +72,13 @@ ICodeVerificationState
       <div>
         {/* <p className="welcome-text">{getWelcomeMessage(this.props.type)}</p> */}
 
-        <Form onSubmit={this.signIn}>
+        <Form onSubmit={this.verify}>
           <TextBox
-            label="Authentication code"
+            label="Verify code"
             disabled={textEntryDisabled}
             // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus={true}
-            onValueChanged={this.onOTPChange}
+            onValueChanged={this.onCodeChange}
           />
 
           {errors}
@@ -94,11 +94,11 @@ ICodeVerificationState
     )
   }
 
-  private onOTPChange = (text: string) => {
-    this.setState({ otp: text })
+  private onCodeChange = (text: string) => {
+    this.setState({ code: text })
   }
 
-  private signIn = () => {
-    this.props.onOTPEntered(this.state.otp)
+  private verify = () => {
+    this.props.onCodeEntered(this.state.code)
   }
 }

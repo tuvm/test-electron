@@ -15,7 +15,7 @@ interface IDeviceRegisterProps {
 }
 
 interface IDeviceRegisterState {
-  readonly currentStep: DeviceRegisterStep | null
+  // readonly currentStep: DeviceRegisterStep | null
 
   /**
    * Whether the welcome wizard is terminating. Used
@@ -32,13 +32,15 @@ export class DeviceRegister extends React.Component<IDeviceRegisterProps, IDevic
     super(props)
 
     this.state = {
-      currentStep: DeviceRegisterStep.Register,
+      // currentStep: DeviceRegisterStep.Register,
       exiting: false,
     }
+
+    this.props.dispatcher.beginDeviceRegister();
   }
 
-  public onCredentialsEntered = () => {
-    console.log('hello');
+  public onDeviceRegister = (hotel: string, deviceName: string, deviceDesciption: string) => {
+    this.props.dispatcher.registerDevice(hotel, deviceName, deviceDesciption);
   }
 
   public onCodeEntered = () => {
@@ -54,8 +56,8 @@ export class DeviceRegister extends React.Component<IDeviceRegisterProps, IDevic
   }
 
   private getComponentForCurrentStep = () => {
-    const step = this.state.currentStep
-    const state = this.props.deviceRegisterState
+    const state = this.props.deviceRegisterState;
+    const step = state?.step;
 
     switch (step) {
       case DeviceRegisterStep.Register:
@@ -63,7 +65,7 @@ export class DeviceRegister extends React.Component<IDeviceRegisterProps, IDevic
           <Register
             loading={state?.loading}
             error={state?.error}
-            onSubmit={this.onCredentialsEntered}
+            onSubmit={this.onDeviceRegister}
           />
         )
 
@@ -72,7 +74,7 @@ export class DeviceRegister extends React.Component<IDeviceRegisterProps, IDevic
           <CodeVerification
             loading={state?.loading}
             error={state?.error}
-            onOTPEntered={this.onCodeEntered}
+            onCodeEntered={this.onCodeEntered}
           />
         )
 

@@ -1,4 +1,5 @@
 import { TypedBaseStore } from './base-store'
+import { fatalError } from '../fatal-error';
 
 /**
  * An enumeration of the possible steps that the device register
@@ -26,7 +27,7 @@ export interface IDeviceRegisterState {
   /**
    * The device register step represented by this state
    */
-  readonly kind: DeviceRegisterStep
+  readonly step: DeviceRegisterStep
 
   /**
    * An error which, if present, should be presented to the
@@ -53,7 +54,7 @@ export interface IDeviceRegisterState {
  * signing in to a GitHub Enterprise instance.
  */
 export interface IRegisterState extends IDeviceRegisterState {
-  readonly kind: DeviceRegisterStep.Register
+  readonly step: DeviceRegisterStep.Register
 }
 
 /**
@@ -64,7 +65,7 @@ export interface IRegisterState extends IDeviceRegisterState {
  * factor authentication on the host.
  */
 export interface ICodeVerificationState extends IDeviceRegisterState {
-  readonly kind: DeviceRegisterStep.CodeVerification
+  readonly step: DeviceRegisterStep.CodeVerification
 
   /**
    * The primary server that the hotel locate
@@ -89,7 +90,7 @@ export interface ICodeVerificationState extends IDeviceRegisterState {
  * successfully signed in.
  */
 export interface ISuccessState extends IDeviceRegisterState {
-  readonly kind: DeviceRegisterStep.Success
+  readonly step: DeviceRegisterStep.Success
 }
 
 /**
@@ -97,7 +98,11 @@ export interface ISuccessState extends IDeviceRegisterState {
  * to Vinpearl OCR system
  */
 export class DeviceRegisterStore extends TypedBaseStore<DeviceRegisterState | null> {
-  private state: DeviceRegisterState | null = null
+  private state: DeviceRegisterState | null = {
+    step: DeviceRegisterStep.Register,
+    error: null,
+    loading: false,
+  }
 
   /**
    * Returns the current state of the sign in store or null if
@@ -124,4 +129,63 @@ export class DeviceRegisterStore extends TypedBaseStore<DeviceRegisterState | nu
     this.setState(null)
   }
 
+  public beginDeviceRegister() {
+    this.setState({
+      step: DeviceRegisterStep.Register,
+      error: null,
+      loading: false,
+    })
+  }
+
+  public async registerDevice(
+    hotel: string,
+    deviceName: string,
+    deviceDescription: string
+  ): Promise<void> {
+    const currentState = this.state;
+    console.log(currentState, hotel, deviceName, deviceDescription);
+
+    if (!currentState || currentState.step !== DeviceRegisterStep.Register) {
+      const stepText = currentState ? currentState.step : 'null'
+      return fatalError(
+        `Device register step '${stepText}' not compatible with authentication`
+      )
+    }
+
+    // this.setState({ ...currentState, loading: true });
+
+    setTimeout(() => {
+      this.setState({
+        step: DeviceRegisterStep.CodeVerification,
+        error: null,
+        loading: false,
+      } as DeviceRegisterState)
+    }, 1000);
+
+  }
+
+  public async verifyCode(
+    code: string,
+  ): Promise<void> {
+    const currentState = this.state;
+    console.log(currentState, code);
+
+    if (!currentState || currentState.step !== DeviceRegisterStep.CodeVerification) {
+      const stepText = currentState ? currentState.step : 'null'
+      return fatalError(
+        `Device register step '${stepText}' not compatible with authentication`
+      )
+    }
+
+    this.setState({ ...currentState, loading: true });
+
+    setTimeout(() => {
+      this.setState({
+        step: DeviceRegisterStep.Success,
+        error: null,
+        loading: false,
+      })
+    }, 1000);
+
+  }
 }
