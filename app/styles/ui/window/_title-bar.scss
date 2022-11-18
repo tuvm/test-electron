@@ -144,15 +144,15 @@
 }
 
 #desktop-app-title-bar.light-title-bar {
-  @include darwin {
-    background: transparent;
-    border-bottom: none;
-  }
+  // @include darwin {
+  //   background: transparent;
+  //   border-bottom: none;
+  // }
 
-  @include win32 {
-    background: transparent;
-    border-bottom: none;
-  }
+  // @include win32 {
+  //   background: transparent;
+  //   border-bottom: none;
+  // }
 
   .window-controls {
     button {

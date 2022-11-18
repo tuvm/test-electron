@@ -4375,12 +4375,12 @@ export class AppStore extends TypedBaseStore<IAppState> {
     return Promise.resolve();
   }
 
-  public _registerDevice(
+  public async _registerDevice(
     hotel: string,
     deviceName: string,
     deviceDescription: string
   ): Promise<void> {
-    const promise = this.deviceRegisterStore.registerDevice(hotel, deviceName, deviceDescription);
+    const promise = await this.deviceRegisterStore.registerDevice(hotel, deviceName, deviceDescription);
     this.emitUpdate();
     return promise;
   }
@@ -4390,7 +4390,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
     this.emitUpdate();
     setTimeout(() => {
       this._endDeviceRegisterFlow();
-    }, 2000);
+    }, 1000);
     return promise;
   }
 

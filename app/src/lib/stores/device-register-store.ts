@@ -154,14 +154,11 @@ export class DeviceRegisterStore extends TypedBaseStore<DeviceRegisterState | nu
 
     this.setState({ ...currentState, loading: true });
 
-    setTimeout(() => {
-      this.setState({
-        step: DeviceRegisterStep.CodeVerification,
-        error: null,
-        loading: false,
-      } as DeviceRegisterState)
-      this.emitUpdate(this.getState())
-    }, 200);
+    this.setState({
+      step: DeviceRegisterStep.CodeVerification,
+      error: null,
+      loading: false,
+    } as DeviceRegisterState)
 
   }
 
@@ -180,14 +177,10 @@ export class DeviceRegisterStore extends TypedBaseStore<DeviceRegisterState | nu
 
     this.setState({ ...currentState, loading: true });
 
-    setTimeout(() => {
-      this.setState({
-        step: DeviceRegisterStep.Success,
-        error: null,
-        loading: false,
-      })
-      this.emitUpdate(this.getState())
-    }, 200);
-
+    this.setState({
+      step: DeviceRegisterStep.Success,
+      error: null,
+      loading: false,
+    })
   }
 }
