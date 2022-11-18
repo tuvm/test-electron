@@ -24,7 +24,7 @@ import {
 } from '../models/progress'
 import { Popup } from '../models/popup'
 
-import { SignInState } from './stores/sign-in-store'
+import { DeviceRegisterState } from './stores'
 
 import { WindowState } from './window-state'
 import { Shell } from './shells'
@@ -95,7 +95,7 @@ export interface IAppState {
    * beginDotComSignIn and beginEnterpriseSign in or via the
    * showDotcomSignInDialog and showEnterpriseSignInDialog methods.
    */
-  readonly signInState: SignInState | null
+  readonly deviceRegisterState: DeviceRegisterState | null
 
   /**
    * The current state of the window, ie maximized, minimized full-screen etc.

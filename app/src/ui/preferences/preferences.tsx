@@ -3,7 +3,6 @@ import { Account } from '../../models/account'
 import { PreferencesTab } from '../../models/preferences'
 import { Dispatcher } from '../dispatcher'
 import { TabBar, TabBarType } from '../tab-bar'
-import { Accounts } from './accounts'
 import { Advanced } from './advanced'
 import { Git } from './git'
 import { assertNever } from '../../lib/fatal-error'
@@ -238,20 +237,6 @@ export class Preferences extends React.Component<
     )
   }
 
-  private onDotComSignIn = () => {
-    this.props.onDismissed()
-    this.props.dispatcher.showDotComSignInDialog()
-  }
-
-  private onEnterpriseSignIn = () => {
-    this.props.onDismissed()
-    this.props.dispatcher.showEnterpriseSignInDialog()
-  }
-
-  private onLogout = (account: Account) => {
-    this.props.dispatcher.removeAccount(account)
-  }
-
   private renderDisallowedCharactersError() {
     const message = this.state.disallowedCharactersMessage
     if (message != null) {
@@ -265,17 +250,6 @@ export class Preferences extends React.Component<
     const index = this.state.selectedIndex
     let View
     switch (index) {
-      case PreferencesTab.Accounts:
-        View = (
-          <Accounts
-            dotComAccount={this.props.dotComAccount}
-            enterpriseAccount={this.props.enterpriseAccount}
-            onDotComSignIn={this.onDotComSignIn}
-            onEnterpriseSignIn={this.onEnterpriseSignIn}
-            onLogout={this.onLogout}
-          />
-        )
-        break
       case PreferencesTab.Integrations: {
         View = (
           <Integrations
@@ -376,7 +350,7 @@ export class Preferences extends React.Component<
         break
       }
       default:
-        return assertNever(index, `Unknown tab index: ${index}`)
+        return assertNever(index as never, `Unknown tab index: ${index}`)
     }
 
     return <div className="tab-container">{View}</div>

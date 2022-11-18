@@ -21,12 +21,12 @@ $overlay-background-color: rgba(0, 0, 0, 0.4);
   --text-color: #{$gray-900};
   --text-secondary-color: #{$gray-500};
   --text-secondary-color-muted: #{lighten($gray-500, 30%)};
-  --base-background-color: #{$gray-200};
+  --base-background-color: #f6f6f6;
   --background-color: #{$white};
 
-  --button-height: 25px;
+  --button-height: 40px;
 
-  --button-background: #{$blue};
+  --button-background: #2667FF;
   --button-border-radius: 6px;
   --button-hover-background: #{lighten($blue, 5%)};
   --button-text-color: #{$white};
@@ -82,7 +82,7 @@ $overlay-background-color: rgba(0, 0, 0, 0.4);
   --font-size: 12px;
   --font-size-sm: 11px;
   --font-size-md: 14px;
-  --font-size-lg: 28px;
+  --font-size-lg: 24px;
   --font-size-xl: 32px;
   --font-size-xxl: 42px;
 
@@ -352,7 +352,7 @@ $overlay-background-color: rgba(0, 0, 0, 0.4);
   /**
    * Variables for form elements
    */
-  --text-field-height: 25px;
+  --text-field-height: 40px;
   --text-field-focus-shadow-color: #{rgba($blue, 0.25)};
 
   /**

@@ -3,7 +3,7 @@ import {
   CloningRepositoriesStore,
   GitHubUserStore,
   GitStore,
-  SignInStore,
+  DeviceRegisterStore,
 } from '.'
 import { Account } from '../../models/account'
 import { AppMenu, IMenu } from '../../models/app-menu'
@@ -402,7 +402,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
     private readonly cloningRepositoriesStore: CloningRepositoriesStore,
     // private readonly issuesStore: IssuesStore,
     private readonly statsStore: StatsStore,
-    private readonly signInStore: SignInStore,
+    private readonly deviceRegisterStore: DeviceRegisterStore,
     private readonly accountsStore: AccountsStore,
     // private readonly repositoriesStore: RepositoriesStore,
     // private readonly pullRequestCoordinator: PullRequestCoordinator,
@@ -634,16 +634,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
     this.cloningRepositoriesStore.onDidError(e => this.emitError(e))
 
-    this.signInStore.onDidAuthenticate((account, method) => {
-      this._addAccount(account)
-
-      if (this.showWelcomeFlow) {
-        this.statsStore.recordWelcomeWizardSignInMethod(method)
-      }
-    })
-    this.signInStore.onDidUpdate(() => this.emitUpdate())
-    this.signInStore.onDidError(error => this.emitError(error))
-
     this.accountsStore.onDidUpdate(accounts => {
       this.accounts = accounts
       const endpointTokens = accounts.map<EndpointToken>(
@@ -765,7 +755,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       windowZoomFactor: this.windowZoomFactor,
       appIsFocused: this.appIsFocused,
       selectedState: this.getSelectedState(),
-      signInState: this.signInStore.getState(),
+      deviceRegisterState: this.deviceRegisterStore.getState(),
       currentPopup: this.currentPopup,
       currentFoldout: this.currentFoldout,
       errors: this.errors,
@@ -3336,40 +3326,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
     return this.statsStore.recordLaunchStats(stats)
   }
 
-  public _resetSignInState(): Promise<void> {
-    this.signInStore.reset()
-    return Promise.resolve()
-  }
-
-  public _beginDotComSignIn(): Promise<void> {
-    this.signInStore.beginDotComSignIn()
-    return Promise.resolve()
-  }
-
-  public _beginEnterpriseSignIn(): Promise<void> {
-    this.signInStore.beginEnterpriseSignIn()
-    return Promise.resolve()
-  }
-
-  public _setSignInEndpoint(url: string): Promise<void> {
-    return this.signInStore.setEndpoint(url)
-  }
-
-  public _setSignInCredentials(
-    username: string,
-    password: string
-  ): Promise<void> {
-    return this.signInStore.authenticateWithBasicAuth(username, password)
-  }
-
-  public _requestBrowserAuthentication(): Promise<void> {
-    return this.signInStore.authenticateWithBrowser()
-  }
-
-  public _setSignInOTP(otp: string): Promise<void> {
-    return this.signInStore.setTwoFactorOTP(otp)
-  }
-
   public async _setAppFocusState(isFocused: boolean): Promise<void> {
     if (this.appIsFocused !== isFocused) {
       this.appIsFocused = isFocused
@@ -3412,21 +3368,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
       `[AppStore] removing account ${account.login} (${account.name}) from store`
     )
     return this.accountsStore.removeAccount(account)
-  }
-
-  private async _addAccount(account: Account): Promise<void> {
-    log.info(
-      `[AppStore] adding account ${account.login} (${account.name}) to store`
-    )
-    const storedAccount = await this.accountsStore.addAccount(account)
-
-    // If we're in the welcome flow and a user signs in we want to trigger
-    // a refresh of the repositories available for cloning straight away
-    // in order to have the list of repositories ready for them when they
-    // get to the blankslate.
-    if (this.showWelcomeFlow && storedAccount !== null) {
-      this.apiRepositoriesStore.loadRepositories(storedAccount)
-    }
   }
 
   public async promptForGenericGitAuthentication(

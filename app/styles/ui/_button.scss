@@ -10,7 +10,7 @@
 
   padding: 0 var(--spacing);
 
-  border: var(--base-border);
+  border: none;
   height: var(--button-height);
 
   color: var(--secondary-button-text-color);
@@ -34,7 +34,8 @@
   }
 
   &[aria-disabled='true'] {
-    opacity: 0.6;
+    background-color: #D4E1FF !important;
+    border: none;
   }
 
   .octicon {
@@ -50,7 +51,7 @@
 .button-component-primary {
   background-color: var(--button-background);
   color: var(--button-text-color);
-  border: 1px solid var(--button-background);
+  // border: 1px solid var(--button-background);
 
   &:not([aria-disabled='true']):hover {
     border-color: var(--button-background);
@@ -114,13 +115,14 @@
   &:hover {
     border-right-width: 1px;
 
-    + .button-group-item {
+    +.button-group-item {
       border-left-width: 0;
     }
   }
 }
 
 .button-group-item {
+
   &:focus,
   &:active {
     z-index: 1;

@@ -26,7 +26,7 @@ import {
   AppStore,
   GitHubUserStore,
   CloningRepositoriesStore,
-  SignInStore,
+  DeviceRegisterStore,
   TokenStore,
   AccountsStore,
 } from '../lib/stores'
@@ -224,7 +224,7 @@ const statsStore = new StatsStore(
   new StatsDatabase('StatsDatabase'),
   new UiActivityMonitor()
 )
-const signInStore = new SignInStore()
+const deviceRegisterStore = new DeviceRegisterStore()
 
 const accountsStore = new AccountsStore(localStorage, TokenStore)
 
@@ -249,7 +249,7 @@ const appStore = new AppStore(
   cloningRepositoriesStore,
   // issuesStore,
   statsStore,
-  signInStore,
+  deviceRegisterStore,
   accountsStore,
   repositoryStateManager,
   apiRepositoriesStore,

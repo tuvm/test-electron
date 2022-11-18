@@ -8,7 +8,7 @@ import {
   AppStore,
   GitHubUserStore,
   CloningRepositoriesStore,
-  SignInStore,
+  DeviceRegisterStore,
   AccountsStore,
 } from '../../src/lib/stores'
 import { InMemoryDispatcher } from '../helpers/in-memory-dispatcher'
@@ -68,7 +68,7 @@ describe('App', () => {
       githubUserStore,
       new CloningRepositoriesStore(),
       statsStore,
-      new SignInStore(),
+      new DeviceRegisterStore(),
       accountsStore,
       // repositoriesStore,
       // pullRequestCoordinator,

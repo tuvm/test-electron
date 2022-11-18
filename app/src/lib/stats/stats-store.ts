@@ -9,7 +9,6 @@ import { merge } from '../../lib/merge'
 import { getPersistedThemeName } from '../../ui/lib/application-theme'
 import { IUiActivityMonitor } from '../../ui/lib/ui-activity-monitor'
 import { Disposable } from 'event-kit'
-import { SignInMethod } from '../stores'
 import { assertNever } from '../fatal-error'
 import {
   getNumber,
@@ -64,7 +63,6 @@ const FirstCommitCreatedAtKey = 'first-commit-created-at'
 const FirstPushToGitHubAtKey = 'first-push-to-github-at'
 const FirstNonDefaultBranchCheckoutAtKey =
   'first-non-default-branch-checkout-at'
-const WelcomeWizardSignInMethodKey = 'welcome-wizard-sign-in-method'
 const terminalEmulatorKey = 'shell'
 const textEditorKey: string = 'externalEditor'
 
@@ -601,7 +599,6 @@ export class StatsStore implements IStatsStore {
       FirstNonDefaultBranchCheckoutAtKey
     )
 
-    const welcomeWizardSignInMethod = getWelcomeWizardSignInMethod()
 
     return {
       timeToWelcomeWizardTerminated,
@@ -611,7 +608,6 @@ export class StatsStore implements IStatsStore {
       timeToFirstCommit,
       timeToFirstGitHubPush,
       timeToFirstNonDefaultBranchCheckout,
-      welcomeWizardSignInMethod,
     }
   }
 
@@ -1159,10 +1155,6 @@ export class StatsStore implements IStatsStore {
 
   public recordNonDefaultBranchCheckout() {
     createLocalStorageTimestamp(FirstNonDefaultBranchCheckoutAtKey)
-  }
-
-  public recordWelcomeWizardSignInMethod(method: SignInMethod) {
-    localStorage.setItem(WelcomeWizardSignInMethodKey, method)
   }
 
   /** Record when a conflicted merge was successfully completed by the user */
@@ -1997,34 +1989,6 @@ function timeTo(key: string): number | undefined {
   return endTime === null || endTime <= startTime
     ? -1
     : Math.round((endTime - startTime) / 1000)
-}
-
-/**
- * Get a string representing the sign in method that was used
- * when authenticating a user in the welcome flow. This method
- * ensures that the reported value is known to the analytics
- * system regardless of whether the enum value of the SignInMethod
- * type changes.
- */
-function getWelcomeWizardSignInMethod(): 'basic' | 'web' | undefined {
-  const method = localStorage.getItem(
-    WelcomeWizardSignInMethodKey
-  ) as SignInMethod | null
-
-  try {
-    switch (method) {
-      case SignInMethod.Basic:
-      case SignInMethod.Web:
-        return method
-      case null:
-        return undefined
-      default:
-        return assertNever(method, `Unknown sign in method: ${method}`)
-    }
-  } catch (ex) {
-    log.error(`Could not parse welcome wizard sign in method`, ex)
-    return undefined
-  }
 }
 
 /**

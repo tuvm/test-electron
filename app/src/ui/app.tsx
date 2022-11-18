@@ -32,44 +32,22 @@ import { CloningRepository } from '../models/cloning-repository'
 
 import { TitleBar, ZoomInfo, FullScreenInfo } from './window'
 
-// import { RepositoriesList } from './repositories-list'
-// import { RepositoryView } from './repository'
-
-// import { CloningRepositoryView } from './cloning-repository'
-import {
-  // Toolbar,
-  // ToolbarDropdown,
-  // DropdownState,
-  // PushPullButton,
-  // BranchDropdown,
-  // RevertProgress,
-} from './toolbar'
-// import { iconForRepository, OcticonSymbolType } from './octicons'
-// import * as OcticonSymbol from './octicons/octicons.generated'
 import {
   showCertificateTrustDialog,
   sendReady,
   isInApplicationFolder,
-  // selectAllWindowContents,
 } from './main-process-proxy'
 
-// import { Welcome } from './welcome'
-// import { AppMenuBar } from './app-menu'
 import { renderBanner } from './banners'
 import { Preferences } from './preferences'
-// import { RepositorySettings } from './repository-settings'
 import { AppError } from './app-error'
-// import { MissingRepository } from './missing-repository'
-// import { CreateBranch } from './create-branch'
-import { SignIn } from './sign-in'
+import { DeviceRegister } from './device-register'
 import { InstallGit } from './install-git'
 import { EditorError } from './editor'
 import { About } from './about'
 
 import { Acknowledgements } from './acknowledgements'
 import { UntrustedCertificate } from './untrusted-certificate'
-// import { getTitleBarHeight } from './window/title-bar'
-// import { NoRepositoriesView } from './no-repositories'
 import { TermsAndConditions } from './terms-and-conditions'
 import { CLIInstalled } from './cli-installed'
 import { GenericGitAuthentication } from './generic-git-auth'
@@ -81,21 +59,12 @@ import { AppTheme } from './app-theme'
 import { ApplicationTheme } from './lib/application-theme'
 import { PopupType, Popup } from '../models/popup'
 
-// import { isCurrentBranchForcePush } from '../lib/rebase'
 import { Banner, BannerType } from '../models/banner'
-// import { StashAndSwitchBranch } from './stash-changes/stash-and-switch-branch-dialog'
 
 import { ConfirmExitTutorial } from './tutorial'
-// import { findContributionTargetDefaultBranch } from '../lib/branch'
-// import {
-//   // GitHubRepository,
-//   hasWritePermission,
-// } from '../models/github-repository'
 import { CreateTag } from './create-tag'
 
 import memoizeOne from 'memoize-one'
-// import { getAccountForRepository } from '../lib/get-account-for-repository'
-// import { CommitOneLine } from '../models/commit'
 import classNames from 'classnames'
 import { MoveToApplicationsFolder } from './move-to-applications-folder'
 import { ThankYou } from './thank-you'
@@ -105,25 +74,18 @@ import {
   updateLastThankYou,
 } from '../lib/thank-you'
 import { ReleaseNote } from '../models/release-notes'
-// import { CommitMessageDialog } from './commit-message/commit-message-dialog'
-// import { buildAutocompletionProviders } from './autocompletion'
 import { DragType, DropTargetSelector } from '../models/drag-drop'
 import { dragAndDropManager } from '../lib/drag-and-drop-manager'
 
 import { InvalidatedToken } from './invalidated-token/invalidated-token'
-// import { MultiCommitOperationKind } from '../models/multi-commit-operation'
 import { AddSSHHost } from './ssh/add-ssh-host'
 import { SSHKeyPassphrase } from './ssh/ssh-key-passphrase'
 
-// import { clamp } from '../lib/clamp'
-// import { generateRepositoryListContextMenu } from './repositories-list/repository-list-item-context-menu'
 import * as ipcRenderer from '../lib/ipc-renderer'
-// import { showNotification } from '../lib/notifications/show-notification'
 
 import { SSHUserPassword } from './ssh/ssh-user-password'
 
 import { Button } from './lib/button'
-// import { createCommitURL } from '../lib/commit-url'
 
 const MinuteInMilliseconds = 1000 * 60
 const HourInMilliseconds = MinuteInMilliseconds * 60
@@ -140,11 +102,7 @@ const SendStatsInterval = 4 * HourInMilliseconds
 
 interface IAppProps {
   readonly dispatcher: Dispatcher
-  // readonly repositoryStateManager: RepositoryStateCache
   readonly appStore: AppStore
-  // readonly issuesStore: IssuesStore
-  // readonly gitHubUserStore: GitHubUserStore
-  // readonly aheadBehindStore: AheadBehindStore
   readonly startTime: number
 }
 
@@ -624,15 +582,6 @@ export class App extends React.Component<IAppProps, IAppState> {
             repositoryIndicatorsEnabled={this.state.repositoryIndicatorsEnabled}
           />
         )
-      case PopupType.SignIn:
-        return (
-          <SignIn
-            key="sign-in"
-            signInState={this.state.signInState}
-            dispatcher={this.props.dispatcher}
-            onDismissed={onPopupDismissedFn}
-          />
-        )
       case PopupType.InstallGit:
         return (
           <InstallGit
@@ -1058,16 +1007,14 @@ export class App extends React.Component<IAppProps, IAppState> {
     );
   }
 
-  // private renderWelcomeFlow() {
-  //   return (
-  //     <Welcome
-  //       dispatcher={this.props.dispatcher}
-  //       optOut={this.state.optOutOfUsageTracking}
-  //       accounts={this.state.accounts}
-  //       signInState={this.state.signInState}
-  //     />
-  //   )
-  // }
+  private renderDeviceRegister() {
+    return (
+      <DeviceRegister
+        dispatcher={this.props.dispatcher}
+        deviceRegisterState={this.state.deviceRegisterState}
+      />
+    )
+  }
 
   public render() {
     if (this.loading) {
@@ -1088,7 +1035,7 @@ export class App extends React.Component<IAppProps, IAppState> {
           }
         />
         {this.renderTitlebar()}
-          {this.renderApp()}
+          {1 !== 1 ? this.renderApp() : this.renderDeviceRegister()}
         {this.renderZoomInfo()}
         {this.renderFullScreenInfo()}
       </div>

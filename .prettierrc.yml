@@ -1,11 +1,11 @@
 singleQuote: true
 trailingComma: es5
-semi: false
+semi: true
 proseWrap: always
 endOfLine: auto
 arrowParens: avoid
 
 overrides:
-  - files: '*.scss'
+  - files: "*.scss"
     options:
       printWidth: 200

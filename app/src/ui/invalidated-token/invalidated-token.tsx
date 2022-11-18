@@ -47,14 +47,8 @@ export class InvalidatedToken extends React.Component<IInvalidatedTokenProps> {
   }
 
   private onSubmit = () => {
-    const { dispatcher, onDismissed } = this.props
+    const { onDismissed } = this.props
 
     onDismissed()
-
-    if (this.isEnterpriseAccount) {
-      dispatcher.showEnterpriseSignInDialog(this.props.account.endpoint)
-    } else {
-      dispatcher.showDotComSignInDialog()
-    }
   }
 }
