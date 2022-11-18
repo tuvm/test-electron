@@ -142,7 +142,8 @@ import {
   Shell,
 } from '../shells'
 import { ILaunchStats, StatsStore } from '../stats'
-import { hasShownWelcomeFlow, markWelcomeFlowComplete } from '../welcome'
+// import { hasShownWelcomeFlow, markWelcomeFlowComplete } from '../welcome'
+import { hasShownDeviceRegisterFlow, markDeviceRegisterFlowComplete } from '../device-register'
 import { WindowState } from '../window-state'
 import { TypedBaseStore } from './base-store'
 import { MergeTreeResult } from '../../models/merge'
@@ -291,7 +292,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
   private selectedRepository: Repository | CloningRepository | null = null
 
-  private showWelcomeFlow = false
+  // private showWelcomeFlow = false
+  private showDeviceRegisterFlow = false
   private focusCommitMessage = false
   private currentPopup: Popup | null = null
   private currentFoldout: Foldout | null = null
@@ -412,19 +414,20 @@ export class AppStore extends TypedBaseStore<IAppState> {
   ) {
     super()
 
-    this.showWelcomeFlow = !hasShownWelcomeFlow()
+    // this.showWelcomeFlow = !hasShownWelcomeFlow()
+    this.showDeviceRegisterFlow = !hasShownDeviceRegisterFlow()
 
-    if (__WIN32__) {
-      const useWindowsOpenSSH = getBoolean(UseWindowsOpenSSHKey)
+    // if (__WIN32__) {
+    //   const useWindowsOpenSSH = getBoolean(UseWindowsOpenSSHKey)
 
-      // If the user never selected whether to use Windows OpenSSH or not, use it
-      // by default if we have to show the welcome flow (i.e. if it's a new install)
-      if (useWindowsOpenSSH === undefined) {
-        this._setUseWindowsOpenSSH(this.showWelcomeFlow)
-      } else {
-        this.useWindowsOpenSSH = useWindowsOpenSSH
-      }
-    }
+    //   // If the user never selected whether to use Windows OpenSSH or not, use it
+    //   // by default if we have to show the welcome flow (i.e. if it's a new install)
+    //   if (useWindowsOpenSSH === undefined) {
+    //     this._setUseWindowsOpenSSH(this.showWelcomeFlow)
+    //   } else {
+    //     this.useWindowsOpenSSH = useWindowsOpenSSH
+    //   }
+    // }
 
     this.gitStoreCache = new GitStoreCache(
       shell,
@@ -759,7 +762,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
       currentPopup: this.currentPopup,
       currentFoldout: this.currentFoldout,
       errors: this.errors,
-      showWelcomeFlow: this.showWelcomeFlow,
+      // showWelcomeFlow: this.showWelcomeFlow,
+      showDeviceRegisterFlow: this.showDeviceRegisterFlow,
       focusCommitMessage: this.focusCommitMessage,
       emoji: this.emoji,
       sidebarWidth: this.sidebarWidth,
@@ -2808,16 +2812,16 @@ export class AppStore extends TypedBaseStore<IAppState> {
     this.emitUpdate()
   }
 
-  public _endWelcomeFlow(): Promise<void> {
-    this.showWelcomeFlow = false
-    this.emitUpdate()
+  // public _endWelcomeFlow(): Promise<void> {
+  //   this.showWelcomeFlow = false
+  //   this.emitUpdate()
 
-    markWelcomeFlowComplete()
+  //   markWelcomeFlowComplete()
 
-    this.statsStore.recordWelcomeWizardTerminated()
+  //   this.statsStore.recordWelcomeWizardTerminated()
 
-    return Promise.resolve()
-  }
+  //   return Promise.resolve()
+  // }
 
   public _setCommitMessageFocus(focus: boolean) {
     if (this.focusCommitMessage !== focus) {
@@ -4376,7 +4380,27 @@ export class AppStore extends TypedBaseStore<IAppState> {
     deviceName: string,
     deviceDescription: string
   ): Promise<void> {
-    return this.deviceRegisterStore.registerDevice(hotel, deviceName, deviceDescription);
+    const promise = this.deviceRegisterStore.registerDevice(hotel, deviceName, deviceDescription);
+    this.emitUpdate();
+    return promise;
+  }
+
+  public async _verifyCode(code: string): Promise<void> {
+    const promise = await this.deviceRegisterStore.verifyCode(code);
+    this.emitUpdate();
+    setTimeout(() => {
+      this._endDeviceRegisterFlow();
+    }, 2000);
+    return promise;
+  }
+
+  public _endDeviceRegisterFlow(): Promise<void> {
+    this.showDeviceRegisterFlow = false;
+    this.emitUpdate();
+
+    markDeviceRegisterFlowComplete();
+
+    return Promise.resolve();
   }
 }
 

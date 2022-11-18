@@ -150,9 +150,9 @@ const sendErrorWithContext = (
           extra.currentFoldout = `${currentState.currentFoldout.type}`
         }
 
-        if (currentState.showWelcomeFlow) {
-          extra.inWelcomeFlow = 'true'
-        }
+        // if (currentState.showWelcomeFlow) {
+        //   extra.inWelcomeFlow = 'true'
+        // }
 
         if (currentState.windowZoomFactor !== 1) {
           extra.windowZoomFactor = `${currentState.windowZoomFactor}`

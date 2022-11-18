@@ -596,9 +596,9 @@ export class Dispatcher {
   }
 
   /** End the Welcome flow. */
-  public endWelcomeFlow(): Promise<void> {
-    return this.appStore._endWelcomeFlow()
-  }
+  // public endWelcomeFlow(): Promise<void> {
+  //   return this.appStore._endWelcomeFlow()
+  // }
 
   /** Set the commit message input's focus. */
   public setCommitMessageFocus(focus: boolean) {
@@ -1961,5 +1961,13 @@ export class Dispatcher {
     deviceDescription: string
   ): Promise<void> {
     return this.appStore._registerDevice(hotel, deviceName, deviceDescription);
+  }
+
+  public verifyCode(code: string): Promise<void> {
+    return this.appStore._verifyCode(code);
+  }
+
+  public endDeviceRegisterFlow(): Promise<void> {
+    return this.appStore._endDeviceRegisterFlow();
   }
 }

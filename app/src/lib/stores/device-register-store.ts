@@ -152,7 +152,7 @@ export class DeviceRegisterStore extends TypedBaseStore<DeviceRegisterState | nu
       )
     }
 
-    // this.setState({ ...currentState, loading: true });
+    this.setState({ ...currentState, loading: true });
 
     setTimeout(() => {
       this.setState({
@@ -160,7 +160,8 @@ export class DeviceRegisterStore extends TypedBaseStore<DeviceRegisterState | nu
         error: null,
         loading: false,
       } as DeviceRegisterState)
-    }, 1000);
+      this.emitUpdate(this.getState())
+    }, 200);
 
   }
 
@@ -185,7 +186,8 @@ export class DeviceRegisterStore extends TypedBaseStore<DeviceRegisterState | nu
         error: null,
         loading: false,
       })
-    }, 1000);
+      this.emitUpdate(this.getState())
+    }, 200);
 
   }
 }

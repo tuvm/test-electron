@@ -43,8 +43,8 @@ export class DeviceRegister extends React.Component<IDeviceRegisterProps, IDevic
     this.props.dispatcher.registerDevice(hotel, deviceName, deviceDesciption);
   }
 
-  public onCodeEntered = () => {
-    console.log('code');
+  public onCodeEntered = (code: string) => {
+    this.props.dispatcher.verifyCode(code);
   }
 
   public componentWillReceiveProps(nextProps: IDeviceRegisterProps) {
@@ -76,6 +76,11 @@ export class DeviceRegister extends React.Component<IDeviceRegisterProps, IDevic
             error={state?.error}
             onCodeEntered={this.onCodeEntered}
           />
+        )
+
+      case DeviceRegisterStep.Success:
+        return (
+          <div className="form-title">Thành công</div>
         )
 
       default:

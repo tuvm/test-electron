@@ -485,8 +485,8 @@ export class App extends React.Component<IAppProps, IAppState> {
       }
     }
 
-    const showAppIcon = !this.state.showWelcomeFlow
-    const inWelcomeFlow = this.state.showWelcomeFlow
+    const showAppIcon = true
+    // const inWelcomeFlow = this.state.showWelcomeFlow
     // const inNoRepositoriesView = this.inNoRepositoriesViewState()
 
     // The light title bar style should only be used while we're in
@@ -496,8 +496,7 @@ export class App extends React.Component<IAppProps, IAppState> {
     // the app menu in the no-repositories blank slate on Windows but
     // the menu doesn't support the light style at the moment so we're
     // forcing it to use the dark style.
-    const titleBarStyle =
-      inWelcomeFlow || __DARWIN__ ? 'light' : 'dark'
+    const titleBarStyle = 'light'
 
     return (
       <TitleBar
@@ -1035,7 +1034,8 @@ export class App extends React.Component<IAppProps, IAppState> {
           }
         />
         {this.renderTitlebar()}
-          {1 !== 1 ? this.renderApp() : this.renderDeviceRegister()}
+          {!this.state.showDeviceRegisterFlow
+           ? this.renderApp() : this.renderDeviceRegister()}
         {this.renderZoomInfo()}
         {this.renderFullScreenInfo()}
       </div>
