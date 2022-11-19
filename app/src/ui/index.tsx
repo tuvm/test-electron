@@ -42,7 +42,7 @@ import {
 import { UiActivityMonitor } from './lib/ui-activity-monitor'
 import { RepositoryStateCache } from '../lib/stores/repository-state-cache'
 import { ApiRepositoriesStore } from '../lib/stores/api-repositories-store'
-import { CommitStatusStore } from '../lib/stores/commit-status-store'
+// import { CommitStatusStore } from '../lib/stores/commit-status-store'
 
 // We're using a polyfill for the upcoming CSS4 `:focus-ring` pseudo-selector.
 // This allows us to not have to override default accessibility driven focus
@@ -221,7 +221,7 @@ const repositoryStateManager = new RepositoryStateCache(statsStore)
 
 const apiRepositoriesStore = new ApiRepositoriesStore(accountsStore)
 
-const commitStatusStore = new CommitStatusStore(accountsStore)
+// const commitStatusStore = new CommitStatusStore(accountsStore)
 // const aheadBehindStore = new AheadBehindStore()
 
 const aliveStore = new AliveStore(accountsStore)
@@ -253,7 +253,7 @@ const dispatcher = new Dispatcher(
   appStore,
   repositoryStateManager,
   statsStore,
-  commitStatusStore
+  // commitStatusStore
 )
 
 dispatcher.registerErrorHandler(defaultErrorHandler)

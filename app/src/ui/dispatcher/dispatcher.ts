@@ -1,8 +1,5 @@
-import { Disposable, DisposableLike } from 'event-kit'
+import { Disposable } from 'event-kit'
 
-import {
-  IAPICheckSuite,
-} from '../../lib/api'
 import {
   Foldout,
   FoldoutType,
@@ -35,7 +32,6 @@ import { BranchesTab } from '../../models/branches-tab'
 import { CloneRepositoryTab } from '../../models/clone-repository-tab'
 import { Commit, CommitOneLine } from '../../models/commit'
 import { DiffSelection } from '../../models/diff'
-import { GitHubRepository } from '../../models/github-repository'
 import { ManualConflictResolution } from '../../models/manual-conflict-resolution'
 import { Popup, PopupType } from '../../models/popup'
 import { PullRequest } from '../../models/pull-request'
@@ -58,10 +54,6 @@ import {
   moveToApplicationsFolder,
   isWindowFocused,
 } from '../main-process-proxy'
-import {
-  CommitStatusStore,
-  StatusCallBack,
-} from '../../lib/stores/commit-status-store'
 import { UncommittedChangesStrategy } from '../../models/uncommitted-changes-strategy'
 import { sleep } from '../../lib/promise'
 import { DragElement } from '../../models/drag-drop'
@@ -73,7 +65,6 @@ import {
   MultiCommitOperationStepKind,
 } from '../../models/multi-commit-operation'
 import { getMultiCommitOperationChooseBranchStep } from '../../lib/multi-commit-operation'
-import { ICombinedRefCheck, IRefCheck } from '../../lib/ci-checks/ci-checks'
 import { ValidNotificationPullRequestReviewState } from '../../lib/valid-notification-pull-request-review'
 
 /**
@@ -98,7 +89,7 @@ export class Dispatcher {
     private readonly appStore: AppStore,
     private readonly repositoryStateManager: RepositoryStateCache,
     private readonly statsStore: StatsStore,
-    private readonly commitStatusStore: CommitStatusStore
+    // private readonly commitStatusStore: CommitStatusStore
   ) {}
 
   /** Load the initial state for the app. */
@@ -593,12 +584,6 @@ export class Dispatcher {
 
   public async setAppFocusState(isFocused: boolean): Promise<void> {
     await this.appStore._setAppFocusState(isFocused)
-
-    if (isFocused) {
-      this.commitStatusStore.startBackgroundRefresh()
-    } else {
-      this.commitStatusStore.stopBackgroundRefresh()
-    }
   }
 
   public async initializeAppFocusState(): Promise<void> {
@@ -1017,116 +1002,6 @@ export class Dispatcher {
   /** Increments the `errorWhenSwitchingBranchesWithUncommmittedChanges` metric */
   public recordErrorWhenSwitchingBranchesWithUncommmittedChanges() {
     return this.statsStore.recordErrorWhenSwitchingBranchesWithUncommmittedChanges()
-  }
-
-  /**
-   * Attempt to retrieve a commit status for a particular
-   * ref. If the ref doesn't exist in the cache this function returns null.
-   *
-   * Useful for component who wish to have a value for the initial render
-   * instead of waiting for the subscription to produce an event.
-   */
-  public tryGetCommitStatus(
-    repository: GitHubRepository,
-    ref: string,
-    branchName?: string
-  ): ICombinedRefCheck | null {
-    return this.commitStatusStore.tryGetStatus(repository, ref, branchName)
-  }
-
-  /**
-   * Subscribe to commit status updates for a particular ref.
-   *
-   * @param repository The GitHub repository to use when looking up commit status.
-   * @param ref        The commit ref (can be a SHA or a Git ref) for which to
-   *                   fetch status.
-   * @param callback   A callback which will be invoked whenever the
-   *                   store updates a commit status for the given ref.
-   * @param branchName If we want to retrieve action workflow checks with the
-   *                   sub, we provide the branch name for it.
-   */
-  public subscribeToCommitStatus(
-    repository: GitHubRepository,
-    ref: string,
-    callback: StatusCallBack,
-    branchName?: string
-  ): DisposableLike {
-    return this.commitStatusStore.subscribe(
-      repository,
-      ref,
-      callback,
-      branchName
-    )
-  }
-
-  /**
-   * Invoke a manual refresh of the status for a particular ref
-   */
-  public manualRefreshSubscription(
-    repository: GitHubRepository,
-    ref: string,
-    pendingChecks: ReadonlyArray<IRefCheck>
-  ): Promise<void> {
-    return this.commitStatusStore.manualRefreshSubscription(
-      repository,
-      ref,
-      pendingChecks
-    )
-  }
-
-  /**
-   * Triggers GitHub to rerequest a list of check suites, without pushing new
-   * code to a repository.
-   */
-  public async rerequestCheckSuites(
-    repository: GitHubRepository,
-    checkRuns: ReadonlyArray<IRefCheck>,
-    failedOnly: boolean
-  ): Promise<ReadonlyArray<boolean>> {
-    const promises = new Array<Promise<boolean>>()
-
-    // If it is one and in actions check, we can rerun it individually.
-    if (checkRuns.length === 1 && checkRuns[0].actionsWorkflow !== undefined) {
-      promises.push(
-        this.commitStatusStore.rerunJob(repository, checkRuns[0].id)
-      )
-      return Promise.all(promises)
-    }
-
-    const checkSuiteIds = new Set<number>()
-    const workflowRunIds = new Set<number>()
-    for (const cr of checkRuns) {
-      if (failedOnly && cr.actionsWorkflow !== undefined) {
-        workflowRunIds.add(cr.actionsWorkflow.id)
-        continue
-      }
-
-      // There could still be failed ones that are not action and only way to
-      // rerun them is to rerun their whole check suite
-      if (cr.checkSuiteId !== null) {
-        checkSuiteIds.add(cr.checkSuiteId)
-      }
-    }
-
-    for (const id of workflowRunIds) {
-      promises.push(this.commitStatusStore.rerunFailedJobs(repository, id))
-    }
-
-    for (const id of checkSuiteIds) {
-      promises.push(this.commitStatusStore.rerequestCheckSuite(repository, id))
-    }
-
-    return Promise.all(promises)
-  }
-
-  /**
-   * Gets a single check suite using its id
-   */
-  public async fetchCheckSuite(
-    repository: GitHubRepository,
-    checkSuiteId: number
-  ): Promise<IAPICheckSuite | null> {
-    return this.commitStatusStore.fetchCheckSuite(repository, checkSuiteId)
   }
 
   /**
