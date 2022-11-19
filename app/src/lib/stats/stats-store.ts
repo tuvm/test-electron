@@ -1,7 +1,7 @@
 import { StatsDatabase, ILaunchStats, IDailyMeasures } from './stats-database'
 import { getDotComAPIEndpoint } from '../api'
 import { getVersion } from '../../ui/lib/app-proxy'
-import { hasShownWelcomeFlow } from '../welcome'
+// import { hasShownWelcomeFlow } from '../welcome'
 import { Account } from '../../models/account'
 import { getOS } from '../get-os'
 import { Repository } from '../../models/repository'
@@ -462,9 +462,9 @@ export class StatsStore implements IStatsStore {
 
     // don't report until the user has had a chance to view and opt-in for
     // sharing their stats with us
-    if (!hasShownWelcomeFlow()) {
-      return
-    }
+    // if (!hasShownWelcomeFlow()) {
+    //   return
+    // }
 
     if (!this.shouldReportDailyStats()) {
       return
