@@ -34,36 +34,25 @@ import { compare } from '../../lib/compare'
 import { queueWorkHigh } from '../../lib/queue-work'
 
 import {
-  reset,
   GitResetMode,
   getRemotes,
   fetch as fetchRepo,
   fetchRefspec,
   getRecentBranches,
   getBranches,
-  deleteRef,
   getCommits,
   merge,
   setRemoteURL,
-  getStatus,
-  IStatusResult,
   getCommit,
   IndexStatus,
   getIndexChanges,
   checkoutIndex,
   discardChangesFromSelection,
-  checkoutPaths,
   resetPaths,
   revertCommit,
-  unstageAllFiles,
   addRemote,
   listSubmodules,
   resetSubmodulePaths,
-  parseTrailers,
-  mergeTrailers,
-  getTrailerSeparatorCharacters,
-  parseSingleUnfoldedTrailer,
-  isCoAuthoredByTrailer,
   getAheadBehind,
   revRange,
   revSymmetricDifference,
@@ -88,8 +77,6 @@ import {
 } from './helpers/find-upstream-remote'
 import { findDefaultRemote } from './helpers/find-default-remote'
 import { IAuthor } from '../../models/author'
-import { formatCommitMessage } from '../format-commit-message'
-import { GitAuthor } from '../../models/git-author'
 import { IGitAccount } from '../../models/git-account'
 import { BaseStore } from './base-store'
 import { getStashes, getStashedFiles } from '../git/stash'
@@ -196,8 +183,7 @@ export class GitStore extends BaseStore {
 
     if (index > -1) {
       log.debug(
-        `reconciling history - adding ${
-          commits.length
+        `reconciling history - adding ${commits.length
         } commits before merge base ${mergeBase.substring(0, 8)}`
       )
 
@@ -488,7 +474,7 @@ export class GitStore extends BaseStore {
     if (
       !isRepositoryWithForkedGitHubRepository(this.repository) ||
       getNonForkGitHubRepository(this.repository) ===
-        this.repository.gitHubRepository
+      this.repository.gitHubRepository
     ) {
       this._upstreamDefaultBranch = null
       return
@@ -674,226 +660,6 @@ export class GitStore extends BaseStore {
   private storeCommits(commits: ReadonlyArray<Commit>) {
     for (const commit of commits) {
       this.commitLookup.set(commit.sha, commit)
-    }
-  }
-
-  private async undoFirstCommit(
-    repository: Repository
-  ): Promise<true | undefined> {
-    // What are we doing here?
-    // The state of the working directory here is rather important, because we
-    // want to ensure that any deleted files are restored to your working
-    // directory for the next stage. Doing doing a `git checkout -- .` here
-    // isn't suitable because we should preserve the other working directory
-    // changes.
-
-    const status = await this.performFailableOperation(() =>
-      getStatus(this.repository)
-    )
-
-    if (status == null) {
-      throw new Error(
-        `Unable to undo commit because there are too many files in your repository's working directory.`
-      )
-    }
-
-    const paths = status.workingDirectory.files
-
-    const deletedFiles = paths.filter(
-      p => p.status.kind === AppFileStatusKind.Deleted
-    )
-    const deletedFilePaths = deletedFiles.map(d => d.path)
-
-    await checkoutPaths(repository, deletedFilePaths)
-
-    // Now that we have the working directory changes, as well the restored
-    // deleted files, we can remove the HEAD ref to make the current branch
-    // disappear
-    await deleteRef(repository, 'HEAD', 'Reverting first commit')
-
-    // Finally, ensure any changes in the index are unstaged. This ensures all
-    // files in the repository will be untracked.
-    await unstageAllFiles(repository)
-    return true
-  }
-
-  /**
-   * Undo a specific commit for the current repository.
-   *
-   * @param commit - The commit to remove - should be the tip of the current branch.
-   */
-  public async undoCommit(commit: Commit): Promise<void> {
-    // For an initial commit, just delete the reference but leave HEAD. This
-    // will make the branch unborn again.
-    const success = await this.performFailableOperation(() =>
-      commit.parentSHAs.length === 0
-        ? this.undoFirstCommit(this.repository)
-        : reset(this.repository, GitResetMode.Mixed, commit.parentSHAs[0])
-    )
-
-    if (success === undefined) {
-      return
-    }
-
-    // Let's be safe about this since it's untried waters.
-    // If we can restore co-authors then that's fantastic
-    // but if we can't we shouldn't be throwing an error,
-    // let's just fall back to the old way of restoring the
-    // entire message
-    if (this.repository.gitHubRepository) {
-      try {
-        await this.loadCommitAndCoAuthors(commit)
-        this.emitUpdate()
-        return
-      } catch (e) {
-        log.error('Failed to restore commit and co-authors, falling back', e)
-      }
-    }
-
-    this._commitMessage = {
-      summary: commit.summary,
-      description: commit.body,
-    }
-    this.emitUpdate()
-  }
-
-  /**
-   * Attempt to restore both the commit message and any co-authors
-   * in it after an undo operation.
-   *
-   * This is a deceivingly simple task which complicated by the
-   * us wanting to follow the heuristics of Git when finding, and
-   * parsing trailers.
-   */
-  private async loadCommitAndCoAuthors(commit: Commit) {
-    const repository = this.repository
-
-    // git-interpret-trailers is really only made for working
-    // with full commit messages so let's start with that
-    const message = await formatCommitMessage(repository, {
-      summary: commit.summary,
-      description: commit.body,
-    })
-
-    // Next we extract any co-authored-by trailers we
-    // can find. We use interpret-trailers for this
-    const foundTrailers = await parseTrailers(repository, message)
-    const coAuthorTrailers = foundTrailers.filter(isCoAuthoredByTrailer)
-
-    // This is the happy path, nothing more for us to do
-    if (coAuthorTrailers.length === 0) {
-      this._commitMessage = {
-        summary: commit.summary,
-        description: commit.body,
-      }
-
-      return
-    }
-
-    // call interpret-trailers --unfold so that we can be sure each
-    // trailer sits on a single line
-    const unfolded = await mergeTrailers(repository, message, [], true)
-    const lines = unfolded.split('\n')
-
-    // We don't know (I mean, we're fairly sure) what the separator character
-    // used for the trailer is so we call out to git to get all possibilities
-    let separators: string | undefined = undefined
-
-    // We know that what we've got now is well formed so we can capture the leading
-    // token, followed by the separator char and a single space, followed by the
-    // value
-    const coAuthorRe = /^co-authored-by(.)\s(.*)/i
-    const extractedTrailers = []
-
-    // Iterate backwards from the unfolded message and look for trailers that we've
-    // already seen when calling parseTrailers earlier.
-    for (let i = lines.length - 1; i >= 0; i--) {
-      const line = lines[i]
-      const match = coAuthorRe.exec(line)
-
-      // Not a trailer line, we're sure of that
-      if (!match) {
-        continue
-      }
-
-      // Only shell out for separators if we really need them
-      separators ??= await getTrailerSeparatorCharacters(this.repository)
-
-      if (separators.indexOf(match[1]) === -1) {
-        continue
-      }
-
-      const trailer = parseSingleUnfoldedTrailer(line, match[1])
-
-      if (!trailer) {
-        continue
-      }
-
-      // We already know that the key is Co-Authored-By so we only
-      // need to compare by value. Let's see if we can find the thing
-      // that we believe to be a trailer among what interpret-trailers
-      // --parse told us was a trailer. This step is a bit redundant
-      // but it ensure we match exactly with what Git thinks is a trailer
-      const foundTrailerIx = coAuthorTrailers.findIndex(
-        t => t.value === trailer.value
-      )
-
-      if (foundTrailerIx === -1) {
-        continue
-      }
-
-      // We're running backwards
-      extractedTrailers.unshift(coAuthorTrailers[foundTrailerIx])
-
-      // Remove the trailer that matched so that we can be sure
-      // we're not picking it up again
-      coAuthorTrailers.splice(foundTrailerIx, 1)
-
-      // This line was a co-author trailer so we'll remove it to
-      // make sure it doesn't end up in the restored commit body
-      lines.splice(i, 1)
-    }
-
-    // Get rid of the summary/title
-    lines.splice(0, 2)
-
-    const newBody = lines.join('\n').trim()
-
-    this._commitMessage = {
-      summary: commit.summary,
-      description: newBody,
-    }
-
-    const extractedAuthors = extractedTrailers.map(t =>
-      GitAuthor.parse(t.value)
-    )
-    const newAuthors = new Array<IAuthor>()
-
-    // Last step, phew! The most likely scenario where we
-    // get called is when someone has just made a commit and
-    // either forgot to add a co-author or forgot to remove
-    // someone so chances are high that we already have a
-    // co-author which includes a username. If we don't we'll
-    // add it without a username which is fine as well
-    for (let i = 0; i < extractedAuthors.length; i++) {
-      const extractedAuthor = extractedAuthors[i]
-
-      // If GitAuthor failed to parse
-      if (extractedAuthor === null) {
-        continue
-      }
-
-      const { name, email } = extractedAuthor
-      const existing = this.coAuthors.find(
-        a => a.name === name && a.email === email && a.username !== null
-      )
-      newAuthors.push(existing || { name, email, username: null })
-    }
-
-    this._coAuthors = newAuthors
-
-    if (this._coAuthors.length > 0 && this._showCoAuthoredBy === false) {
-      this._showCoAuthoredBy = true
     }
   }
 
@@ -1096,69 +862,6 @@ export class GitStore extends BaseStore {
     }
   }
 
-  public async loadStatus(): Promise<IStatusResult | null> {
-    const status = await this.performFailableOperation(() =>
-      getStatus(this.repository)
-    )
-
-    if (!status) {
-      return null
-    }
-
-    this._aheadBehind = status.branchAheadBehind || null
-
-    const { currentBranch, currentTip } = status
-
-    if (currentBranch || currentTip) {
-      if (currentTip && currentBranch) {
-        const branchTipCommit = await this.lookupCommit(currentTip)
-
-        const branch = new Branch(
-          currentBranch,
-          status.currentUpstreamBranch || null,
-          branchTipCommit,
-          BranchType.Local,
-          `refs/heads/${currentBranch}`
-        )
-        this._tip = { kind: TipState.Valid, branch }
-      } else if (currentTip) {
-        this._tip = { kind: TipState.Detached, currentSha: currentTip }
-      } else if (currentBranch) {
-        this._tip = { kind: TipState.Unborn, ref: currentBranch }
-      }
-    } else {
-      this._tip = { kind: TipState.Unknown }
-    }
-
-    this.emitUpdate()
-
-    return status
-  }
-
-  /**
-   * Find a commit in the local cache, or load in the commit from the underlying
-   * repository.
-   *
-   * This will error if the commit ID cannot be resolved.
-   */
-  private async lookupCommit(sha: string): Promise<Commit> {
-    const cachedCommit = this.commitLookup.get(sha)
-    if (cachedCommit != null) {
-      return Promise.resolve(cachedCommit)
-    }
-
-    const foundCommit = await this.performFailableOperation(() =>
-      getCommit(this.repository, sha)
-    )
-
-    if (foundCommit != null) {
-      this.commitLookup.set(sha, foundCommit)
-      return foundCommit
-    }
-
-    throw new Error(`Could not load commit: '${sha}'`)
-  }
-
   /**
    * Refreshes the list of GitHub Desktop created stash entries for the repository
    */
@@ -1258,7 +961,7 @@ export class GitStore extends BaseStore {
 
     const currentRemoteName =
       this.tip.kind === TipState.Valid &&
-      this.tip.branch.upstreamRemoteName !== null
+        this.tip.branch.upstreamRemoteName !== null
         ? this.tip.branch.upstreamRemoteName
         : null
 

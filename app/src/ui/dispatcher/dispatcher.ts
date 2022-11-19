@@ -4,13 +4,9 @@ import {
   IAPICheckSuite,
 } from '../../lib/api'
 import {
-  CompareAction,
   Foldout,
   FoldoutType,
   ICompareFormUpdate,
-  RepositorySectionTab,
-  RebaseConflictState,
-  isRebaseConflictState,
   MultiCommitOperationConflictState,
 } from '../../lib/app-state'
 import { fatalError } from '../../lib/fatal-error'
@@ -18,10 +14,6 @@ import {
   setGenericPassword,
   setGenericUsername,
 } from '../../lib/generic-git-auth'
-import {
-  RebaseResult,
-  getRebaseSnapshot,
-} from '../../lib/git'
 import { isGitOnPath } from '../../lib/is-git-on-path'
 import {
   rejectOAuthRequest,
@@ -35,18 +27,14 @@ import { Shell } from '../../lib/shells'
 import { ILaunchStats, StatsStore } from '../../lib/stats'
 import { AppStore } from '../../lib/stores/app-store'
 import { RepositoryStateCache } from '../../lib/stores/repository-state-cache'
-import { getTipSha } from '../../lib/tip'
 
 import { Account } from '../../models/account'
 import { AppMenu, ExecutableMenuItem } from '../../models/app-menu'
-import { IAuthor } from '../../models/author'
 import { Branch, IAheadBehind } from '../../models/branch'
 import { BranchesTab } from '../../models/branches-tab'
 import { CloneRepositoryTab } from '../../models/clone-repository-tab'
-import { CloningRepository } from '../../models/cloning-repository'
 import { Commit, CommitOneLine } from '../../models/commit'
-import { ICommitMessage } from '../../models/commit-message'
-import { DiffSelection, ImageDiffType } from '../../models/diff'
+import { DiffSelection } from '../../models/diff'
 import { GitHubRepository } from '../../models/github-repository'
 import { ManualConflictResolution } from '../../models/manual-conflict-resolution'
 import { Popup, PopupType } from '../../models/popup'
@@ -56,11 +44,9 @@ import {
   RepositoryWithGitHubRepository,
   getGitHubHtmlUrl,
 } from '../../models/repository'
-import { RetryAction } from '../../models/retry-actions'
 import {
   CommittedFileChange,
   WorkingDirectoryFileChange,
-  WorkingDirectoryStatus,
 } from '../../models/status'
 import { TipState } from '../../models/tip'
 import { Banner, BannerType } from '../../models/banner'
@@ -77,7 +63,6 @@ import {
   StatusCallBack,
 } from '../../lib/stores/commit-status-store'
 import { UncommittedChangesStrategy } from '../../models/uncommitted-changes-strategy'
-import { IStashEntry } from '../../models/stash-entry'
 import { sleep } from '../../lib/promise'
 import { DragElement } from '../../models/drag-drop'
 import { ILastThankYou } from '../../models/last-thank-you'
@@ -131,18 +116,6 @@ export class Dispatcher {
     return this.appStore._pauseTutorial(repository)
   }
 
-  /** Load the next batch of history for the repository. */
-  public loadNextCommitBatch(repository: Repository): Promise<void> {
-    return this.appStore._loadNextCommitBatch(repository)
-  }
-
-  /** Load the changed files for the current history selection. */
-  public loadChangedFilesForCurrentSelection(
-    repository: Repository
-  ): Promise<void> {
-    return this.appStore._loadChangedFilesForCurrentSelection(repository)
-  }
-
   /**
    * Change the selected commit in the history view.
    *
@@ -188,29 +161,6 @@ export class Dispatcher {
     return this.appStore._setRepositoryFilterText(text)
   }
 
-  /** Change the selected section in the repository. */
-  public changeRepositorySection(
-    repository: Repository,
-    section: RepositorySectionTab
-  ): Promise<void> {
-    return this.appStore._changeRepositorySection(repository, section)
-  }
-
-  /**
-   * Changes the selection in the changes view to the working directory and
-   * optionally selects one or more files from the working directory.
-   *
-   *  @param files An array of files to select when showing the working directory.
-   *               If undefined this method will preserve the previously selected
-   *               files or pick the first changed file if no selection exists.
-   */
-  public selectWorkingDirectoryFiles(
-    repository: Repository,
-    selectedFiles?: WorkingDirectoryFileChange[]
-  ): Promise<void> {
-    return this.appStore._selectWorkingDirectoryFiles(repository, selectedFiles)
-  }
-
   /**
    * Changes the selection in the changes view to the stash entry view and
    * optionally selects a particular file from the current stash entry.
@@ -254,14 +204,6 @@ export class Dispatcher {
     includeAll: boolean
   ): Promise<void> {
     return this.appStore._changeIncludeAllFiles(repository, includeAll)
-  }
-
-  /**
-   * Refresh the commit author of a repository. Required after changing git's
-   * user name or email address.
-   */
-  public async refreshAuthor(repository: Repository): Promise<void> {
-    return this.appStore._refreshAuthor(repository)
   }
 
   /** Show the popup. This will close any current popup. */
@@ -333,92 +275,6 @@ export class Dispatcher {
       type: PopupType.MultiCommitOperation,
       repository,
     })
-  }
-
-  /**
-   * Initialize and launch the rebase flow for a conflicted repository
-   */
-  public async launchRebaseOperation(
-    repository: Repository,
-    targetBranch: string
-  ) {
-    await this.appStore._loadStatus(repository)
-
-    const repositoryState = this.repositoryStateManager.get(repository)
-    const { conflictState } = repositoryState.changesState
-
-    if (conflictState === null || !isRebaseConflictState(conflictState)) {
-      return
-    }
-
-    const updatedConflictState = {
-      ...conflictState,
-      targetBranch,
-    }
-
-    this.repositoryStateManager.updateChangesState(repository, () => ({
-      conflictState: updatedConflictState,
-    }))
-
-    const snapshot = await getRebaseSnapshot(repository)
-    if (snapshot === null) {
-      return
-    }
-
-    const { progress, commits } = snapshot
-    this.initializeMultiCommitOperation(
-      repository,
-      {
-        kind: MultiCommitOperationKind.Rebase,
-        sourceBranch: null,
-        commits,
-        currentTip: '',
-      },
-      null,
-      commits,
-      targetBranch
-    )
-
-    this.repositoryStateManager.updateMultiCommitOperationState(
-      repository,
-      () => ({
-        progress,
-      })
-    )
-
-    const { manualResolutions } = conflictState
-    this.setMultiCommitOperationStep(repository, {
-      kind: MultiCommitOperationStepKind.ShowConflicts,
-      conflictState: {
-        kind: 'multiCommitOperation',
-        manualResolutions,
-        ourBranch: targetBranch,
-        theirBranch: undefined,
-      },
-    })
-
-    this.showPopup({
-      type: PopupType.MultiCommitOperation,
-      repository,
-    })
-  }
-
-  /**
-   * Create a new tag on the given target commit.
-   */
-  public createTag(
-    repository: Repository,
-    name: string,
-    targetCommitSha: string
-  ): Promise<void> {
-    return this.appStore._createTag(repository, name, targetCommitSha)
-  }
-
-  /**
-   * Deletes the passed tag.
-   */
-  public deleteTag(repository: Repository, name: string): Promise<void> {
-    return this.appStore._deleteTag(repository, name)
   }
 
   /**
@@ -515,8 +371,6 @@ export class Dispatcher {
       })
     }
 
-    await this.changeRepositorySection(repository, RepositorySectionTab.Changes)
-
     this.appStore._setRepositoryCommitToAmend(repository, commit)
 
     this.statsStore.recordAmendCommitStarted()
@@ -605,17 +459,6 @@ export class Dispatcher {
     this.appStore._setCommitMessageFocus(focus)
   }
 
-  /**
-   * Set the commit summary and description for a work-in-progress
-   * commit in the changes view for a particular repository.
-   */
-  public setCommitMessage(
-    repository: Repository,
-    message: ICommitMessage
-  ): Promise<void> {
-    return this.appStore._setCommitMessage(repository, message)
-  }
-
   /** Remove the given account from the app. */
   public removeAccount(account: Account): Promise<void> {
     return this.appStore._removeAccount(account)
@@ -667,93 +510,6 @@ export class Dispatcher {
     return this.appStore._setConflictsResolved(repository)
   }
 
-  /**
-   * Continue with the rebase after the user has resolved all conflicts with
-   * tracked files in the working directory.
-   */
-  public async continueRebase(
-    kind: MultiCommitOperationKind,
-    repository: Repository,
-    workingDirectory: WorkingDirectoryStatus,
-    conflictsState: RebaseConflictState
-  ): Promise<RebaseResult> {
-    const stateBefore = this.repositoryStateManager.get(repository)
-    const { manualResolutions } = conflictsState
-
-    const beforeSha = getTipSha(stateBefore.branchesState.tip)
-
-    log.info(`[continueRebase] continuing rebase for ${beforeSha}`)
-
-    const result = await this.appStore._continueRebase(
-      repository,
-      workingDirectory,
-      manualResolutions
-    )
-
-    if (result === RebaseResult.CompletedWithoutError) {
-      this.statsStore.recordOperationSuccessfulWithConflicts(kind)
-    }
-
-    await this.appStore._loadStatus(repository)
-
-    const stateAfter = this.repositoryStateManager.get(repository)
-    const { tip } = stateAfter.branchesState
-    const afterSha = getTipSha(tip)
-
-    log.info(
-      `[continueRebase] completed rebase - got ${result} and on tip ${afterSha} - kind ${tip.kind}`
-    )
-
-    return result
-  }
-
-  /** aborts an in-flight merge and refreshes the repository's status */
-  public async abortMerge(repository: Repository) {
-    await this.appStore._abortMerge(repository)
-    await this.appStore._loadStatus(repository)
-  }
-
-  /**
-   * commits an in-flight merge and shows a banner if successful
-   *
-   * @param repository
-   * @param workingDirectory
-   * @param successfulMergeBannerState information for banner to be displayed if merge is successful
-   */
-  public async finishConflictedMerge(
-    repository: Repository,
-    workingDirectory: WorkingDirectoryStatus,
-    successfulMergeBanner: Banner,
-    isSquash: boolean
-  ) {
-    // get manual resolutions in case there are manual conflicts
-    const repositoryState = this.repositoryStateManager.get(repository)
-    const { conflictState } = repositoryState.changesState
-    if (conflictState === null) {
-      // if this doesn't exist, something is very wrong and we shouldn't proceed 😢
-      log.error(
-        'Conflict state missing during finishConflictedMerge. No merge will be committed.'
-      )
-      return
-    }
-    const result = await this.appStore._finishConflictedMerge(
-      repository,
-      workingDirectory,
-      conflictState.manualResolutions
-    )
-    if (result !== undefined) {
-      this.setBanner(successfulMergeBanner)
-      if (isSquash) {
-        // Squash merge will not hit the normal recording of successful merge in
-        // app-store._mergeBranch because it only records there when there are
-        // no conflicts. Thus, recordSquashMergeSuccessful is done here in order
-        // to capture all successful squash merges under this metric.
-        this.statsStore.recordSquashMergeSuccessful()
-        this.statsStore.recordSquashMergeSuccessfulWithConflicts()
-      }
-    }
-  }
-
   /** Record the given launch stats. */
   public recordLaunchStats(stats: ILaunchStats): Promise<void> {
     return this.appStore._recordLaunchStats(stats)
@@ -762,15 +518,6 @@ export class Dispatcher {
   /** Report any stats if needed. */
   public reportStats(): Promise<void> {
     return this.appStore._reportStats()
-  }
-
-  /** Changes the URL for the remote that matches the given name  */
-  public setRemoteURL(
-    repository: Repository,
-    name: string,
-    url: string
-  ): Promise<void> {
-    return this.appStore._setRemoteURL(repository, name, url)
   }
 
   /** Open the URL in a browser */
@@ -969,14 +716,6 @@ export class Dispatcher {
     }
   }
 
-  /** Prompt the user to authenticate for a generic git server. */
-  public promptForGenericGitAuthentication(
-    repository: Repository | CloningRepository,
-    retry: RetryAction
-  ): Promise<void> {
-    return this.appStore.promptForGenericGitAuthentication(repository, retry)
-  }
-
   /** Save the generic git credentials. */
   public async saveGenericGitCredentials(
     hostname: string,
@@ -998,22 +737,6 @@ export class Dispatcher {
     }
   }
 
-  /** Change the selected image diff type. */
-  public changeImageDiffType(type: ImageDiffType): Promise<void> {
-    return this.appStore._changeImageDiffType(type)
-  }
-
-  /** Change the hide whitespace in changes diff setting */
-  public onHideWhitespaceInChangesDiffChanged(
-    hideWhitespaceInDiff: boolean,
-    repository: Repository
-  ): Promise<void> {
-    return this.appStore._setHideWhitespaceInChangesDiff(
-      hideWhitespaceInDiff,
-      repository
-    )
-  }
-
   /** Change the hide whitespace in history diff setting */
   public onHideWhitespaceInHistoryDiffChanged(
     hideWhitespaceInDiff: boolean,
@@ -1021,19 +744,6 @@ export class Dispatcher {
     file: CommittedFileChange | null = null
   ): Promise<void> {
     return this.appStore._setHideWhitespaceInHistoryDiff(
-      hideWhitespaceInDiff,
-      repository,
-      file
-    )
-  }
-
-  /** Change the hide whitespace in pull request diff setting */
-  public onHideWhitespaceInPullRequestDiffChanged(
-    hideWhitespaceInDiff: boolean,
-    repository: Repository,
-    file: CommittedFileChange | null = null
-  ) {
-    this.appStore._setHideWhitespaceInPullRequestDiff(
       hideWhitespaceInDiff,
       repository,
       file
@@ -1126,49 +836,6 @@ export class Dispatcher {
   /** Ignore the existing `upstream` remote. */
   public ignoreExistingUpstreamRemote(repository: Repository): Promise<void> {
     return this.appStore._ignoreExistingUpstreamRemote(repository)
-  }
-
-  /**
-   * Set whether the user has chosen to hide or show the
-   * co-authors field in the commit message component
-   *
-   * @param repository Co-author settings are per-repository
-   */
-  public setShowCoAuthoredBy(
-    repository: Repository,
-    showCoAuthoredBy: boolean
-  ) {
-    return this.appStore._setShowCoAuthoredBy(repository, showCoAuthoredBy)
-  }
-
-  /**
-   * Update the per-repository co-authors list
-   *
-   * @param repository Co-author settings are per-repository
-   * @param coAuthors  Zero or more authors
-   */
-  public setCoAuthors(
-    repository: Repository,
-    coAuthors: ReadonlyArray<IAuthor>
-  ) {
-    return this.appStore._setCoAuthors(repository, coAuthors)
-  }
-
-  /**
-   * Initialize the compare state for the current repository.
-   */
-  public initializeCompare(
-    repository: Repository,
-    initialAction?: CompareAction
-  ) {
-    return this.appStore._initializeCompare(repository, initialAction)
-  }
-
-  /**
-   * Update the compare state for the current repository
-   */
-  public executeCompare(repository: Repository, action: CompareAction) {
-    return this.appStore._executeCompare(repository, action)
   }
 
   /** Update the compare form state for the current repository */
@@ -1462,11 +1129,6 @@ export class Dispatcher {
     return this.commitStatusStore.fetchCheckSuite(repository, checkSuiteId)
   }
 
-  /** Drops the given stash in the given repository */
-  public dropStash(repository: Repository, stashEntry: IStashEntry) {
-    return this.appStore._dropStashEntry(repository, stashEntry)
-  }
-
   /**
    * Set the width of the commit summary column in the
    * history view to the given value.
@@ -1647,14 +1309,6 @@ export class Dispatcher {
     await sleep(500)
   }
 
-  /**
-   * Update the cherry pick progress in application state by querying the Git
-   * repository state.
-   */
-  public setCherryPickProgressFromState(repository: Repository) {
-    return this.appStore._setCherryPickProgressFromState(repository)
-  }
-
   /** Method to record cherry pick initiated via the context menu. */
   public recordCherryPickViaContextMenu() {
     this.statsStore.recordCherryPickViaContextMenu()
@@ -1725,18 +1379,6 @@ export class Dispatcher {
     )
   }
 
-  public handleConflictsDetectedOnError(
-    repository: Repository,
-    currentBranch: string,
-    theirBranch: string
-  ) {
-    return this.appStore._handleConflictsDetectedOnError(
-      repository,
-      currentBranch,
-      theirBranch
-    )
-  }
-
   /**
    * This method is to update the multi operation state to move it along in
    * steps.
@@ -1763,7 +1405,7 @@ export class Dispatcher {
       type: BannerType.ConflictsFound,
       operationDescription,
       onOpenConflictsDialog: async () => {
-        const { changesState, multiCommitOperationState } =
+        const { changesState } =
           this.repositoryStateManager.get(repository)
         const { conflictState } = changesState
 
@@ -1772,17 +1414,6 @@ export class Dispatcher {
             '[onConflictsFoundBanner] App is in invalid state to so conflicts dialog.'
           )
           return
-        }
-
-        if (
-          multiCommitOperationState !== null &&
-          multiCommitOperationState.operationDetail.kind ===
-          MultiCommitOperationKind.CherryPick
-        ) {
-          // TODO: expanded to other types - not functionally necessary; makes
-          // progress dialog more accurate; likely only regular rebase has the
-          // state data to also do this; need to evaluate it's importance
-          await this.setCherryPickProgressFromState(repository)
         }
 
         const { manualResolutions } = conflictState
@@ -1915,20 +1546,6 @@ export class Dispatcher {
     this.statsStore.recordPullRequestReviewDialogSwitchToPullRequest(reviewType)
   }
 
-  public startPullRequest(repository: Repository) {
-    this.appStore._startPullRequest(repository)
-  }
-
-  /**
-   * Change the selected changed file of the current pull request state.
-   */
-  public changePullRequestFileSelection(
-    repository: Repository,
-    file: CommittedFileChange
-  ): Promise<void> {
-    return this.appStore._changePullRequestFileSelection(repository, file)
-  }
-
   /**
    * Set the width of the file list column in the pull request files changed
    */
@@ -1941,10 +1558,6 @@ export class Dispatcher {
    */
   public resetPullRequestFileListWidth(): Promise<void> {
     return this.appStore._resetPullRequestFileListWidth()
-  }
-
-  public updatePullRequestBaseBranch(repository: Repository, branch: Branch) {
-    this.appStore._updatePullRequestBaseBranch(repository, branch)
   }
 
   /**

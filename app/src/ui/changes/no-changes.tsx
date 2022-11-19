@@ -13,7 +13,6 @@ import { TipState, IValidBranch } from '../../models/tip'
 import { Ref } from '../lib/ref'
 import { IAheadBehind } from '../../models/branch'
 import { IRemote } from '../../models/remote'
-import { isCurrentBranchForcePush } from '../../lib/rebase'
 import { StashedChangesLoadStates } from '../../models/stash-entry'
 import { Dispatcher } from '../dispatcher'
 import { SuggestedActionGroup } from '../suggested-actions'
@@ -340,14 +339,6 @@ export class NoChanges extends React.Component<
     // Branch not published
     if (aheadBehind === null) {
       return this.renderPublishBranchAction(tip)
-    }
-
-    const isForcePush = isCurrentBranchForcePush(branchesState, aheadBehind)
-    if (isForcePush) {
-      // do not render an action currently after the rebase has completed, as
-      // the default behaviour is currently to pull in changes from the tracking
-      // branch which will could potentially lead to a more confusing history
-      return null
     }
 
     if (aheadBehind.behind > 0) {

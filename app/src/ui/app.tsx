@@ -62,7 +62,6 @@ import { PopupType, Popup } from '../models/popup'
 import { Banner, BannerType } from '../models/banner'
 
 import { ConfirmExitTutorial } from './tutorial'
-import { CreateTag } from './create-tag'
 
 import memoizeOne from 'memoize-one'
 import classNames from 'classnames'
@@ -696,19 +695,6 @@ export class App extends React.Component<IAppProps, IAppState> {
             key="confirm-exit-tutorial"
             onDismissed={onPopupDismissedFn}
             onContinue={this.onExitTutorialToHomeScreen}
-          />
-        )
-      }
-      case PopupType.CreateTag: {
-        return (
-          <CreateTag
-            key="create-tag"
-            repository={popup.repository}
-            onDismissed={onPopupDismissedFn}
-            dispatcher={this.props.dispatcher}
-            targetCommitSha={popup.targetCommitSha}
-            initialName={popup.initialName}
-            localTags={popup.localTags}
           />
         )
       }

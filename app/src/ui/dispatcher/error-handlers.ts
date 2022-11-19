@@ -122,8 +122,6 @@ export async function gitAuthenticationErrorHandler(
     return error
   }
 
-  await dispatcher.promptForGenericGitAuthentication(repository, retry)
-
   return null
 }
 
@@ -255,14 +253,6 @@ export async function mergeConflictHandler(
       break
   }
 
-  const { currentBranch, theirBranch } = gitContext
-
-  dispatcher.handleConflictsDetectedOnError(
-    repository,
-    currentBranch,
-    theirBranch
-  )
-
   return null
 }
 
@@ -310,57 +300,6 @@ export async function upstreamAlreadyExistsHandler(
     repository: error.repository,
     existingRemote: error.existingRemote,
   })
-
-  return null
-}
-
-/*
- * Handler for detecting when a merge conflict is reported to direct the user
- * to a different dialog than the generic Git error dialog.
- */
-export async function rebaseConflictsHandler(
-  error: Error,
-  dispatcher: Dispatcher
-): Promise<Error | null> {
-  const e = asErrorWithMetadata(error)
-  if (!e) {
-    return error
-  }
-
-  const gitError = asGitError(e.underlyingError)
-  if (!gitError) {
-    return error
-  }
-
-  const dugiteError = gitError.result.gitError
-  if (!dugiteError) {
-    return error
-  }
-
-  if (dugiteError !== DugiteError.RebaseConflicts) {
-    return error
-  }
-
-  const { repository, gitContext } = e.metadata
-  if (repository == null) {
-    return error
-  }
-
-  if (!(repository instanceof Repository)) {
-    return error
-  }
-
-  if (gitContext == null) {
-    return error
-  }
-
-  if (gitContext.kind !== 'merge' && gitContext.kind !== 'pull') {
-    return error
-  }
-
-  const { currentBranch } = gitContext
-
-  dispatcher.launchRebaseOperation(repository, currentBranch)
 
   return null
 }

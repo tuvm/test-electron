@@ -473,20 +473,13 @@ export class Preferences extends React.Component<
 
   private onSave = async () => {
     try {
-      let shouldRefreshAuthor = false
 
       if (this.state.committerName !== this.state.initialCommitterName) {
         await setGlobalConfigValue('user.name', this.state.committerName)
-        shouldRefreshAuthor = true
       }
 
       if (this.state.committerEmail !== this.state.initialCommitterEmail) {
         await setGlobalConfigValue('user.email', this.state.committerEmail)
-        shouldRefreshAuthor = true
-      }
-
-      if (this.props.repository !== null && shouldRefreshAuthor) {
-        this.props.dispatcher.refreshAuthor(this.props.repository)
       }
 
       // If the entered default branch is empty, we don't store it and keep
