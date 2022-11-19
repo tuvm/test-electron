@@ -7,7 +7,6 @@ import { Dispatcher } from '../../src/ui/dispatcher'
 import {
   AppStore,
   GitHubUserStore,
-  CloningRepositoriesStore,
   DeviceRegisterStore,
   AccountsStore,
 } from '../../src/lib/stores'
@@ -66,7 +65,6 @@ describe('App', () => {
 
     appStore = new AppStore(
       githubUserStore,
-      new CloningRepositoriesStore(),
       statsStore,
       new DeviceRegisterStore(),
       accountsStore,

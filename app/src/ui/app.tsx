@@ -4,7 +4,6 @@ import {
   IAppState,
   // RepositorySectionTab,
   FoldoutType,
-  SelectionType,
 } from '../lib/app-state'
 import { Dispatcher } from './dispatcher'
 import { AppStore } from '../lib/stores'
@@ -28,7 +27,6 @@ import { PreferencesTab } from '../models/preferences'
 import { findItemByAccessKey, itemIsSelectable } from '../models/app-menu'
 import { Account } from '../models/account'
 // import { TipState } from '../models/tip'
-import { CloningRepository } from '../models/cloning-repository'
 
 import { TitleBar, ZoomInfo, FullScreenInfo } from './window'
 
@@ -60,8 +58,6 @@ import { ApplicationTheme } from './lib/application-theme'
 import { PopupType, Popup } from '../models/popup'
 
 import { Banner, BannerType } from '../models/banner'
-
-import { ConfirmExitTutorial } from './tutorial'
 
 import memoizeOne from 'memoize-one'
 import classNames from 'classnames'
@@ -293,19 +289,6 @@ export class App extends React.Component<IAppProps, IAppState> {
     return enterpriseAccount || null
   }
 
-  private getSelectedTutorialRepository() {
-    const { selectedState } = this.state
-    const selectedRepository =
-      selectedState && selectedState.type === SelectionType.Repository
-        ? selectedState.repository
-        : null
-
-    const isTutorialRepository =
-      selectedRepository && selectedRepository.isTutorialRepository
-
-    return isTutorialRepository ? selectedRepository : null
-  }
-
   public componentDidMount() {
     // this.getUserList();
 
@@ -459,15 +442,6 @@ export class App extends React.Component<IAppProps, IAppState> {
     console.log(paths, dispatcher);
   }
 
-  private getRepository(): Repository | CloningRepository | null {
-    const state = this.state.selectedState
-    if (state == null) {
-      return null
-    }
-
-    return state.repository
-  }
-
   private renderTitlebar() {
     const inFullScreen = this.state.windowState === 'full-screen'
 
@@ -542,11 +516,6 @@ export class App extends React.Component<IAppProps, IAppState> {
 
     switch (popup.type) {
       case PopupType.Preferences:
-        let repository = this.getRepository()
-
-        if (repository instanceof CloningRepository) {
-          repository = null
-        }
 
         return (
           <Preferences
@@ -572,7 +541,6 @@ export class App extends React.Component<IAppProps, IAppState> {
             notificationsEnabled={this.state.notificationsEnabled}
             optOutOfUsageTracking={this.state.optOutOfUsageTracking}
             enterpriseAccount={this.getEnterpriseAccount()}
-            repository={repository}
             onDismissed={onPopupDismissedFn}
             selectedShell={this.state.selectedShell}
             selectedTheme={this.state.selectedTheme}
@@ -689,15 +657,6 @@ export class App extends React.Component<IAppProps, IAppState> {
             onDismissed={onPopupDismissedFn}
           />
         )
-      case PopupType.ConfirmExitTutorial: {
-        return (
-          <ConfirmExitTutorial
-            key="confirm-exit-tutorial"
-            onDismissed={onPopupDismissedFn}
-            onContinue={this.onExitTutorialToHomeScreen}
-          />
-        )
-      }
       case PopupType.MoveToApplicationsFolder: {
         return (
           <MoveToApplicationsFolder
@@ -763,16 +722,6 @@ export class App extends React.Component<IAppProps, IAppState> {
       default:
         return assertNever(popup as never, `Unknown popup type: ${popup}`)
     }
-  }
-
-  private onExitTutorialToHomeScreen = () => {
-    const tutorialRepository = this.getSelectedTutorialRepository()
-    if (!tutorialRepository) {
-      return false
-    }
-
-    this.props.dispatcher.pauseTutorial(tutorialRepository)
-    return true
   }
 
   private updateExistingLFSFilters = () => {

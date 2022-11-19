@@ -72,11 +72,6 @@ export interface IAppState {
 
   readonly accounts: ReadonlyArray<Account>
   /**
-   * The current list of repositories tracked in the application
-   */
-  readonly repositories: ReadonlyArray<Repository | CloningRepository>
-
-  /**
    * List of IDs of the most recently opened repositories (most recent first)
    */
   readonly recentRepositories: ReadonlyArray<number>
@@ -85,8 +80,6 @@ export interface IAppState {
    * A cache of the latest repository state values, keyed by the repository id
    */
   readonly localRepositoryStateLookup: Map<number, ILocalRepositoryState>
-
-  readonly selectedState: PossibleSelections | null
 
   /**
    * The state of the ongoing (if any) sign in process. See SignInState

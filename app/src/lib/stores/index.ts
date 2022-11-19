@@ -1,6 +1,6 @@
 export * from './accounts-store'
 export * from './app-store'
-export * from './cloning-repositories-store'
+// export * from './cloning-repositories-store'
 export * from './device-register-store'
 export * from './git-store'
 export * from './github-user-store'

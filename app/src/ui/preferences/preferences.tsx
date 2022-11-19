@@ -38,13 +38,13 @@ import {
   getDefaultBranch,
 } from '../../lib/helpers/default-branch'
 import { Prompts } from './prompts'
-import { Repository } from '../../models/repository'
+// import { Repository } from '../../models/repository'
 
 interface IPreferencesProps {
   readonly dispatcher: Dispatcher
   readonly dotComAccount: Account | null
   readonly enterpriseAccount: Account | null
-  readonly repository: Repository | null
+  // readonly repository: Repository | null
   readonly onDismissed: () => void
   readonly useWindowsOpenSSH: boolean
   readonly notificationsEnabled: boolean

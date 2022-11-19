@@ -367,10 +367,7 @@ function getMenuState(state: IAppState): Map<MenuIDs, IMenuItemState> {
     return getAllMenusDisabledBuilder().state
   }
 
-  return getAllMenusEnabledBuilder()
-    // .merge(getRepositoryMenuBuilder(state))
-    // .merge(getInWelcomeFlowBuilder(state.showWelcomeFlow))
-    .merge(getNoRepositoriesBuilder(state)).state
+  return getAllMenusEnabledBuilder().state
 }
 
 function getAllMenusEnabledBuilder(): MenuStateBuilder {
@@ -403,21 +400,6 @@ function getAllMenusEnabledBuilder(): MenuStateBuilder {
 
 //   return menuStateBuilder
 // }
-
-function getNoRepositoriesBuilder(state: IAppState): MenuStateBuilder {
-  const noRepositoriesDisabledIds: ReadonlyArray<MenuIDs> = [
-    'show-repository-list',
-  ]
-
-  const menuStateBuilder = new MenuStateBuilder()
-  if (state.repositories.length === 0) {
-    for (const id of noRepositoriesDisabledIds) {
-      menuStateBuilder.disable(id)
-    }
-  }
-
-  return menuStateBuilder
-}
 
 // function getRepoIssuesEnabled(repository: Repository): boolean {
 //   if (isRepositoryWithGitHubRepository(repository)) {

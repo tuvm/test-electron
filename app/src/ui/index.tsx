@@ -24,13 +24,12 @@ import {
 import {
   AppStore,
   GitHubUserStore,
-  CloningRepositoriesStore,
   DeviceRegisterStore,
   TokenStore,
   AccountsStore,
 } from '../lib/stores'
 import { UserDatabase } from '../lib/databases'
-import { SelectionType, IAppState } from '../lib/app-state'
+import { IAppState } from '../lib/app-state'
 import { StatsDatabase, StatsStore } from '../lib/stats'
 import { shellNeedsPatching, updateEnvironmentForProcess } from '../lib/shell'
 import { installDevGlobals } from './install-globals'
@@ -137,14 +136,6 @@ const sendErrorWithContext = (
           extra.currentPopup = `${currentState.currentPopup.type}`
         }
 
-        if (currentState.selectedState !== null) {
-          extra.selectedState = `${currentState.selectedState.type}`
-
-          if (currentState.selectedState.type === SelectionType.Repository) {
-            extra.selectedRepositorySection = `${currentState.selectedState.state.selectedSection}`
-          }
-        }
-
         if (currentState.currentFoldout !== null) {
           extra.currentFoldout = `${currentState.currentFoldout.type}`
         }
@@ -161,7 +152,7 @@ const sendErrorWithContext = (
           extra.activeAppErrors = `${currentState.errors.length}`
         }
 
-        extra.repositoryCount = `${currentState.repositories.length}`
+        // extra.repositoryCount = `${currentState.repositories.length}`
         extra.windowState = currentState.windowState ?? 'Unknown'
         extra.accounts = `${currentState.accounts.length}`
 
@@ -217,7 +208,6 @@ window.addEventListener('unhandledrejection', ev => {
 const gitHubUserStore = new GitHubUserStore(
   new UserDatabase('UserDatabase')
 )
-const cloningRepositoriesStore = new CloningRepositoriesStore()
 // const issuesStore = new IssuesStore(new IssuesDatabase('IssuesDatabase'))
 const statsStore = new StatsStore(
   new StatsDatabase('StatsDatabase'),
@@ -245,7 +235,7 @@ const notificationsStore = new NotificationsStore(
 
 const appStore = new AppStore(
   gitHubUserStore,
-  cloningRepositoriesStore,
+  // cloningRepositoriesStore,
   // issuesStore,
   statsStore,
   deviceRegisterStore,

@@ -1,6 +1,5 @@
 import {
   AccountsStore,
-  CloningRepositoriesStore,
   GitHubUserStore,
   DeviceRegisterStore,
 } from '.'
@@ -30,7 +29,6 @@ import {
 } from '../../models/status'
 import { TipState, IValidBranch } from '../../models/tip'
 import { Popup, PopupType } from '../../models/popup'
-import { IGitAccount } from '../../models/git-account'
 import { themeChangeMonitor } from '../../ui/lib/theme-change-monitor'
 // import { getAppPath } from '../../ui/lib/app-proxy'
 import {
@@ -43,7 +41,6 @@ import {
   getAppMenu,
   getCurrentWindowState,
   getCurrentWindowZoomFactor,
-  updatePreferredAppMenuItemLabels,
   updateAccounts,
   setWindowZoomFactor,
 } from '../../ui/main-process-proxy'
@@ -59,10 +56,7 @@ import {
   FoldoutType,
   IAppState,
   ICompareFormUpdate,
-  PossibleSelections,
   RepositorySectionTab,
-  SelectionType,
-  IRepositoryState,
   ChangesSelectionKind,
   ChangesWorkingDirectorySelection,
   IConstrainedValue,
@@ -75,7 +69,6 @@ import {
 } from '../editors'
 import { assertNever, forceUnwrap } from '../fatal-error'
 
-import { getGenericHostname, getGenericUsername } from '../generic-git-auth'
 import { getAccountForRepository } from '../get-account-for-repository'
 import {
   getCommitDiff,
@@ -89,9 +82,6 @@ import {
 } from '../git/lfs'
 import { updateMenuState } from '../menu-update'
 import { merge } from '../merge'
-import {
-  matchGitHubRepository,
-} from '../repository-matching'
 import { RetryAction } from '../../models/retry-actions'
 import {
   Default as DefaultShell,
@@ -128,7 +118,6 @@ import {
 } from '../../models/uncommitted-changes-strategy'
 import { StashedChangesLoadStates } from '../../models/stash-entry'
 import { arrayEquals } from '../equality'
-import { MenuLabelsEvent } from '../../models/menu-labels'
 import {
   TutorialStep,
   orderedTutorialSteps,
@@ -330,7 +319,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
   public constructor(
     private readonly gitHubUserStore: GitHubUserStore,
-    private readonly cloningRepositoriesStore: CloningRepositoriesStore,
+    // private readonly cloningRepositoriesStore: CloningRepositoriesStore,
     // private readonly issuesStore: IssuesStore,
     private readonly statsStore: StatsStore,
     private readonly deviceRegisterStore: DeviceRegisterStore,
@@ -553,12 +542,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
       this.emitUpdate()
     })
 
-    this.cloningRepositoriesStore.onDidUpdate(() => {
-      this.emitUpdate()
-    })
-
-    this.cloningRepositoriesStore.onDidError(e => this.emitError(e))
-
     this.accountsStore.onDidUpdate(accounts => {
       this.accounts = accounts
       const endpointTokens = accounts.map<EndpointToken>(
@@ -633,53 +616,15 @@ export class AppStore extends TypedBaseStore<IAppState> {
     }
   }
 
-  private getSelectedState(): PossibleSelections | null {
-    const repository = this.selectedRepository
-    if (!repository) {
-      return null
-    }
-
-    if (repository instanceof CloningRepository) {
-      const progress =
-        this.cloningRepositoriesStore.getRepositoryState(repository)
-      if (!progress) {
-        return null
-      }
-
-      return {
-        type: SelectionType.CloningRepository,
-        repository,
-        progress,
-      }
-    }
-
-    if (repository.missing) {
-      return { type: SelectionType.MissingRepository, repository }
-    }
-
-    return {
-      type: SelectionType.Repository,
-      repository,
-      state: this.repositoryStateCache.get(repository),
-    }
-  }
-
   public getState(): IAppState {
-    const repositories = [
-      ...this.repositories,
-      ...this.cloningRepositoriesStore.repositories,
-    ]
-
     return {
       userList: this.userList,
       accounts: this.accounts,
-      repositories,
       recentRepositories: this.recentRepositories,
       localRepositoryStateLookup: this.localRepositoryStateLookup,
       windowState: this.windowState,
       windowZoomFactor: this.windowZoomFactor,
       appIsFocused: this.appIsFocused,
-      selectedState: this.getSelectedState(),
       deviceRegisterState: this.deviceRegisterStore.getState(),
       currentPopup: this.currentPopup,
       currentFoldout: this.currentFoldout,
@@ -1032,8 +977,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
     const shellValue = localStorage.getItem(shellKey)
     this.selectedShell = shellValue ? parseShell(shellValue) : DefaultShell
 
-    this.updateMenuLabelsForSelectedRepository()
-
     const imageDiffTypeValue = localStorage.getItem(imageDiffTypeKey)
     this.imageDiffType =
       imageDiffTypeValue === null
@@ -1177,73 +1120,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
     }
 
     return null
-  }
-
-  /**
-   * Update menu labels for the selected repository.
-   *
-   * If selected repository type is a `CloningRepository` or
-   * `MissingRepository`, the menu labels will be updated but they will lack
-   * the expected `IRepositoryState` and revert to the default values.
-   */
-  private updateMenuLabelsForSelectedRepository() {
-    const { selectedState } = this.getState()
-
-    if (
-      selectedState !== null &&
-      selectedState.type === SelectionType.Repository
-    ) {
-      this.updateMenuItemLabels(selectedState.state)
-    } else {
-      this.updateMenuItemLabels(null)
-    }
-  }
-
-  /**
-   * Update the menus in the main process using the provided repository state
-   *
-   * @param state the current repository state, or `null` if the repository is
-   *              being cloned or is missing
-   */
-  private updateMenuItemLabels(state: IRepositoryState | null) {
-    const {
-      selectedShell,
-      selectedExternalEditor,
-      askForConfirmationOnRepositoryRemoval,
-      askForConfirmationOnForcePush,
-    } = this
-
-    const labels: MenuLabelsEvent = {
-      selectedShell,
-      selectedExternalEditor,
-      askForConfirmationOnRepositoryRemoval,
-      askForConfirmationOnForcePush,
-    }
-
-    if (state === null) {
-      updatePreferredAppMenuItemLabels(labels)
-      return
-    }
-
-    const { changesState, branchesState } = state
-    const { currentPullRequest } = branchesState
-
-    let contributionTargetDefaultBranch: string | undefined
-
-
-    const isStashedChangesVisible =
-      changesState.selection.kind === ChangesSelectionKind.Stash
-
-    const askForConfirmationWhenStashingAllChanges =
-      changesState.stashEntry !== null
-
-    updatePreferredAppMenuItemLabels({
-      ...labels,
-      contributionTargetDefaultBranch,
-      isStashedChangesVisible,
-      hasCurrentPullRequest: currentPullRequest !== null,
-      askForConfirmationWhenStashingAllChanges,
-    })
   }
 
   private updateRepositorySelectionAfterRepositoriesChanged() {
@@ -1415,7 +1291,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
     })
     this.emitUpdate()
 
-    this.updateMenuLabelsForSelectedRepository()
   }
 
   /**
@@ -1482,7 +1357,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
       }
     })
 
-    this.updateMenuLabelsForSelectedRepository()
     this.emitUpdate()
     this.updateChangesStashDiff(repository)
 
@@ -1730,64 +1604,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
     return Promise.resolve()
   }
 
-  private getAccountForRemoteURL(remote: string): IGitAccount | null {
-    const account = matchGitHubRepository(this.accounts, remote)?.account
-    if (account !== undefined) {
-      const hasValidToken =
-        account.token.length > 0 ? 'has token' : 'empty token'
-      log.info(
-        `[AppStore.getAccountForRemoteURL] account found for remote: ${remote} - ${account.login} (${hasValidToken})`
-      )
-      return account
-    }
-
-    const hostname = getGenericHostname(remote)
-    const username = getGenericUsername(hostname)
-    if (username != null) {
-      log.info(
-        `[AppStore.getAccountForRemoteURL] found generic credentials for '${hostname}' and '${username}'`
-      )
-      return { login: username, endpoint: hostname }
-    }
-
-    log.info(
-      `[AppStore.getAccountForRemoteURL] no generic credentials found for '${remote}'`
-    )
-
-    return null
-  }
-
-  /** This shouldn't be called directly. See `Dispatcher`. */
-  public _clone(
-    url: string,
-    path: string,
-    options?: { branch?: string; defaultBranch?: string }
-  ): {
-    promise: Promise<boolean>
-    repository: CloningRepository
-  } {
-    const account = this.getAccountForRemoteURL(url)
-    const promise = this.cloningRepositoriesStore.clone(url, path, {
-      ...options,
-      account,
-    })
-    const repository = this.cloningRepositoriesStore.repositories.find(
-      r => r.url === url && r.path === path
-    )!
-
-    promise.then(success => {
-      if (success) {
-        this.statsStore.recordCloneRepository()
-      }
-    })
-
-    return { promise, repository }
-  }
-
-  public _removeCloningRepository(repository: CloningRepository) {
-    this.cloningRepositoriesStore.remove(repository)
-  }
-
   public _setRepositoryCommitToAmend(
     repository: Repository,
     commit: Commit | null
@@ -1986,8 +1802,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
     this.askForConfirmationOnRepositoryRemoval = confirmRepoRemoval
     setBoolean(confirmRepoRemovalKey, confirmRepoRemoval)
 
-    this.updateMenuLabelsForSelectedRepository()
-
     this.emitUpdate()
 
     return Promise.resolve()
@@ -2026,8 +1840,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
     this.askForConfirmationOnForcePush = value
     setBoolean(confirmForcePushKey, value)
 
-    this.updateMenuLabelsForSelectedRepository()
-
     this.emitUpdate()
 
     return Promise.resolve()
@@ -2058,7 +1870,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
     localStorage.setItem(externalEditorKey, selectedEditor)
     this.emitUpdate()
 
-    this.updateMenuLabelsForSelectedRepository()
     return promise
   }
 
@@ -2066,8 +1877,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
     this.selectedShell = shell
     localStorage.setItem(shellKey, shell)
     this.emitUpdate()
-
-    this.updateMenuLabelsForSelectedRepository()
 
     return Promise.resolve()
   }
