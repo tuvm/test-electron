@@ -1,7 +1,7 @@
 // import { Commit } from './commit'
 // import { CommitIdentity } from './commit-identity'
 import { GitAuthor } from './git-author'
-import { GitHubRepository } from './github-repository'
+// import { GitHubRepository } from './github-repository'
 // import { isWebFlowCommitter } from '../lib/web-flow-committer'
 
 /** The minimum properties we need in order to display a user's avatar. */
@@ -27,12 +27,12 @@ export interface IAvatarUser {
 
 export function getAvatarUserFromAuthor(
   author: GitAuthor,
-  gitHubRepository: GitHubRepository | null
+  // gitHubRepository: GitHubRepository | null
 ) {
   return {
     email: author.email,
     name: author.name,
-    endpoint: gitHubRepository === null ? null : gitHubRepository.endpoint,
+    // endpoint: gitHubRepository === null ? null : gitHubRepository.endpoint,
     avatarURL: undefined,
   }
 }

@@ -18,8 +18,8 @@ import { Progress } from './progress'
 // import { RepositorySettingsTab } from '../ui/repository-settings/repository-settings'
 // import { ICommitMessage } from './commit-message'
 // import { IAuthor } from './author'
-import { IRefCheck } from '../lib/ci-checks/ci-checks'
-import { GitHubRepository } from './github-repository'
+// import { IRefCheck } from '../lib/ci-checks/ci-checks'
+// import { GitHubRepository } from './github-repository'
 // import { ValidNotificationPullRequestReview } from '../lib/valid-notification-pull-request-review'
 // import { UnreachableCommitsTab } from '../ui/history/unreachable-commits-dialog'
 
@@ -328,13 +328,13 @@ export type Popup =
   //   commitSha: string
   //   checks: ReadonlyArray<IRefCheck>
   // }
-  | {
-    type: PopupType.CICheckRunRerun
-    checkRuns: ReadonlyArray<IRefCheck>
-    repository: GitHubRepository
-    prRef: string
-    failedOnly: boolean
-  }
+  // | {
+  //   type: PopupType.CICheckRunRerun
+  //   checkRuns: ReadonlyArray<IRefCheck>
+  //   repository: GitHubRepository
+  //   prRef: string
+  //   failedOnly: boolean
+  // }
   | { type: PopupType.WarnForcePush; operation: string; onBegin: () => void }
   // | {
   //   type: PopupType.DiscardChangesRetry

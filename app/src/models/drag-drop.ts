@@ -1,5 +1,5 @@
 // import { Commit } from './commit'
-import { GitHubRepository } from './github-repository'
+// import { GitHubRepository } from './github-repository'
 
 /**
  * This is a type is used in conjunction with the drag and drop manager to
@@ -23,7 +23,7 @@ export type DragElement = {
   type: DragType.Commit
   // commit: Commit
   // selectedCommits: ReadonlyArray<Commit>
-  gitHubRepository: GitHubRepository | null
+  // gitHubRepository: GitHubRepository | null
 }
 
 export enum DropTargetType {
