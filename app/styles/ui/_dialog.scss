@@ -1,26 +1,8 @@
 @import '../mixins';
-@import 'dialogs/merge';
-@import 'dialogs/conflicts';
-@import 'dialogs/rebase';
 @import 'dialogs/progress-dialog';
-@import 'dialogs/abort-merge';
-@import 'dialogs/push-needs-pull';
-@import 'dialogs/publish-repository';
-@import 'dialogs/repository-settings';
-@import 'dialogs/release-notes';
 @import 'dialogs/usage-reporting';
-@import 'dialogs/stash-changes';
-@import 'dialogs/commit-conflicts-warning';
-@import 'dialogs/create-tutorial-repository';
-@import 'dialogs/create-fork';
-@import 'dialogs/fork-settings';
-@import 'dialogs/cherry-pick';
 @import 'dialogs/thank-you';
-@import 'dialogs/commit-message';
-@import 'dialogs/choose-branch';
 @import 'dialogs/ci-check-run-rerun';
-@import 'dialogs/unreachable-commits';
-@import 'dialogs/open-pull-request';
 
 // The styles herein attempt to follow a flow where margins are only applied
 // to the bottom of elements (with the exception of the last child). This to
@@ -69,6 +51,7 @@ dialog {
     &.modal-enter {
       opacity: 0 !important;
     }
+
     &.modal-enter-active {
       opacity: 1 !important;
     }
@@ -128,7 +111,7 @@ dialog {
   // The dialog embeds a fieldset as the first child of the form element
   // in order to be able to disable all form elements and buttons in one
   // swoop. This resets all styles for that fieldset.
-  & > form > fieldset {
+  &>form>fieldset {
     border: 0;
     margin: 0;
     padding: 0;
@@ -196,6 +179,7 @@ dialog {
         outline: 0;
       }
     }
+
     @include close-button;
   }
 
@@ -279,6 +263,7 @@ dialog {
     h2 {
       font-size: var(--font-size-md);
     }
+
     h3 {
       font-size: var(--font-size);
     }
@@ -340,7 +325,7 @@ dialog {
     border-bottom: 1px solid var(--form-error-border-color);
     color: var(--form-error-text-color);
 
-    > .octicon {
+    >.octicon {
       flex-grow: 0;
       flex-shrink: 0;
       margin-right: var(--spacing);
@@ -353,6 +338,7 @@ dialog {
   }
 
   &#app-error {
+
     // Use wider dialogs for raw git errors, to make sure we can display lines
     // up to 80 characters long without wrapping them.
     &.raw-git-error {
@@ -384,27 +370,35 @@ dialog {
   &#preferences {
     width: 600px;
   }
+
   &#about {
     width: 450px;
   }
+
   &#create-repository {
     width: 400px;
   }
+
   &#create-branch {
     width: 400px;
+
     .link-button-component {
       display: inline;
     }
   }
+
   &#push-branch-commits {
     width: 450px;
   }
+
   &#publish-branch {
     width: 450px;
   }
+
   &#generic-git-auth {
     width: 450px;
   }
+
   &#create-tag {
     width: 400px;
 

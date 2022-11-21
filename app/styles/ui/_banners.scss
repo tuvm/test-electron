@@ -1,5 +1,4 @@
 @import 'banners/successful';
-@import 'banners/conflicts';
 @import 'banners/update-available';
 @import 'banners/open_thank_you_card';
 
@@ -27,6 +26,7 @@
     justify-content: left;
     align-items: center;
   }
+
   .close {
     display: flex;
     flex-shrink: 0;
