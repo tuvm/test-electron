@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import * as React from 'react'
-import { DesktopFakeRepository } from '../../lib/desktop-fake-repository'
+// import { DesktopFakeRepository } from '../../lib/desktop-fake-repository'
 import {
   ReleaseNoteHeaderLeftUri,
   ReleaseNoteHeaderRightUri,
@@ -35,7 +35,7 @@ export class ThankYou extends React.Component<IThankYouProps, {}> {
             text={entry.message}
             emoji={this.props.emoji}
             renderUrlsAsLinks={true}
-            repository={DesktopFakeRepository}
+            // repository={DesktopFakeRepository}
           />
         </li>
       )

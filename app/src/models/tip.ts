@@ -1,4 +1,3 @@
-import { Branch } from './branch'
 import { assertNever } from '../lib/fatal-error'
 
 export enum TipState {
@@ -32,19 +31,10 @@ export interface IDetachedHead {
   readonly currentSha: string
 }
 
-export interface IValidBranch {
-  readonly kind: TipState.Valid
-  /**
-   * The branch information associated with the current tip of the repository.
-   */
-  readonly branch: Branch
-}
-
 export type Tip =
   | IUnknownRepository
   | IUnbornRepository
   | IDetachedHead
-  | IValidBranch
 
 /**
  * Gets a value indicating whether two Tip instances refer to the
@@ -63,18 +53,7 @@ export function tipEquals(x: Tip, y: Tip) {
       return x.kind === y.kind && x.ref === y.ref
     case TipState.Detached:
       return x.kind === y.kind && x.currentSha === y.currentSha
-    case TipState.Valid:
-      return x.kind === y.kind && branchEquals(x.branch, y.branch)
     default:
       return assertNever(x, `Unknown tip state ${kind}`)
   }
-}
-
-function branchEquals(x: Branch, y: Branch) {
-  return (
-    x.type === y.type &&
-    x.tip.sha === y.tip.sha &&
-    x.upstreamRemoteName === y.upstreamRemoteName &&
-    x.upstream === y.upstream
-  )
 }

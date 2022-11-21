@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import { LinkButton } from './link-button'
-import { Repository } from '../../models/repository'
+// import { Repository } from '../../models/repository'
 import { Tokenizer, TokenType, TokenResult } from '../../lib/text-token-parser'
 import { assertNever } from '../../lib/fatal-error'
 import memoizeOne from 'memoize-one'
@@ -31,16 +31,16 @@ interface IRichTextProps {
    * If not specified, or the repository is a non-GitHub repository,
    * no link highlighting is performed.
    */
-  readonly repository?: Repository
+  // readonly repository?: Repository
 }
 
 function getElements(
   emoji: Map<string, string>,
-  repository: Repository | undefined,
+  // repository: Repository | undefined,
   renderUrlsAsLinks: boolean | undefined,
   text: string | ReadonlyArray<TokenResult>
 ) {
-  const tokenizer = new Tokenizer(emoji, repository)
+  const tokenizer = new Tokenizer(emoji)
   const tokens = typeof text === 'string' ? tokenizer.tokenize(text) : text
 
   return tokens.map((token, index) => {
@@ -131,7 +131,7 @@ export class RichText extends React.Component<IRichTextProps, IRichTextState> {
   }
 
   public render() {
-    const { emoji, repository, renderUrlsAsLinks, text } = this.props
+    const { emoji, renderUrlsAsLinks, text } = this.props
 
     // If we've been given an empty string then return null so that we don't end
     // up introducing an extra empty <span>.
@@ -144,7 +144,7 @@ export class RichText extends React.Component<IRichTextProps, IRichTextState> {
         {this.state.overflowed && (
           <Tooltip target={this.containerRef}>{this.getTitle(text)}</Tooltip>
         )}
-        {this.getElements(emoji, repository, renderUrlsAsLinks, text)}
+        {this.getElements(emoji, renderUrlsAsLinks, text)}
       </div>
     )
   }

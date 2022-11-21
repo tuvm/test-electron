@@ -1,26 +1,17 @@
-import {
-  GitError as DugiteError,
-} from 'dugite'
+// import {
+//   GitError as DugiteError,
+// } from 'dugite'
 
 import { Dispatcher } from '.'
 import { ExternalEditorError } from '../../lib/editors/shared'
 import {
-  DiscardChangesError,
   ErrorWithMetadata,
 } from '../../lib/error-with-metadata'
-import { AuthenticationErrors } from '../../lib/git/authentication'
-import { GitError, isAuthFailureError } from '../../lib/git/core'
+// import { AuthenticationErrors } from '../../lib/git/authentication'
+// import { GitError, isAuthFailureError } from '../../lib/git/core'
 import { ShellError } from '../../lib/shells'
-import { UpstreamAlreadyExistsError } from '../../lib/stores/upstream-already-exists-error'
 
 import { PopupType } from '../../models/popup'
-import {
-  Repository,
-  isRepositoryWithGitHubRepository,
-} from '../../models/repository'
-import { hasWritePermission } from '../../models/github-repository'
-import { RetryActionType } from '../../models/retry-actions'
-import { parseFilesToBeOverwritten } from '../lib/parse-files-to-be-overwritten'
 
 /**
  * Cast the error to an error with metadata if possible. Otherwise return null.
@@ -34,13 +25,13 @@ function asErrorWithMetadata(error: Error): ErrorWithMetadata | null {
 }
 
 /** Cast the error to a `GitError` if possible. Otherwise return null. */
-function asGitError(error: Error): GitError | null {
-  if (error instanceof GitError) {
-    return error
-  } else {
-    return null
-  }
-}
+// function asGitError(error: Error): GitError | null {
+//   if (error instanceof GitError) {
+//     return error
+//   } else {
+//     return null
+//   }
+// }
 
 function asEditorError(error: Error): ExternalEditorError | null {
   if (error instanceof ExternalEditorError) {
@@ -81,49 +72,31 @@ export async function backgroundTaskHandler(
 }
 
 /** Handle git authentication errors in a manner that seems Right And Good. */
-export async function gitAuthenticationErrorHandler(
-  error: Error,
-  dispatcher: Dispatcher
-): Promise<Error | null> {
-  const e = asErrorWithMetadata(error)
-  if (!e) {
-    return error
-  }
+// export async function gitAuthenticationErrorHandler(
+//   error: Error,
+//   dispatcher: Dispatcher
+// ): Promise<Error | null> {
+//   const e = asErrorWithMetadata(error)
+//   if (!e) {
+//     return error
+//   }
 
-  const gitError = asGitError(e.underlyingError)
-  if (!gitError) {
-    return error
-  }
+//   const gitError = asGitError(e.underlyingError)
+//   if (!gitError) {
+//     return error
+//   }
 
-  const dugiteError = gitError.result.gitError
-  if (!dugiteError) {
-    return error
-  }
+//   const dugiteError = gitError.result.gitError
+//   if (!dugiteError) {
+//     return error
+//   }
 
-  if (!AuthenticationErrors.has(dugiteError)) {
-    return error
-  }
+//   if (!AuthenticationErrors.has(dugiteError)) {
+//     return error
+//   }
 
-  const repository = e.metadata.repository
-  if (!repository) {
-    return error
-  }
-
-  // If it's a GitHub repository then it's not some generic git server
-  // authentication problem, but more likely a legit permission problem. So let
-  // the error continue to bubble up.
-  if (repository instanceof Repository && repository.gitHubRepository) {
-    return error
-  }
-
-  const retry = e.metadata.retryAction
-  if (!retry) {
-    log.error(`No retry action provided for a git authentication error.`, e)
-    return error
-  }
-
-  return null
-}
+//   return null
+// }
 
 export async function externalEditorErrorHandler(
   error: Error,
@@ -163,381 +136,190 @@ export async function openShellErrorHandler(
 }
 
 /** Handle errors where they need to pull before pushing. */
-export async function pushNeedsPullHandler(
-  error: Error,
-  dispatcher: Dispatcher
-): Promise<Error | null> {
-  const e = asErrorWithMetadata(error)
-  if (!e) {
-    return error
-  }
+// export async function pushNeedsPullHandler(
+//   error: Error,
+//   dispatcher: Dispatcher
+// ): Promise<Error | null> {
+//   const e = asErrorWithMetadata(error)
+//   if (!e) {
+//     return error
+//   }
 
-  const gitError = asGitError(e.underlyingError)
-  if (!gitError) {
-    return error
-  }
+//   const gitError = asGitError(e.underlyingError)
+//   if (!gitError) {
+//     return error
+//   }
 
-  const dugiteError = gitError.result.gitError
-  if (!dugiteError) {
-    return error
-  }
+//   const dugiteError = gitError.result.gitError
+//   if (!dugiteError) {
+//     return error
+//   }
 
-  if (dugiteError !== DugiteError.PushNotFastForward) {
-    return error
-  }
+//   if (dugiteError !== DugiteError.PushNotFastForward) {
+//     return error
+//   }
 
-  const repository = e.metadata.repository
-  if (!repository) {
-    return error
-  }
-
-  if (!(repository instanceof Repository)) {
-    return error
-  }
-
-  dispatcher.showPopup({ type: PopupType.PushNeedsPull, repository })
-
-  return null
-}
+//   return null
+// }
 
 /**
  * Handler for detecting when a merge conflict is reported to direct the user
  * to a different dialog than the generic Git error dialog.
  */
-export async function mergeConflictHandler(
-  error: Error,
-  dispatcher: Dispatcher
-): Promise<Error | null> {
-  const e = asErrorWithMetadata(error)
-  if (!e) {
-    return error
-  }
+// export async function mergeConflictHandler(
+//   error: Error,
+//   dispatcher: Dispatcher
+// ): Promise<Error | null> {
+//   const e = asErrorWithMetadata(error)
+//   if (!e) {
+//     return error
+//   }
 
-  const gitError = asGitError(e.underlyingError)
-  if (!gitError) {
-    return error
-  }
+//   const gitError = asGitError(e.underlyingError)
+//   if (!gitError) {
+//     return error
+//   }
 
-  const dugiteError = gitError.result.gitError
-  if (!dugiteError) {
-    return error
-  }
+//   const dugiteError = gitError.result.gitError
+//   if (!dugiteError) {
+//     return error
+//   }
 
-  if (dugiteError !== DugiteError.MergeConflicts) {
-    return error
-  }
+//   if (dugiteError !== DugiteError.MergeConflicts) {
+//     return error
+//   }
 
-  const { repository, gitContext } = e.metadata
-  if (repository == null) {
-    return error
-  }
-
-  if (!(repository instanceof Repository)) {
-    return error
-  }
-
-  if (gitContext == null) {
-    return error
-  }
-
-  if (!(gitContext.kind === 'merge' || gitContext.kind === 'pull')) {
-    return error
-  }
-
-  switch (gitContext.kind) {
-    case 'pull':
-      dispatcher.mergeConflictDetectedFromPull()
-      break
-    case 'merge':
-      dispatcher.mergeConflictDetectedFromExplicitMerge()
-      break
-  }
-
-  return null
-}
+//   return null
+// }
 
 /**
  * Handler for when we attempt to install the global LFS filters and LFS throws
  * an error.
  */
-export async function lfsAttributeMismatchHandler(
-  error: Error,
-  dispatcher: Dispatcher
-): Promise<Error | null> {
-  const gitError = asGitError(error)
-  if (!gitError) {
-    return error
-  }
+// export async function lfsAttributeMismatchHandler(
+//   error: Error,
+//   dispatcher: Dispatcher
+// ): Promise<Error | null> {
+//   const gitError = asGitError(error)
+//   if (!gitError) {
+//     return error
+//   }
 
-  const dugiteError = gitError.result.gitError
-  if (!dugiteError) {
-    return error
-  }
+//   const dugiteError = gitError.result.gitError
+//   if (!dugiteError) {
+//     return error
+//   }
 
-  if (dugiteError !== DugiteError.LFSAttributeDoesNotMatch) {
-    return error
-  }
+//   if (dugiteError !== DugiteError.LFSAttributeDoesNotMatch) {
+//     return error
+//   }
 
-  dispatcher.showPopup({ type: PopupType.LFSAttributeMismatch })
+//   dispatcher.showPopup({ type: PopupType.LFSAttributeMismatch })
 
-  return null
-}
+//   return null
+// }
 
-/**
- * Handler for when an upstream remote already exists but doesn't actually match
- * the upstream repository.
- */
-export async function upstreamAlreadyExistsHandler(
-  error: Error,
-  dispatcher: Dispatcher
-): Promise<Error | null> {
-  if (!(error instanceof UpstreamAlreadyExistsError)) {
-    return error
-  }
-
-  dispatcher.showPopup({
-    type: PopupType.UpstreamAlreadyExists,
-    repository: error.repository,
-    existingRemote: error.existingRemote,
-  })
-
-  return null
-}
-
-const rejectedPathRe =
-  /^ ! \[remote rejected\] .*? -> .*? \(refusing to allow an OAuth App to create or update workflow `(.*?)` without `workflow` scope\)/m
+// const samlReauthErrorMessageRe =
+//   /`([^']+)' organization has enabled or enforced SAML SSO.*?you must re-authorize/s
 
 /**
  * Attempts to detect whether an error is the result of a failed push
  * due to insufficient OAuth permissions (missing workflow scope)
  */
-export async function refusedWorkflowUpdate(
-  error: Error,
-  dispatcher: Dispatcher
-) {
-  const e = asErrorWithMetadata(error)
-  if (!e) {
-    return error
-  }
+// export async function samlReauthRequired(error: Error, dispatcher: Dispatcher) {
+//   const e = asErrorWithMetadata(error)
+//   if (!e) {
+//     return error
+//   }
 
-  const gitError = asGitError(e.underlyingError)
-  if (!gitError) {
-    return error
-  }
+//   const gitError = asGitError(e.underlyingError)
+//   if (!gitError || gitError.result.gitError === null) {
+//     return error
+//   }
 
-  const { repository } = e.metadata
+//   if (!isAuthFailureError(gitError.result.gitError)) {
+//     return error
+//   }
 
-  if (!(repository instanceof Repository)) {
-    return error
-  }
 
-  if (!isRepositoryWithGitHubRepository(repository)) {
-    return error
-  }
+//   const remoteMessage = getRemoteMessage(gitError.result.stderr)
+//   const match = samlReauthErrorMessageRe.exec(remoteMessage)
 
-  const match = rejectedPathRe.exec(error.message)
+//   if (!match) {
+//     return error
+//   }
 
-  if (!match) {
-    return error
-  }
-
-  dispatcher.showPopup({
-    type: PopupType.PushRejectedDueToMissingWorkflowScope,
-    rejectedPath: match[1],
-    repository,
-  })
-
-  return null
-}
-
-const samlReauthErrorMessageRe =
-  /`([^']+)' organization has enabled or enforced SAML SSO.*?you must re-authorize/s
-
-/**
- * Attempts to detect whether an error is the result of a failed push
- * due to insufficient OAuth permissions (missing workflow scope)
- */
-export async function samlReauthRequired(error: Error, dispatcher: Dispatcher) {
-  const e = asErrorWithMetadata(error)
-  if (!e) {
-    return error
-  }
-
-  const gitError = asGitError(e.underlyingError)
-  if (!gitError || gitError.result.gitError === null) {
-    return error
-  }
-
-  if (!isAuthFailureError(gitError.result.gitError)) {
-    return error
-  }
-
-  const { repository } = e.metadata
-
-  if (!(repository instanceof Repository)) {
-    return error
-  }
-
-  if (repository.gitHubRepository === null) {
-    return error
-  }
-
-  const remoteMessage = getRemoteMessage(gitError.result.stderr)
-  const match = samlReauthErrorMessageRe.exec(remoteMessage)
-
-  if (!match) {
-    return error
-  }
-
-  const organizationName = match[1]
-  const endpoint = repository.gitHubRepository.endpoint
-
-  dispatcher.showPopup({
-    type: PopupType.SAMLReauthRequired,
-    organizationName,
-    endpoint,
-    retryAction: e.metadata.retryAction,
-  })
-
-  return null
-}
+//   return null
+// }
 
 /**
  * Attempts to detect whether an error is the result of a failed push
  * due to insufficient GitHub permissions. (No `write` access.)
  */
-export async function insufficientGitHubRepoPermissions(
-  error: Error,
-  dispatcher: Dispatcher
-) {
-  const e = asErrorWithMetadata(error)
-  if (!e) {
-    return error
-  }
+// export async function insufficientGitHubRepoPermissions(
+//   error: Error,
+//   dispatcher: Dispatcher
+// ) {
+//   const e = asErrorWithMetadata(error)
+//   if (!e) {
+//     return error
+//   }
 
-  const gitError = asGitError(e.underlyingError)
-  if (!gitError || gitError.result.gitError === null) {
-    return error
-  }
+//   const gitError = asGitError(e.underlyingError)
+//   if (!gitError || gitError.result.gitError === null) {
+//     return error
+//   }
 
-  if (!isAuthFailureError(gitError.result.gitError)) {
-    return error
-  }
+//   if (!isAuthFailureError(gitError.result.gitError)) {
+//     return error
+//   }
 
-  const { repository, retryAction } = e.metadata
-
-  if (
-    !(repository instanceof Repository) ||
-    !isRepositoryWithGitHubRepository(repository)
-  ) {
-    return error
-  }
-
-  if (retryAction === undefined || retryAction.type !== RetryActionType.Push) {
-    return error
-  }
-
-  if (hasWritePermission(repository.gitHubRepository)) {
-    return error
-  }
-
-  dispatcher.showCreateForkDialog(repository)
-
-  return null
-}
+//   return null
+// }
 
 /**
  * Handler for when an action the user attempts cannot be done because there are local
  * changes that would get overwritten.
  */
-export async function localChangesOverwrittenHandler(
-  error: Error,
-  dispatcher: Dispatcher
-): Promise<Error | null> {
-  const e = asErrorWithMetadata(error)
-  if (e === null) {
-    return error
-  }
+// export async function localChangesOverwrittenHandler(
+//   error: Error,
+//   dispatcher: Dispatcher
+// ): Promise<Error | null> {
+//   const e = asErrorWithMetadata(error)
+//   if (e === null) {
+//     return error
+//   }
 
-  const gitError = asGitError(e.underlyingError)
-  if (gitError === null) {
-    return error
-  }
+//   const gitError = asGitError(e.underlyingError)
+//   if (gitError === null) {
+//     return error
+//   }
 
-  const dugiteError = gitError.result.gitError
+//   const dugiteError = gitError.result.gitError
 
-  if (
-    dugiteError !== DugiteError.LocalChangesOverwritten &&
-    dugiteError !== DugiteError.MergeWithLocalChanges &&
-    dugiteError !== DugiteError.RebaseWithLocalChanges
-  ) {
-    return error
-  }
+//   if (
+//     dugiteError !== DugiteError.LocalChangesOverwritten &&
+//     dugiteError !== DugiteError.MergeWithLocalChanges &&
+//     dugiteError !== DugiteError.RebaseWithLocalChanges
+//   ) {
+//     return error
+//   }
 
-  const { repository, retryAction } = e.metadata
+//   return null
+// }
 
-  if (!(repository instanceof Repository)) {
-    return error
-  }
+// /**
+//  * Extract lines from Git's stderr output starting with the
+//  * prefix `remote: `. Useful to extract server-specific
+//  * error messages from network operations (fetch, push, pull,
+//  * etc).
+//  */
+// function getRemoteMessage(stderr: string) {
+//   const needle = 'remote: '
 
-  if (retryAction === undefined) {
-    return error
-  }
-
-  if (e.metadata.gitContext?.kind === 'checkout') {
-    dispatcher.recordErrorWhenSwitchingBranchesWithUncommmittedChanges()
-  }
-
-  const files = parseFilesToBeOverwritten(gitError.result.stderr)
-
-  dispatcher.showPopup({
-    type: PopupType.LocalChangesOverwritten,
-    repository,
-    retryAction,
-    files,
-  })
-
-  return null
-}
-
-/**
- * Handler for when an action the user attempts to discard changes and they
- * cannot be moved to trash/recycle bin
- */
-export async function discardChangesHandler(
-  error: Error,
-  dispatcher: Dispatcher
-): Promise<Error | null> {
-  if (!(error instanceof DiscardChangesError)) {
-    return error
-  }
-
-  const { retryAction } = error.metadata
-
-  if (retryAction === undefined) {
-    return error
-  }
-
-  dispatcher.showPopup({
-    type: PopupType.DiscardChangesRetry,
-    retryAction,
-  })
-
-  return null
-}
-
-/**
- * Extract lines from Git's stderr output starting with the
- * prefix `remote: `. Useful to extract server-specific
- * error messages from network operations (fetch, push, pull,
- * etc).
- */
-function getRemoteMessage(stderr: string) {
-  const needle = 'remote: '
-
-  return stderr
-    .split(/\r?\n/)
-    .filter(x => x.startsWith(needle))
-    .map(x => x.substring(needle.length))
-    .join('\n')
-}
+//   return stderr
+//     .split(/\r?\n/)
+//     .filter(x => x.startsWith(needle))
+//     .map(x => x.substring(needle.length))
+//     .join('\n')
+// }

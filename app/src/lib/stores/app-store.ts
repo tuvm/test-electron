@@ -4,18 +4,15 @@ import {
 } from '.'
 import { Account } from '../../models/account'
 import { AppMenu, IMenu } from '../../models/app-menu'
-import { Branch, IAheadBehind } from '../../models/branch'
-import { BranchesTab } from '../../models/branches-tab'
-import { CloningRepository } from '../../models/cloning-repository'
 import {
   ImageDiffType,
 } from '../../models/diff'
 import { PullRequest } from '../../models/pull-request'
-import {
-  ILocalRepositoryState,
-  Repository,
-  RepositoryWithGitHubRepository,
-} from '../../models/repository'
+// import {
+//   ILocalRepositoryState,
+//   Repository,
+//   RepositoryWithGitHubRepository,
+// } from '../../models/repository'
 
 import { Popup, PopupType } from '../../models/popup'
 import { themeChangeMonitor } from '../../ui/lib/theme-change-monitor'
@@ -50,14 +47,11 @@ import {
   launchExternalEditor,
 } from '../editors'
 
-import { getAccountForRepository } from '../get-account-for-repository'
-import {
-  getBranchAheadBehind,
-} from '../git'
-import {
-  installGlobalLFSFilters,
-  installLFSHooks,
-} from '../git/lfs'
+// import { getAccountForRepository } from '../get-account-for-repository'
+// import {
+//   installGlobalLFSFilters,
+//   // installLFSHooks,
+// } from '../git/lfs'
 import { updateMenuState } from '../menu-update'
 import {
   Default as DefaultShell,
@@ -109,8 +103,6 @@ import {
   getNotificationsEnabled,
 } from './notifications-store'
 import * as ipcRenderer from '../ipc-renderer'
-
-const LastSelectedRepositoryIDKey = 'last-selected-repository-id'
 
 const defaultSidebarWidth: number = 250
 const sidebarWidthConfigKey: string = 'sidebar-width'
@@ -167,10 +159,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
   private userList: any = {};
   private accounts: ReadonlyArray<Account> = new Array<Account>()
-  private repositories: ReadonlyArray<Repository> = new Array<Repository>()
+  // private repositories: ReadonlyArray<Repository> = new Array<Repository>()
   private recentRepositories: ReadonlyArray<number> = new Array<number>()
-
-  private selectedRepository: Repository | CloningRepository | null = null
 
   // private showWelcomeFlow = false
   private showDeviceRegisterFlow = false
@@ -181,10 +171,10 @@ export class AppStore extends TypedBaseStore<IAppState> {
   private errors: ReadonlyArray<Error> = new Array<Error>()
   private emitQueued = false
 
-  private readonly localRepositoryStateLookup = new Map<
-    number,
-    ILocalRepositoryState
-  >()
+  // private readonly localRepositoryStateLookup = new Map<
+  //   number,
+  //   ILocalRepositoryState
+  // >()
 
   /** Map from shortcut (e.g., :+1:) to on disk URL. */
   private emoji = new Map<string, string>()
@@ -251,12 +241,11 @@ export class AppStore extends TypedBaseStore<IAppState> {
   /** The current repository filter text */
   private repositoryFilterText: string = ''
 
-  /** The function to resolve the current Open in Desktop flow. */
-  private resolveOpenInDesktop:
-    | ((repository: Repository | null) => void)
-    | null = null
+  // /** The function to resolve the current Open in Desktop flow. */
+  // private resolveOpenInDesktop:
+  //   | ((repository: Repository | null) => void)
+  //   | null = null
 
-  private selectedBranchesTab = BranchesTab.Branches
   private selectedTheme = ApplicationTheme.System
   private customTheme?: ICustomTheme
   private currentTheme: ApplicationTheme = ApplicationTheme.Light
@@ -494,7 +483,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       userList: this.userList,
       accounts: this.accounts,
       recentRepositories: this.recentRepositories,
-      localRepositoryStateLookup: this.localRepositoryStateLookup,
+      // localRepositoryStateLookup: this.localRepositoryStateLookup,
       windowState: this.windowState,
       windowZoomFactor: this.windowZoomFactor,
       appIsFocused: this.appIsFocused,
@@ -535,7 +524,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
       selectedShell: this.selectedShell,
       repositoryFilterText: this.repositoryFilterText,
       resolvedExternalEditor: this.resolvedExternalEditor,
-      selectedBranchesTab: this.selectedBranchesTab,
       selectedTheme: this.selectedTheme,
       customTheme: this.customTheme,
       currentTheme: this.currentTheme,
@@ -591,8 +579,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
     this.accounts = accounts
     this.userList = userList
-
-    this.updateRepositorySelectionAfterRepositoriesChanged()
 
     this.sidebarWidth = constrain(
       getNumber(sidebarWidthConfigKey, defaultSidebarWidth)
@@ -769,35 +755,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
     )
   }
 
-  private updateRepositorySelectionAfterRepositoriesChanged() {
-    const selectedRepository = this.selectedRepository
-    let newSelectedRepository: Repository | CloningRepository | null =
-      this.selectedRepository
-    if (selectedRepository) {
-      const r =
-        this.repositories.find(
-          r =>
-            r.constructor === selectedRepository.constructor &&
-            r.id === selectedRepository.id
-        ) || null
-
-      newSelectedRepository = r
-    }
-
-    if (newSelectedRepository === null && this.repositories.length > 0) {
-      const lastSelectedID = getNumber(LastSelectedRepositoryIDKey, 0)
-      if (lastSelectedID > 0) {
-        newSelectedRepository =
-          this.repositories.find(r => r.id === lastSelectedID) || null
-      }
-
-      if (!newSelectedRepository) {
-        newSelectedRepository = this.repositories[0]
-      }
-    }
-
-  }
-
   public _setCommitSpellcheckEnabled(commitSpellcheckEnabled: boolean) {
     if (this.commitSpellcheckEnabled === commitSpellcheckEnabled) {
       return
@@ -844,9 +801,9 @@ export class AppStore extends TypedBaseStore<IAppState> {
       return
     }
 
-    if (currentPopup.type === PopupType.CloneRepository) {
-      this._completeOpenInDesktop(() => Promise.resolve(null))
-    }
+    // if (currentPopup.type === PopupType.CloneRepository) {
+    //   this._completeOpenInDesktop(() => Promise.resolve(null))
+    // }
 
     this.currentPopup = null
     this.emitUpdate()
@@ -1195,9 +1152,9 @@ export class AppStore extends TypedBaseStore<IAppState> {
     this.emitUpdate()
   }
 
-  public _reportStats() {
-    return this.statsStore.reportStats(this.accounts, this.repositories)
-  }
+  // public _reportStats() {
+  //   return this.statsStore.reportStats(this.accounts, this.repositories)
+  // }
 
   public _recordLaunchStats(stats: ILaunchStats): Promise<void> {
     return this.statsStore.recordLaunchStats(stats)
@@ -1210,35 +1167,35 @@ export class AppStore extends TypedBaseStore<IAppState> {
     }
   }
 
-  /**
-   * Start an Open in Desktop flow. This will return a new promise which will
-   * resolve when `_completeOpenInDesktop` is called.
-   */
-  public _startOpenInDesktop(fn: () => void): Promise<Repository | null> {
-    const p = new Promise<Repository | null>(
-      resolve => (this.resolveOpenInDesktop = resolve)
-    )
-    fn()
-    return p
-  }
+  // /**
+  //  * Start an Open in Desktop flow. This will return a new promise which will
+  //  * resolve when `_completeOpenInDesktop` is called.
+  //  */
+  // public _startOpenInDesktop(fn: () => void): Promise<Repository | null> {
+  //   const p = new Promise<Repository | null>(
+  //     resolve => (this.resolveOpenInDesktop = resolve)
+  //   )
+  //   fn()
+  //   return p
+  // }
 
-  /**
-   * Complete any active Open in Desktop flow with the repository returned by
-   * the given function.
-   */
-  public async _completeOpenInDesktop(
-    fn: () => Promise<Repository | null>
-  ): Promise<Repository | null> {
-    const resolve = this.resolveOpenInDesktop
-    this.resolveOpenInDesktop = null
+  // /**
+  //  * Complete any active Open in Desktop flow with the repository returned by
+  //  * the given function.
+  //  */
+  // public async _completeOpenInDesktop(
+  //   fn: () => Promise<Repository | null>
+  // ): Promise<Repository | null> {
+  //   const resolve = this.resolveOpenInDesktop
+  //   this.resolveOpenInDesktop = null
 
-    const result = await fn()
-    if (resolve) {
-      resolve(result)
-    }
+  //   const result = await fn()
+  //   if (resolve) {
+  //     resolve(result)
+  //   }
 
-    return result
-  }
+  //   return result
+  // }
 
   public _removeAccount(account: Account): Promise<void> {
     log.info(
@@ -1247,27 +1204,27 @@ export class AppStore extends TypedBaseStore<IAppState> {
     return this.accountsStore.removeAccount(account)
   }
 
-  public async _installGlobalLFSFilters(force: boolean): Promise<void> {
-    try {
-      await installGlobalLFSFilters(force)
-    } catch (error) {
-      this.emitError(error)
-    }
-  }
+  // public async _installGlobalLFSFilters(force: boolean): Promise<void> {
+  //   try {
+  //     await installGlobalLFSFilters(force)
+  //   } catch (error) {
+  //     this.emitError(error)
+  //   }
+  // }
 
-  public async _installLFSHooks(
-    repositories: ReadonlyArray<Repository>
-  ): Promise<void> {
-    for (const repo of repositories) {
-      try {
-        // At this point we've asked the user if we should install them, so
-        // force installation.
-        await installLFSHooks(repo, true)
-      } catch (error) {
-        this.emitError(error)
-      }
-    }
-  }
+  // public async _installLFSHooks(
+  //   repositories: ReadonlyArray<Repository>
+  // ): Promise<void> {
+  //   for (const repo of repositories) {
+  //     try {
+  //       // At this point we've asked the user if we should install them, so
+  //       // force installation.
+  //       await installLFSHooks(repo, true)
+  //     } catch (error) {
+  //       this.emitError(error)
+  //     }
+  //   }
+  // }
 
   /**
    * Request a refresh of the list of repositories that
@@ -1278,25 +1235,17 @@ export class AppStore extends TypedBaseStore<IAppState> {
     return this.apiRepositoriesStore.loadRepositories(account)
   }
 
-  public _changeBranchesTab(tab: BranchesTab): Promise<void> {
-    this.selectedBranchesTab = tab
+  // public async _showGitHubExplore(repository: Repository): Promise<void> {
+  //   const { gitHubRepository } = repository
+  //   if (!gitHubRepository || gitHubRepository.htmlURL === null) {
+  //     return
+  //   }
 
-    this.emitUpdate()
+  //   const url = new URL(gitHubRepository.htmlURL)
+  //   url.pathname = '/explore'
 
-    return Promise.resolve()
-  }
-
-  public async _showGitHubExplore(repository: Repository): Promise<void> {
-    const { gitHubRepository } = repository
-    if (!gitHubRepository || gitHubRepository.htmlURL === null) {
-      return
-    }
-
-    const url = new URL(gitHubRepository.htmlURL)
-    url.pathname = '/explore'
-
-    await this._openInBrowser(url.toString())
-  }
+  //   await this._openInBrowser(url.toString())
+  // }
 
   public async _showPullRequestByPR(pr: PullRequest): Promise<void> {
     const { htmlURL: baseRepoUrl } = pr.base.gitHubRepository
@@ -1310,16 +1259,16 @@ export class AppStore extends TypedBaseStore<IAppState> {
     await this._openInBrowser(showPrUrl)
   }
 
-  private getIgnoreExistingUpstreamRemoteKey(repository: Repository): string {
-    return `repository/${repository.id}/ignoreExistingUpstreamRemote`
-  }
+  // private getIgnoreExistingUpstreamRemoteKey(repository: Repository): string {
+  //   return `repository/${repository.id}/ignoreExistingUpstreamRemote`
+  // }
 
-  public _ignoreExistingUpstreamRemote(repository: Repository): Promise<void> {
-    const key = this.getIgnoreExistingUpstreamRemoteKey(repository)
-    setBoolean(key, true)
+  // public _ignoreExistingUpstreamRemote(repository: Repository): Promise<void> {
+  //   const key = this.getIgnoreExistingUpstreamRemoteKey(repository)
+  //   setBoolean(key, true)
 
-    return Promise.resolve()
-  }
+  //   return Promise.resolve()
+  // }
 
   /**
    * Set the application-wide theme
@@ -1370,32 +1319,24 @@ export class AppStore extends TypedBaseStore<IAppState> {
     return Promise.resolve()
   }
 
-  public async _showCreateForkDialog(
-    repository: RepositoryWithGitHubRepository
-  ) {
-    const account = getAccountForRepository(this.accounts, repository)
-    if (account === null) {
-      return
-    }
-    await this._showPopup({
-      type: PopupType.CreateFork,
-      repository,
-      account,
-    })
-  }
+  // public async _showCreateForkDialog(
+  //   repository: RepositoryWithGitHubRepository
+  // ) {
+  //   const account = getAccountForRepository(this.accounts, repository)
+  //   if (account === null) {
+  //     return
+  //   }
+  //   await this._showPopup({
+  //     type: PopupType.CreateFork,
+  //     repository,
+  //     account,
+  //   })
+  // }
 
   /** This shouldn't be called directly. See `Dispatcher`. */
   public async _setDragElement(dragElement: DragElement | null): Promise<void> {
     this.currentDragElement = dragElement
     this.emitUpdate()
-  }
-
-  /** This shouldn't be called directly. See `Dispatcher`. */
-  public async _getBranchAheadBehind(
-    repository: Repository,
-    branch: Branch
-  ): Promise<IAheadBehind | null> {
-    return getBranchAheadBehind(repository, branch)
   }
 
   public _setLastThankYou(lastThankYou: ILastThankYou) {

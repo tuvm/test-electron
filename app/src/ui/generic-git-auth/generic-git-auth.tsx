@@ -3,7 +3,7 @@ import * as React from 'react'
 import { TextBox } from '../lib/text-box'
 import { Row } from '../lib/row'
 import { Dialog, DialogContent, DialogFooter } from '../common/dialog'
-import { RetryAction } from '../../models/retry-actions'
+// import { RetryAction } from '../../models/retry-actions'
 import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 import { Ref } from '../lib/ref'
 import { LinkButton } from '../lib/link-button'
@@ -17,14 +17,14 @@ interface IGenericGitAuthenticationProps {
     hostname: string,
     username: string,
     password: string,
-    retryAction: RetryAction
+    // retryAction: RetryAction
   ) => void
 
   /** The function to call when the user dismisses the dialog. */
   readonly onDismiss: () => void
 
   /** The action to retry after getting credentials. */
-  readonly retryAction: RetryAction
+  // readonly retryAction: RetryAction
 }
 
 interface IGenericGitAuthenticationState {
@@ -115,7 +115,7 @@ export class GenericGitAuthentication extends React.Component<
       this.props.hostname,
       this.state.username,
       this.state.password,
-      this.props.retryAction
+      // this.props.retryAction
     )
   }
 }

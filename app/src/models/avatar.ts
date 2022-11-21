@@ -1,8 +1,8 @@
-import { Commit } from './commit'
-import { CommitIdentity } from './commit-identity'
+// import { Commit } from './commit'
+// import { CommitIdentity } from './commit-identity'
 import { GitAuthor } from './git-author'
 import { GitHubRepository } from './github-repository'
-import { isWebFlowCommitter } from '../lib/web-flow-committer'
+// import { isWebFlowCommitter } from '../lib/web-flow-committer'
 
 /** The minimum properties we need in order to display a user's avatar. */
 export interface IAvatarUser {
@@ -26,7 +26,7 @@ export interface IAvatarUser {
 }
 
 export function getAvatarUserFromAuthor(
-  author: CommitIdentity | GitAuthor,
+  author: GitAuthor,
   gitHubRepository: GitHubRepository | null
 ) {
   return {
@@ -37,45 +37,45 @@ export function getAvatarUserFromAuthor(
   }
 }
 
-/**
- * Attempt to look up avatars for all authors (and committer)
- * of a particular commit.
- *
- * Avatars are returned ordered, starting with the author, followed
- * by all co-authors and finally the committer (if different from
- * author and any co-author).
- *
- * @param gitHubRepository
- * @param gitHubUsers
- * @param commit
- */
-export function getAvatarUsersForCommit(
-  gitHubRepository: GitHubRepository | null,
-  commit: Commit
-) {
-  const avatarUsers = []
+// /**
+//  * Attempt to look up avatars for all authors (and committer)
+//  * of a particular commit.
+//  *
+//  * Avatars are returned ordered, starting with the author, followed
+//  * by all co-authors and finally the committer (if different from
+//  * author and any co-author).
+//  *
+//  * @param gitHubRepository
+//  * @param gitHubUsers
+//  * @param commit
+//  */
+// export function getAvatarUsersForCommit(
+//   gitHubRepository: GitHubRepository | null,
+//   commit: Commit
+// ) {
+//   const avatarUsers = []
 
-  avatarUsers.push(getAvatarUserFromAuthor(commit.author, gitHubRepository))
-  avatarUsers.push(
-    ...commit.coAuthors.map(x => getAvatarUserFromAuthor(x, gitHubRepository))
-  )
+//   avatarUsers.push(getAvatarUserFromAuthor(commit.author, gitHubRepository))
+//   avatarUsers.push(
+//     ...commit.coAuthors.map(x => getAvatarUserFromAuthor(x, gitHubRepository))
+//   )
 
-  const coAuthoredByCommitter = commit.coAuthors.some(
-    x => x.name === commit.committer.name && x.email === commit.committer.email
-  )
+//   const coAuthoredByCommitter = commit.coAuthors.some(
+//     x => x.name === commit.committer.name && x.email === commit.committer.email
+//   )
 
-  const webFlowCommitter =
-    gitHubRepository !== null && isWebFlowCommitter(commit, gitHubRepository)
+//   const webFlowCommitter =
+//     gitHubRepository !== null && isWebFlowCommitter(commit, gitHubRepository)
 
-  if (
-    !commit.authoredByCommitter &&
-    !webFlowCommitter &&
-    !coAuthoredByCommitter
-  ) {
-    avatarUsers.push(
-      getAvatarUserFromAuthor(commit.committer, gitHubRepository)
-    )
-  }
+//   if (
+//     !commit.authoredByCommitter &&
+//     !webFlowCommitter &&
+//     !coAuthoredByCommitter
+//   ) {
+//     avatarUsers.push(
+//       getAvatarUserFromAuthor(commit.committer, gitHubRepository)
+//     )
+//   }
 
-  return avatarUsers
-}
+//   return avatarUsers
+// }

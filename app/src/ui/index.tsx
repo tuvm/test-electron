@@ -6,20 +6,20 @@ import * as Path from 'path'
 import { App } from './app'
 import {
   Dispatcher,
-  gitAuthenticationErrorHandler,
+  // gitAuthenticationErrorHandler,
   externalEditorErrorHandler,
   openShellErrorHandler,
-  mergeConflictHandler,
-  lfsAttributeMismatchHandler,
+  // mergeConflictHandler,
+  // lfsAttributeMismatchHandler,
   defaultErrorHandler,
   backgroundTaskHandler,
-  pushNeedsPullHandler,
-  upstreamAlreadyExistsHandler,
-  localChangesOverwrittenHandler,
-  refusedWorkflowUpdate,
-  samlReauthRequired,
-  insufficientGitHubRepoPermissions,
-  discardChangesHandler,
+  // pushNeedsPullHandler,
+  // upstreamAlreadyExistsHandler,
+  // localChangesOverwrittenHandler,
+  // refusedWorkflowUpdate,
+  // samlReauthRequired,
+  // insufficientGitHubRepoPermissions,
+  // discardChangesHandler,
 } from './dispatcher'
 import {
   AppStore,
@@ -255,19 +255,19 @@ const dispatcher = new Dispatcher(
 )
 
 dispatcher.registerErrorHandler(defaultErrorHandler)
-dispatcher.registerErrorHandler(upstreamAlreadyExistsHandler)
+// dispatcher.registerErrorHandler(upstreamAlreadyExistsHandler)
 dispatcher.registerErrorHandler(externalEditorErrorHandler)
 dispatcher.registerErrorHandler(openShellErrorHandler)
-dispatcher.registerErrorHandler(mergeConflictHandler)
-dispatcher.registerErrorHandler(lfsAttributeMismatchHandler)
-dispatcher.registerErrorHandler(insufficientGitHubRepoPermissions)
-dispatcher.registerErrorHandler(gitAuthenticationErrorHandler)
-dispatcher.registerErrorHandler(pushNeedsPullHandler)
-dispatcher.registerErrorHandler(samlReauthRequired)
+// dispatcher.registerErrorHandler(mergeConflictHandler)
+// dispatcher.registerErrorHandler(lfsAttributeMismatchHandler)
+// dispatcher.registerErrorHandler(insufficientGitHubRepoPermissions)
+// dispatcher.registerErrorHandler(gitAuthenticationErrorHandler)
+// dispatcher.registerErrorHandler(pushNeedsPullHandler)
+// dispatcher.registerErrorHandler(samlReauthRequired)
 dispatcher.registerErrorHandler(backgroundTaskHandler)
-dispatcher.registerErrorHandler(localChangesOverwrittenHandler)
-dispatcher.registerErrorHandler(refusedWorkflowUpdate)
-dispatcher.registerErrorHandler(discardChangesHandler)
+// dispatcher.registerErrorHandler(localChangesOverwrittenHandler)
+// dispatcher.registerErrorHandler(refusedWorkflowUpdate)
+// dispatcher.registerErrorHandler(discardChangesHandler)
 
 document.body.classList.add(`platform-${process.platform}`)
 

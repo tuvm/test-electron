@@ -1,8 +1,8 @@
-import {
-  Repository,
-  isRepositoryWithGitHubRepository,
-  getNonForkGitHubRepository,
-} from '../models/repository'
+// import {
+//   Repository,
+//   isRepositoryWithGitHubRepository,
+//   getNonForkGitHubRepository,
+// } from '../models/repository'
 import { GitHubRepository } from '../models/github-repository'
 import { getHTMLURL } from './api'
 
@@ -60,12 +60,12 @@ export class Tokenizer {
   private _results = new Array<TokenResult>()
   private _currentString = ''
 
-  public constructor(emoji: Map<string, string>, repository?: Repository) {
+  public constructor(emoji: Map<string, string>) {
     this.emoji = emoji
 
-    if (repository && isRepositoryWithGitHubRepository(repository)) {
-      this.repository = getNonForkGitHubRepository(repository)
-    }
+    // if (repository && isRepositoryWithGitHubRepository(repository)) {
+    //   this.repository = getNonForkGitHubRepository(repository)
+    // }
   }
 
   private reset() {

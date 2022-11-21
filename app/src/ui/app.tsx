@@ -10,19 +10,19 @@ import { AppStore } from '../lib/stores'
 import { assertNever } from '../lib/fatal-error'
 // import { shell } from '../lib/app-shell'
 import { updateStore, UpdateStatus } from './lib/update-store'
-import { RetryAction } from '../models/retry-actions'
+// import { RetryAction } from '../models/retry-actions'
 import { shouldRenderApplicationMenu } from './lib/features'
 
 import { getDotComAPIEndpoint } from '../lib/api'
 import { getVersion, getName } from './lib/app-proxy'
 import { getOS } from '../lib/get-os'
 // import { MenuEvent } from '../main-process/menu'
-import {
-  Repository,
-  // getGitHubHtmlUrl,
-  // getNonForkGitHubRepository,
-  // isRepositoryWithGitHubRepository,
-} from '../models/repository'
+// import {
+//   Repository,
+//   // getGitHubHtmlUrl,
+//   // getNonForkGitHubRepository,
+//   // isRepositoryWithGitHubRepository,
+// } from '../models/repository'
 import { PreferencesTab } from '../models/preferences'
 import { findItemByAccessKey, itemIsSelectable } from '../models/app-menu'
 import { Account } from '../models/account'
@@ -48,10 +48,10 @@ import { Acknowledgements } from './acknowledgements'
 import { UntrustedCertificate } from './untrusted-certificate'
 import { TermsAndConditions } from './terms-and-conditions'
 import { CLIInstalled } from './cli-installed'
-import { GenericGitAuthentication } from './generic-git-auth'
+// import { GenericGitAuthentication } from './generic-git-auth'
 import { ShellError } from './shell'
-import { InitializeLFS, AttributeMismatch } from './lfs'
-import { ReleaseNotes } from './release-notes'
+// import { InitializeLFS, AttributeMismatch } from './lfs'
+// import { ReleaseNotes } from './release-notes'
 
 import { AppTheme } from './app-theme'
 import { ApplicationTheme } from './lib/application-theme'
@@ -93,7 +93,7 @@ const UpdateCheckInterval = 4 * HourInMilliseconds
 /**
  * Send usage stats every 4 hours
  */
-const SendStatsInterval = 4 * HourInMilliseconds
+// const SendStatsInterval = 4 * HourInMilliseconds
 
 interface IAppProps {
   readonly dispatcher: Dispatcher
@@ -229,10 +229,10 @@ export class App extends React.Component<IAppProps, IAppState> {
     // the app. So defer it until we have some breathing space.
     // this.props.appStore.loadEmoji()
 
-    this.props.dispatcher.reportStats()
-    setInterval(() => this.props.dispatcher.reportStats(), SendStatsInterval)
+    // this.props.dispatcher.reportStats()
+    // setInterval(() => this.props.dispatcher.reportStats(), SendStatsInterval)
 
-    this.props.dispatcher.installGlobalLFSFilters(false)
+    // this.props.dispatcher.installGlobalLFSFilters(false)
 
     // We only want to automatically check for updates on beta and prod
     if (
@@ -598,16 +598,16 @@ export class App extends React.Component<IAppProps, IAppState> {
         return (
           <CLIInstalled key="cli-installed" onDismissed={onPopupDismissedFn} />
         )
-      case PopupType.GenericGitAuthentication:
-        return (
-          <GenericGitAuthentication
-            key="generic-git-authentication"
-            hostname={popup.hostname}
-            onDismiss={onPopupDismissedFn}
-            onSave={this.onSaveCredentials}
-            retryAction={popup.retryAction}
-          />
-        )
+      // case PopupType.GenericGitAuthentication:
+      //   return (
+      //     <GenericGitAuthentication
+      //       key="generic-git-authentication"
+      //       hostname={popup.hostname}
+      //       onDismiss={onPopupDismissedFn}
+      //       onSave={this.onSaveCredentials}
+      //       retryAction={popup.retryAction}
+      //     />
+      //   )
       case PopupType.ExternalEditorFailed:
         const openPreferences = popup.openPreferences
         const suggestDefaultEditor = popup.suggestDefaultEditor
@@ -631,32 +631,32 @@ export class App extends React.Component<IAppProps, IAppState> {
             showPreferencesDialog={this.onShowAdvancedPreferences}
           />
         )
-      case PopupType.InitializeLFS:
-        return (
-          <InitializeLFS
-            key="initialize-lfs"
-            repositories={popup.repositories}
-            onDismissed={onPopupDismissedFn}
-            onInitialize={this.initializeLFS}
-          />
-        )
-      case PopupType.LFSAttributeMismatch:
-        return (
-          <AttributeMismatch
-            key="lsf-attribute-mismatch"
-            onDismissed={onPopupDismissedFn}
-            onUpdateExistingFilters={this.updateExistingLFSFilters}
-          />
-        )
-      case PopupType.ReleaseNotes:
-        return (
-          <ReleaseNotes
-            key="release-notes"
-            emoji={this.state.emoji}
-            newReleases={popup.newReleases}
-            onDismissed={onPopupDismissedFn}
-          />
-        )
+      // case PopupType.InitializeLFS:
+      //   return (
+      //     <InitializeLFS
+      //       key="initialize-lfs"
+      //       repositories={popup.repositories}
+      //       onDismissed={onPopupDismissedFn}
+      //       onInitialize={this.initializeLFS}
+      //     />
+      //   )
+      // case PopupType.LFSAttributeMismatch:
+      //   return (
+      //     <AttributeMismatch
+      //       key="lsf-attribute-mismatch"
+      //       onDismissed={onPopupDismissedFn}
+      //       onUpdateExistingFilters={this.updateExistingLFSFilters}
+      //     />
+      //   )
+      // case PopupType.ReleaseNotes:
+      //   return (
+      //     <ReleaseNotes
+      //       key="release-notes"
+      //       emoji={this.state.emoji}
+      //       newReleases={popup.newReleases}
+      //       onDismissed={onPopupDismissedFn}
+      //     />
+      //   )
       case PopupType.MoveToApplicationsFolder: {
         return (
           <MoveToApplicationsFolder
@@ -724,13 +724,13 @@ export class App extends React.Component<IAppProps, IAppState> {
     }
   }
 
-  private updateExistingLFSFilters = () => {
-    this.props.dispatcher.installGlobalLFSFilters(true)
-  }
+  // private updateExistingLFSFilters = () => {
+  //   this.props.dispatcher.installGlobalLFSFilters(true)
+  // }
 
-  private initializeLFS = (repositories: ReadonlyArray<Repository>) => {
-    this.props.dispatcher.installLFSHooks(repositories)
-  }
+  // private initializeLFS = (repositories: ReadonlyArray<Repository>) => {
+  //   this.props.dispatcher.installLFSHooks(repositories)
+  // }
 
   private onShowAdvancedPreferences = () => {
     this.props.dispatcher.showPopup({
@@ -750,20 +750,20 @@ export class App extends React.Component<IAppProps, IAppState> {
     this.props.dispatcher.openShell(path, true)
   }
 
-  private onSaveCredentials = async (
-    hostname: string,
-    username: string,
-    password: string,
-    retryAction: RetryAction
-  ) => {
-    await this.props.dispatcher.saveGenericGitCredentials(
-      hostname,
-      username,
-      password
-    )
+  // private onSaveCredentials = async (
+  //   hostname: string,
+  //   username: string,
+  //   password: string,
+  //   retryAction: RetryAction
+  // ) => {
+  //   await this.props.dispatcher.saveGenericGitCredentials(
+  //     hostname,
+  //     username,
+  //     password
+  //   )
 
-    // this.props.dispatcher.performRetry(retryAction)
-  }
+  //   // this.props.dispatcher.performRetry(retryAction)
+  // }
 
   private renderPopup() {
     const popupContent = this.currentPopupContent()
@@ -795,14 +795,14 @@ export class App extends React.Component<IAppProps, IAppState> {
         errors={this.state.errors}
         onClearError={this.clearError}
         onShowPopup={this.showPopup}
-        onRetryAction={this.onRetryAction}
+        // onRetryAction={() => {}}
       />
     )
   }
 
-  private onRetryAction = (retryAction: RetryAction) => {
-    // this.props.dispatcher.performRetry(retryAction)
-  }
+  // private onRetryAction = (retryAction: RetryAction) => {
+  //   // this.props.dispatcher.performRetry(retryAction)
+  // }
 
   private showPopup = (popup: Popup) => {
     this.props.dispatcher.showPopup(popup)

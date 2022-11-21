@@ -4,20 +4,20 @@ import { PreferencesTab } from '../../models/preferences'
 import { Dispatcher } from '../dispatcher'
 import { TabBar, TabBarType } from '../tab-bar'
 import { Advanced } from './advanced'
-import { Git } from './git'
+// import { Git } from './git'
 import { assertNever } from '../../lib/fatal-error'
 import { Dialog, DialogFooter, DialogError } from '../common/dialog'
-import {
-  getGlobalConfigValue,
-  setGlobalConfigValue,
-} from '../../lib/git/config'
-import { lookupPreferredEmail } from '../../lib/email'
+// import {
+//   getGlobalConfigValue,
+//   setGlobalConfigValue,
+// } from '../../lib/git/config'
+// import { lookupPreferredEmail } from '../../lib/email'
 import { Shell, getAvailableShells } from '../../lib/shells'
 import { getAvailableEditors } from '../../lib/editors/lookup'
-import {
-  gitAuthorNameIsValid,
-  InvalidGitAuthorNameMessage,
-} from '../lib/identifier-rules'
+// import {
+//   gitAuthorNameIsValid,
+//   InvalidGitAuthorNameMessage,
+// } from '../lib/identifier-rules'
 import { Appearance } from './appearance'
 import { ApplicationTheme, ICustomTheme } from '../lib/application-theme'
 import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
@@ -28,15 +28,15 @@ import {
 } from '../../models/uncommitted-changes-strategy'
 import { Octicon } from '../octicons'
 import * as OcticonSymbol from '../octicons/octicons.generated'
-import {
-  isConfigFileLockError,
-  parseConfigLockFilePathFromError,
-} from '../../lib/git'
-import { ConfigLockFileExists } from '../lib/config-lock-file-exists'
-import {
-  setDefaultBranch,
-  getDefaultBranch,
-} from '../../lib/helpers/default-branch'
+// import {
+//   isConfigFileLockError,
+//   parseConfigLockFilePathFromError,
+// } from '../../lib/git'
+// import { ConfigLockFileExists } from '../lib/config-lock-file-exists'
+// import {
+//   setDefaultBranch,
+//   getDefaultBranch,
+// } from '../../lib/helpers/default-branch'
 import { Prompts } from './prompts'
 // import { Repository } from '../../models/repository'
 
@@ -66,12 +66,12 @@ interface IPreferencesProps {
 
 interface IPreferencesState {
   readonly selectedIndex: PreferencesTab
-  readonly committerName: string
-  readonly committerEmail: string
-  readonly defaultBranch: string
-  readonly initialCommitterName: string | null
-  readonly initialCommitterEmail: string | null
-  readonly initialDefaultBranch: string | null
+  // readonly committerName: string
+  // readonly committerEmail: string
+  // readonly defaultBranch: string
+  // readonly initialCommitterName: string | null
+  // readonly initialCommitterEmail: string | null
+  // readonly initialDefaultBranch: string | null
   readonly disallowedCharactersMessage: string | null
   readonly useWindowsOpenSSH: boolean
   readonly notificationsEnabled: boolean
@@ -108,12 +108,12 @@ export class Preferences extends React.Component<
 
     this.state = {
       selectedIndex: this.props.initialSelectedTab || PreferencesTab.Accounts,
-      committerName: '',
-      committerEmail: '',
-      defaultBranch: '',
-      initialCommitterName: null,
-      initialCommitterEmail: null,
-      initialDefaultBranch: null,
+      // committerName: '',
+      // committerEmail: '',
+      // defaultBranch: '',
+      // initialCommitterName: null,
+      // initialCommitterEmail: null,
+      // initialDefaultBranch: null,
       disallowedCharactersMessage: null,
       availableEditors: [],
       useWindowsOpenSSH: false,
@@ -134,29 +134,29 @@ export class Preferences extends React.Component<
   }
 
   public async componentWillMount() {
-    const initialCommitterName = await getGlobalConfigValue('user.name')
-    const initialCommitterEmail = await getGlobalConfigValue('user.email')
-    const initialDefaultBranch = await getDefaultBranch()
+    // const initialCommitterName = await getGlobalConfigValue('user.name')
+    // const initialCommitterEmail = await getGlobalConfigValue('user.email')
+    // const initialDefaultBranch = await getDefaultBranch()
 
-    let committerName = initialCommitterName
-    let committerEmail = initialCommitterEmail
+    // let committerName = initialCommitterName
+    // let committerEmail = initialCommitterEmail
 
-    if (!committerName || !committerEmail) {
-      const account = this.props.dotComAccount || this.props.enterpriseAccount
+    // if (!committerName || !committerEmail) {
+    //   const account = this.props.dotComAccount || this.props.enterpriseAccount
 
-      if (account) {
-        if (!committerName) {
-          committerName = account.login
-        }
+    //   if (account) {
+    //     if (!committerName) {
+    //       committerName = account.login
+    //     }
 
-        if (!committerEmail) {
-          committerEmail = lookupPreferredEmail(account)
-        }
-      }
-    }
+    //     if (!committerEmail) {
+    //       committerEmail = lookupPreferredEmail(account)
+    //     }
+    //   }
+    // }
 
-    committerName = committerName || ''
-    committerEmail = committerEmail || ''
+    // committerName = committerName || ''
+    // committerEmail = committerEmail || ''
 
     const [editors, shells] = await Promise.all([
       getAvailableEditors(),
@@ -167,12 +167,12 @@ export class Preferences extends React.Component<
     const availableShells = shells.map(e => e.shell)
 
     this.setState({
-      committerName,
-      committerEmail,
-      defaultBranch: initialDefaultBranch,
-      initialCommitterName,
-      initialCommitterEmail,
-      initialDefaultBranch,
+      // committerName,
+      // committerEmail,
+      // defaultBranch: initialDefaultBranch,
+      // initialCommitterName,
+      // initialCommitterEmail,
+      // initialDefaultBranch,
       useWindowsOpenSSH: this.props.useWindowsOpenSSH,
       notificationsEnabled: this.props.notificationsEnabled,
       optOutOfUsageTracking: this.props.optOutOfUsageTracking,
@@ -263,36 +263,36 @@ export class Preferences extends React.Component<
         )
         break
       }
-      case PreferencesTab.Git: {
-        const { existingLockFilePath } = this.state
-        const error =
-          existingLockFilePath !== undefined ? (
-            <DialogError>
-              <ConfigLockFileExists
-                lockFilePath={existingLockFilePath}
-                onLockFileDeleted={this.onLockFileDeleted}
-                onError={this.onLockFileDeleteError}
-              />
-            </DialogError>
-          ) : null
+      // case PreferencesTab.Git: {
+      //   const { existingLockFilePath } = this.state
+      //   const error =
+      //     existingLockFilePath !== undefined ? (
+      //       <DialogError>
+      //         <ConfigLockFileExists
+      //           lockFilePath={existingLockFilePath}
+      //           onLockFileDeleted={this.onLockFileDeleted}
+      //           onError={this.onLockFileDeleteError}
+      //         />
+      //       </DialogError>
+      //     ) : null
 
-        View = (
-          <>
-            {error}
-            <Git
-              name={this.state.committerName}
-              email={this.state.committerEmail}
-              defaultBranch={this.state.defaultBranch}
-              dotComAccount={this.props.dotComAccount}
-              enterpriseAccount={this.props.enterpriseAccount}
-              onNameChanged={this.onCommitterNameChanged}
-              onEmailChanged={this.onCommitterEmailChanged}
-              onDefaultBranchChanged={this.onDefaultBranchChanged}
-            />
-          </>
-        )
-        break
-      }
+      //   View = (
+      //     <>
+      //       {error}
+      //       <Git
+      //         name={this.state.committerName}
+      //         email={this.state.committerEmail}
+      //         defaultBranch={this.state.defaultBranch}
+      //         dotComAccount={this.props.dotComAccount}
+      //         enterpriseAccount={this.props.enterpriseAccount}
+      //         onNameChanged={this.onCommitterNameChanged}
+      //         onEmailChanged={this.onCommitterEmailChanged}
+      //         onDefaultBranchChanged={this.onDefaultBranchChanged}
+      //       />
+      //     </>
+      //   )
+      //   break
+      // }
       case PreferencesTab.Appearance:
         View = (
           <Appearance
@@ -362,13 +362,13 @@ export class Preferences extends React.Component<
     this.setState({ repositoryIndicatorsEnabled })
   }
 
-  private onLockFileDeleted = () => {
-    this.setState({ existingLockFilePath: undefined })
-  }
+  // private onLockFileDeleted = () => {
+  //   this.setState({ existingLockFilePath: undefined })
+  // }
 
-  private onLockFileDeleteError = (e: Error) => {
-    this.props.dispatcher.postError(e)
-  }
+  // private onLockFileDeleteError = (e: Error) => {
+  //   this.props.dispatcher.postError(e)
+  // }
 
   private onUseWindowsOpenSSHChanged = (useWindowsOpenSSH: boolean) => {
     this.setState({ useWindowsOpenSSH })
@@ -412,22 +412,22 @@ export class Preferences extends React.Component<
     this.setState({ uncommittedChangesStrategy })
   }
 
-  private onCommitterNameChanged = (committerName: string) => {
-    this.setState({
-      committerName,
-      disallowedCharactersMessage: gitAuthorNameIsValid(committerName)
-        ? null
-        : InvalidGitAuthorNameMessage,
-    })
-  }
+  // private onCommitterNameChanged = (committerName: string) => {
+  //   this.setState({
+  //     committerName,
+  //     disallowedCharactersMessage: gitAuthorNameIsValid(committerName)
+  //       ? null
+  //       : InvalidGitAuthorNameMessage,
+  //   })
+  // }
 
-  private onCommitterEmailChanged = (committerEmail: string) => {
-    this.setState({ committerEmail })
-  }
+  // private onCommitterEmailChanged = (committerEmail: string) => {
+  //   this.setState({ committerEmail })
+  // }
 
-  private onDefaultBranchChanged = (defaultBranch: string) => {
-    this.setState({ defaultBranch })
-  }
+  // private onDefaultBranchChanged = (defaultBranch: string) => {
+  //   this.setState({ defaultBranch })
+  // }
 
   private onSelectedEditorChanged = (editor: string) => {
     this.setState({ selectedExternalEditor: editor })
@@ -474,13 +474,13 @@ export class Preferences extends React.Component<
   private onSave = async () => {
     try {
 
-      if (this.state.committerName !== this.state.initialCommitterName) {
-        await setGlobalConfigValue('user.name', this.state.committerName)
-      }
+      // if (this.state.committerName !== this.state.initialCommitterName) {
+      //   await setGlobalConfigValue('user.name', this.state.committerName)
+      // }
 
-      if (this.state.committerEmail !== this.state.initialCommitterEmail) {
-        await setGlobalConfigValue('user.email', this.state.committerEmail)
-      }
+      // if (this.state.committerEmail !== this.state.initialCommitterEmail) {
+      //   await setGlobalConfigValue('user.email', this.state.committerEmail)
+      // }
 
       // If the entered default branch is empty, we don't store it and keep
       // the previous value.
@@ -489,25 +489,25 @@ export class Preferences extends React.Component<
       // save all the changes performed in every single tab), we cannot
       // block the user from clicking "Save" because the entered branch is not valid
       // (they will not be able to know the issue if they are in a different tab).
-      if (
-        this.state.defaultBranch.length > 0 &&
-        this.state.defaultBranch !== this.state.initialDefaultBranch
-      ) {
-        await setDefaultBranch(this.state.defaultBranch)
-      }
+      // if (
+      //   this.state.defaultBranch.length > 0 &&
+      //   this.state.defaultBranch !== this.state.initialDefaultBranch
+      // ) {
+      //   await setDefaultBranch(this.state.defaultBranch)
+      // }
 
     } catch (e) {
-      if (isConfigFileLockError(e)) {
-        const lockFilePath = parseConfigLockFilePathFromError(e.result)
+      // if (isConfigFileLockError(e)) {
+      //   const lockFilePath = parseConfigLockFilePathFromError(e.result)
 
-        if (lockFilePath !== null) {
-          this.setState({
-            existingLockFilePath: lockFilePath,
-            selectedIndex: PreferencesTab.Git,
-          })
-          return
-        }
-      }
+      //   if (lockFilePath !== null) {
+      //     this.setState({
+      //       existingLockFilePath: lockFilePath,
+      //       selectedIndex: PreferencesTab.Git,
+      //     })
+      //     return
+      //   }
+      // }
 
       this.props.onDismissed()
       this.props.dispatcher.postError(e)

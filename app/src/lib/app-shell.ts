@@ -1,7 +1,7 @@
 import { shell as electronShell } from 'electron'
-import * as Path from 'path'
+// import * as Path from 'path'
 
-import { Repository } from '../models/repository'
+// import { Repository } from '../models/repository'
 import {
   showItemInFolder,
   showFolderContents,
@@ -52,13 +52,13 @@ export const shell: IAppShell = {
   openPath: electronShell.openPath,
 }
 
-/**
- * Reveals a file from a repository in the native file manager.
- *
- * @param repository The currently active repository instance
- * @param path The path of the file relative to the root of the repository
- */
-export function revealInFileManager(repository: Repository, path: string) {
-  const fullyQualifiedFilePath = Path.join(repository.path, path)
-  return shell.showItemInFolder(fullyQualifiedFilePath)
-}
+// /**
+//  * Reveals a file from a repository in the native file manager.
+//  *
+//  * @param repository The currently active repository instance
+//  * @param path The path of the file relative to the root of the repository
+//  */
+// export function revealInFileManager(repository: Repository, path: string) {
+//   const fullyQualifiedFilePath = Path.join(repository.path, path)
+//   return shell.showItemInFolder(fullyQualifiedFilePath)
+// }

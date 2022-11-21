@@ -1,4 +1,4 @@
-import { Commit } from './commit'
+// import { Commit } from './commit'
 import { GitHubRepository } from './github-repository'
 
 /**
@@ -12,7 +12,7 @@ export type DragData = CommitDragData
 
 export type CommitDragData = {
   type: DragType.Commit
-  commits: ReadonlyArray<Commit>
+  // commits: ReadonlyArray<Commit>
 }
 
 export enum DragType {
@@ -21,8 +21,8 @@ export enum DragType {
 
 export type DragElement = {
   type: DragType.Commit
-  commit: Commit
-  selectedCommits: ReadonlyArray<Commit>
+  // commit: Commit
+  // selectedCommits: ReadonlyArray<Commit>
   gitHubRepository: GitHubRepository | null
 }
 

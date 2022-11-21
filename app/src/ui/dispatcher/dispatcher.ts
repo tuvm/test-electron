@@ -24,15 +24,8 @@ import { AppStore } from '../../lib/stores/app-store'
 
 import { Account } from '../../models/account'
 import { AppMenu, ExecutableMenuItem } from '../../models/app-menu'
-import { Branch, IAheadBehind } from '../../models/branch'
-import { BranchesTab } from '../../models/branches-tab'
 import { Popup, PopupType } from '../../models/popup'
-import { PullRequest } from '../../models/pull-request'
-import {
-  Repository,
-  RepositoryWithGitHubRepository,
-  getGitHubHtmlUrl,
-} from '../../models/repository'
+
 import { Banner, BannerType } from '../../models/banner'
 
 import { ApplicationTheme, ICustomTheme } from '../lib/application-theme'
@@ -43,7 +36,6 @@ import {
   isWindowFocused,
 } from '../main-process-proxy'
 import { UncommittedChangesStrategy } from '../../models/uncommitted-changes-strategy'
-import { DragElement } from '../../models/drag-drop'
 import { ILastThankYou } from '../../models/last-thank-you'
 import { ValidNotificationPullRequestReviewState } from '../../lib/valid-notification-pull-request-review'
 
@@ -108,38 +100,6 @@ export class Dispatcher {
   /** Close the specified foldout */
   public closeFoldout(foldout: FoldoutType): Promise<void> {
     return this.appStore._closeFoldout(foldout)
-  }
-
-  /**
-   * Show the tag creation dialog.
-   */
-  public showCreateTagDialog(
-    repository: Repository,
-    targetCommitSha: string,
-    localTags: Map<string, string> | null,
-    initialName?: string
-  ): Promise<void> {
-    return this.showPopup({
-      type: PopupType.CreateTag,
-      repository,
-      targetCommitSha,
-      initialName,
-      localTags,
-    })
-  }
-
-  /**
-   * Show the confirmation dialog to delete a tag.
-   */
-  public showDeleteTagDialog(
-    repository: Repository,
-    tagName: string
-  ): Promise<void> {
-    return this.showPopup({
-      type: PopupType.DeleteTag,
-      repository,
-      tagName,
-    })
   }
 
   /**
@@ -304,11 +264,6 @@ export class Dispatcher {
     return this.appStore._recordLaunchStats(stats)
   }
 
-  /** Report any stats if needed. */
-  public reportStats(): Promise<void> {
-    return this.appStore._reportStats()
-  }
-
   /** Open the URL in a browser */
   public openInBrowser(url: string): Promise<boolean> {
     return this.appStore._openInBrowser(url)
@@ -348,16 +303,6 @@ export class Dispatcher {
   /** Moves the app to the /Applications folder on macOS. */
   public moveToApplicationsFolder() {
     return moveToApplicationsFolder()
-  }
-
-  /**
-   * Show a dialog that helps the user create a fork of
-   * their local repo.
-   */
-  public async showCreateForkDialog(
-    repository: RepositoryWithGitHubRepository
-  ): Promise<void> {
-    await this.appStore._showCreateForkDialog(repository)
   }
 
   /**
@@ -519,16 +464,9 @@ export class Dispatcher {
   }
 
   /** Install the global Git LFS filters. */
-  public installGlobalLFSFilters(force: boolean): Promise<void> {
-    return this.appStore._installGlobalLFSFilters(force)
-  }
-
-  /** Install the LFS filters */
-  public installLFSHooks(
-    repositories: ReadonlyArray<Repository>
-  ): Promise<void> {
-    return this.appStore._installLFSHooks(repositories)
-  }
+  // public installGlobalLFSFilters(force: boolean): Promise<void> {
+  //   return this.appStore._installGlobalLFSFilters(force)
+  // }
 
   /**
    * Request a refresh of the list of repositories that
@@ -537,30 +475,6 @@ export class Dispatcher {
    */
   public refreshApiRepositories(account: Account) {
     return this.appStore._refreshApiRepositories(account)
-  }
-
-  /** Change the selected Branches foldout tab. */
-  public changeBranchesTab(tab: BranchesTab): Promise<void> {
-    return this.appStore._changeBranchesTab(tab)
-  }
-
-  /**
-   * Open the Explore page at the GitHub instance of this repository
-   */
-  public showGitHubExplore(repository: Repository): Promise<void> {
-    return this.appStore._showGitHubExplore(repository)
-  }
-
-  /**
-   * Open a browser and navigate to the provided pull request
-   */
-  public async showPullRequestByPR(pr: PullRequest): Promise<void> {
-    return this.appStore._showPullRequestByPR(pr)
-  }
-
-  /** Ignore the existing `upstream` remote. */
-  public ignoreExistingUpstreamRemote(repository: Repository): Promise<void> {
-    return this.appStore._ignoreExistingUpstreamRemote(repository)
   }
 
   public setConfirmDiscardStashSetting(value: boolean) {
@@ -825,19 +739,6 @@ export class Dispatcher {
     return this.statsStore.recordForkCreated()
   }
 
-  /** Open the issue creation page for a GitHub repository in a browser */
-  public async openIssueCreationPage(repository: Repository): Promise<boolean> {
-    // Default to creating issue on parent repo
-    // See https://github.com/desktop/desktop/issues/9232 for rationale
-    const url = getGitHubHtmlUrl(repository)
-    if (url !== null) {
-      this.statsStore.recordIssueCreationWebpageOpened()
-      return this.appStore._openInBrowser(`${url}/issues/new/choose`)
-    } else {
-      return false
-    }
-  }
-
   public setCommitSpellcheckEnabled(commitSpellcheckEnabled: boolean) {
     this.appStore._setCommitSpellcheckEnabled(commitSpellcheckEnabled)
   }
@@ -864,35 +765,9 @@ export class Dispatcher {
     this.statsStore.recordDragStartedAndCanceled()
   }
 
-  /** Method to set the drag element */
-  public setDragElement(dragElement: DragElement): void {
-    this.appStore._setDragElement(dragElement)
-  }
-
   /** Method to clear the drag element */
   public clearDragElement(): void {
     this.appStore._setDragElement(null)
-  }
-
-  // /** Set the multi commit operation target branch */
-  // public setMultiCommitOperationTargetBranch(
-  //   repository: Repository,
-  //   targetBranch: Branch
-  // ): void {
-  //   this.repositoryStateManager.updateMultiCommitOperationState(
-  //     repository,
-  //     () => ({
-  //       targetBranch,
-  //     })
-  //   )
-  // }
-
-  /** Gets a branches ahead behind remote or null if doesn't exist on remote */
-  public async getBranchAheadBehind(
-    repository: Repository,
-    branch: Branch
-  ): Promise<IAheadBehind | null> {
-    return this.appStore._getBranchAheadBehind(repository, branch)
   }
 
   /** Set whether thank you is in order for external contributions */

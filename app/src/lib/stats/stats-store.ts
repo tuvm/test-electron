@@ -1,31 +1,31 @@
 import { StatsDatabase, ILaunchStats, IDailyMeasures } from './stats-database'
-import { getDotComAPIEndpoint } from '../api'
-import { getVersion } from '../../ui/lib/app-proxy'
+// import { getDotComAPIEndpoint } from '../api'
+// import { getVersion } from '../../ui/lib/app-proxy'
 // import { hasShownWelcomeFlow } from '../welcome'
-import { Account } from '../../models/account'
-import { getOS } from '../get-os'
-import { Repository } from '../../models/repository'
+// import { Account } from '../../models/account'
+// import { getOS } from '../get-os'
+// import { Repository } from '../../models/repository'
 import { merge } from '../../lib/merge'
-import { getPersistedThemeName } from '../../ui/lib/application-theme'
+// import { getPersistedThemeName } from '../../ui/lib/application-theme'
 import { IUiActivityMonitor } from '../../ui/lib/ui-activity-monitor'
 import { Disposable } from 'event-kit'
-import { assertNever } from '../fatal-error'
+// import { assertNever } from '../fatal-error'
 import {
-  getNumber,
+  // getNumber,
   setNumber,
   getBoolean,
   setBoolean,
   getNumberArray,
   setNumberArray,
 } from '../local-storage'
-import { PushOptions } from '../git'
-import { getShowSideBySideDiff } from '../../ui/lib/diff-mode'
-import { getAppArchitecture } from '../../ui/main-process-proxy'
-import { Architecture } from '../get-architecture'
-import { MultiCommitOperationKind } from '../../models/multi-commit-operation'
-import { getNotificationsEnabled } from '../stores/notifications-store'
-import { isInApplicationFolder } from '../../ui/main-process-proxy'
-import { getRendererGUID } from '../get-renderer-guid'
+// import { PushOptions } from '../git'
+// import { getShowSideBySideDiff } from '../../ui/lib/diff-mode'
+// import { getAppArchitecture } from '../../ui/main-process-proxy'
+// import { Architecture } from '../get-architecture'
+// import { MultiCommitOperationKind } from '../../models/multi-commit-operation'
+// import { getNotificationsEnabled } from '../stores/notifications-store'
+// import { isInApplicationFolder } from '../../ui/main-process-proxy'
+// import { getRendererGUID } from '../get-renderer-guid'
 import { ValidNotificationPullRequestReviewState } from '../valid-notification-pull-request-review'
 
 type PullRequestReviewStatFieldInfix =
@@ -46,7 +46,7 @@ const StatsEndpoint = 'https://central.github.com/api/usage/desktop'
 /** The URL to the stats samples page. */
 export const SamplesURL = 'https://desktop.github.com/usage-data/'
 
-const LastDailyStatsReportKey = 'last-daily-stats-report'
+// const LastDailyStatsReportKey = 'last-daily-stats-report'
 
 /** The localStorage key for whether the user has opted out. */
 const StatsOptOutKey = 'stats-opt-out'
@@ -60,17 +60,17 @@ const FirstRepositoryAddedAtKey = 'first-repository-added-at'
 const FirstRepositoryClonedAtKey = 'first-repository-cloned-at'
 const FirstRepositoryCreatedAtKey = 'first-repository-created-at'
 const FirstCommitCreatedAtKey = 'first-commit-created-at'
-const FirstPushToGitHubAtKey = 'first-push-to-github-at'
+// const FirstPushToGitHubAtKey = 'first-push-to-github-at'
 const FirstNonDefaultBranchCheckoutAtKey =
   'first-non-default-branch-checkout-at'
-const terminalEmulatorKey = 'shell'
-const textEditorKey: string = 'externalEditor'
+// const terminalEmulatorKey = 'shell'
+// const textEditorKey: string = 'externalEditor'
 
 const RepositoriesCommittedInWithoutWriteAccessKey =
   'repositories-committed-in-without-write-access'
 
 /** How often daily stats should be submitted (i.e., 24 hours). */
-const DailyStatsReportInterval = 1000 * 60 * 60 * 24
+// const DailyStatsReportInterval = 1000 * 60 * 60 * 24
 
 const DefaultDailyMeasures: IDailyMeasures = {
   commits: 0,
@@ -215,181 +215,181 @@ const DefaultDailyMeasures: IDailyMeasures = {
   openSubmoduleFromDiffCount: 0,
 }
 
-interface IOnboardingStats {
-  /**
-   * Time (in seconds) from when the user first launched
-   * the application and entered the welcome wizard until
-   * the user added their first existing repository.
-   *
-   * A negative value means that this action hasn't yet
-   * taken place while undefined means that the current
-   * user installed desktop prior to this metric being
-   * added and we will thus never be able to provide a
-   * value.
-   */
-  readonly timeToFirstAddedRepository?: number
+// interface IOnboardingStats {
+//   /**
+//    * Time (in seconds) from when the user first launched
+//    * the application and entered the welcome wizard until
+//    * the user added their first existing repository.
+//    *
+//    * A negative value means that this action hasn't yet
+//    * taken place while undefined means that the current
+//    * user installed desktop prior to this metric being
+//    * added and we will thus never be able to provide a
+//    * value.
+//    */
+//   readonly timeToFirstAddedRepository?: number
 
-  /**
-   * Time (in seconds) from when the user first launched
-   * the application and entered the welcome wizard until
-   * the user cloned their first repository.
-   *
-   * A negative value means that this action hasn't yet
-   * taken place while undefined means that the current
-   * user installed desktop prior to this metric being
-   * added and we will thus never be able to provide a
-   * value.
-   */
-  readonly timeToFirstClonedRepository?: number
+//   /**
+//    * Time (in seconds) from when the user first launched
+//    * the application and entered the welcome wizard until
+//    * the user cloned their first repository.
+//    *
+//    * A negative value means that this action hasn't yet
+//    * taken place while undefined means that the current
+//    * user installed desktop prior to this metric being
+//    * added and we will thus never be able to provide a
+//    * value.
+//    */
+//   readonly timeToFirstClonedRepository?: number
 
-  /**
-   * Time (in seconds) from when the user first launched
-   * the application and entered the welcome wizard until
-   * the user created their first new repository.
-   *
-   * A negative value means that this action hasn't yet
-   * taken place while undefined means that the current
-   * user installed desktop prior to this metric being
-   * added and we will thus never be able to provide a
-   * value.
-   */
-  readonly timeToFirstCreatedRepository?: number
+//   /**
+//    * Time (in seconds) from when the user first launched
+//    * the application and entered the welcome wizard until
+//    * the user created their first new repository.
+//    *
+//    * A negative value means that this action hasn't yet
+//    * taken place while undefined means that the current
+//    * user installed desktop prior to this metric being
+//    * added and we will thus never be able to provide a
+//    * value.
+//    */
+//   readonly timeToFirstCreatedRepository?: number
 
-  /**
-   * Time (in seconds) from when the user first launched
-   * the application and entered the welcome wizard until
-   * the user crafted their first commit.
-   *
-   * A negative value means that this action hasn't yet
-   * taken place while undefined means that the current
-   * user installed desktop prior to this metric being
-   * added and we will thus never be able to provide a
-   * value.
-   */
-  readonly timeToFirstCommit?: number
+//   /**
+//    * Time (in seconds) from when the user first launched
+//    * the application and entered the welcome wizard until
+//    * the user crafted their first commit.
+//    *
+//    * A negative value means that this action hasn't yet
+//    * taken place while undefined means that the current
+//    * user installed desktop prior to this metric being
+//    * added and we will thus never be able to provide a
+//    * value.
+//    */
+//   readonly timeToFirstCommit?: number
 
-  /**
-   * Time (in seconds) from when the user first launched
-   * the application and entered the welcome wizard until
-   * the user performed their first push of a repository
-   * to GitHub.com or GitHub Enterprise. This metric
-   * does not track pushes to non-GitHub remotes.
-   */
-  readonly timeToFirstGitHubPush?: number
+//   /**
+//    * Time (in seconds) from when the user first launched
+//    * the application and entered the welcome wizard until
+//    * the user performed their first push of a repository
+//    * to GitHub.com or GitHub Enterprise. This metric
+//    * does not track pushes to non-GitHub remotes.
+//    */
+//   readonly timeToFirstGitHubPush?: number
 
-  /**
-   * Time (in seconds) from when the user first launched
-   * the application and entered the welcome wizard until
-   * the user first checked out a branch in any repository
-   * which is not the default branch of that repository.
-   *
-   * Note that this metric will be set regardless of whether
-   * that repository was a GitHub.com/GHE repository, local
-   * repository or has a non-GitHub remote.
-   *
-   * A negative value means that this action hasn't yet
-   * taken place while undefined means that the current
-   * user installed desktop prior to this metric being
-   * added and we will thus never be able to provide a
-   * value.
-   */
-  readonly timeToFirstNonDefaultBranchCheckout?: number
+//   /**
+//    * Time (in seconds) from when the user first launched
+//    * the application and entered the welcome wizard until
+//    * the user first checked out a branch in any repository
+//    * which is not the default branch of that repository.
+//    *
+//    * Note that this metric will be set regardless of whether
+//    * that repository was a GitHub.com/GHE repository, local
+//    * repository or has a non-GitHub remote.
+//    *
+//    * A negative value means that this action hasn't yet
+//    * taken place while undefined means that the current
+//    * user installed desktop prior to this metric being
+//    * added and we will thus never be able to provide a
+//    * value.
+//    */
+//   readonly timeToFirstNonDefaultBranchCheckout?: number
 
-  /**
-   * Time (in seconds) from when the user first launched
-   * the application and entered the welcome wizard until
-   * the user completed the wizard.
-   *
-   * A negative value means that this action hasn't yet
-   * taken place while undefined means that the current
-   * user installed desktop prior to this metric being
-   * added and we will thus never be able to provide a
-   * value.
-   */
-  readonly timeToWelcomeWizardTerminated?: number
+//   /**
+//    * Time (in seconds) from when the user first launched
+//    * the application and entered the welcome wizard until
+//    * the user completed the wizard.
+//    *
+//    * A negative value means that this action hasn't yet
+//    * taken place while undefined means that the current
+//    * user installed desktop prior to this metric being
+//    * added and we will thus never be able to provide a
+//    * value.
+//    */
+//   readonly timeToWelcomeWizardTerminated?: number
 
-  /**
-   * The method that was used when authenticating a
-   * user in the welcome flow. If multiple successful
-   * authentications happened during the welcome flow
-   * due to the user stepping back and signing in to
-   * another account this will reflect the last one.
-   */
-  readonly welcomeWizardSignInMethod?: 'basic' | 'web'
-}
+//   /**
+//    * The method that was used when authenticating a
+//    * user in the welcome flow. If multiple successful
+//    * authentications happened during the welcome flow
+//    * due to the user stepping back and signing in to
+//    * another account this will reflect the last one.
+//    */
+//   readonly welcomeWizardSignInMethod?: 'basic' | 'web'
+// }
 
-interface ICalculatedStats {
-  /** The app version. */
-  readonly version: string
+// interface ICalculatedStats {
+//   /** The app version. */
+//   readonly version: string
 
-  /** The OS version. */
-  readonly osVersion: string
+//   /** The OS version. */
+//   readonly osVersion: string
 
-  /** The platform. */
-  readonly platform: string
+//   /** The platform. */
+//   readonly platform: string
 
-  /** The architecture. */
-  readonly architecture: Architecture
+//   /** The architecture. */
+//   readonly architecture: Architecture
 
-  /** The number of total repositories. */
-  readonly repositoryCount: number
+//   /** The number of total repositories. */
+//   readonly repositoryCount: number
 
-  /** The number of GitHub repositories. */
-  readonly gitHubRepositoryCount: number
+//   /** The number of GitHub repositories. */
+//   readonly gitHubRepositoryCount: number
 
-  /** The install ID. */
-  readonly guid: string
+//   /** The install ID. */
+//   readonly guid: string
 
-  /** Is the user logged in with a GitHub.com account? */
-  readonly dotComAccount: boolean
+//   /** Is the user logged in with a GitHub.com account? */
+//   readonly dotComAccount: boolean
 
-  /** Is the user logged in with an Enterprise account? */
-  readonly enterpriseAccount: boolean
+//   /** Is the user logged in with an Enterprise account? */
+//   readonly enterpriseAccount: boolean
 
-  /**
-   * The name of the currently selected theme/application
-   * appearance as set at time of stats submission.
-   */
-  readonly theme: string
+//   /**
+//    * The name of the currently selected theme/application
+//    * appearance as set at time of stats submission.
+//    */
+//   readonly theme: string
 
-  /** The selected terminal emulator at the time of stats submission */
-  readonly selectedTerminalEmulator: string
+//   /** The selected terminal emulator at the time of stats submission */
+//   readonly selectedTerminalEmulator: string
 
-  /** The selected text editor at the time of stats submission */
-  readonly selectedTextEditor: string
+//   /** The selected text editor at the time of stats submission */
+//   readonly selectedTextEditor: string
 
-  readonly eventType: 'usage'
+//   readonly eventType: 'usage'
 
-  /**
-   * _[Forks]_
-   * How many repos did the user commit in without having `write` access?
-   *
-   * This is a hack in that its really a "computed daily measure" and the
-   * moment we have another one of those we should consider refactoring
-   * them into their own interface
-   */
-  readonly repositoriesCommittedInWithoutWriteAccess: number
+//   /**
+//    * _[Forks]_
+//    * How many repos did the user commit in without having `write` access?
+//    *
+//    * This is a hack in that its really a "computed daily measure" and the
+//    * moment we have another one of those we should consider refactoring
+//    * them into their own interface
+//    */
+//   readonly repositoriesCommittedInWithoutWriteAccess: number
 
-  /**
-   * whether not to the user has chosent to view diffs in split, or unified (the
-   * default) diff view mode
-   */
-  readonly diffMode: 'split' | 'unified'
+//   /**
+//    * whether not to the user has chosent to view diffs in split, or unified (the
+//    * default) diff view mode
+//    */
+//   readonly diffMode: 'split' | 'unified'
 
-  /**
-   * Whether the app was launched from the Applications folder or not. This is
-   * only relevant on macOS, null will be sent otherwise.
-   */
-  readonly launchedFromApplicationsFolder: boolean | null
+//   /**
+//    * Whether the app was launched from the Applications folder or not. This is
+//    * only relevant on macOS, null will be sent otherwise.
+//    */
+//   readonly launchedFromApplicationsFolder: boolean | null
 
-  /** Whether or not the user has enabled high-signal notifications */
-  readonly notificationsEnabled: boolean
-}
+//   /** Whether or not the user has enabled high-signal notifications */
+//   readonly notificationsEnabled: boolean
+// }
 
-type DailyStats = ICalculatedStats &
-  ILaunchStats &
-  IDailyMeasures &
-  IOnboardingStats
+// type DailyStats = ICalculatedStats &
+//   ILaunchStats &
+//   IDailyMeasures &
+//   IOnboardingStats
 
 /**
  * Testable interface for StatsStore
@@ -439,56 +439,56 @@ export class StatsStore implements IStatsStore {
     })
   }
 
-  /** Should the app report its daily stats? */
-  private shouldReportDailyStats(): boolean {
-    const lastDate = getNumber(LastDailyStatsReportKey, 0)
-    const now = Date.now()
-    return now - lastDate > DailyStatsReportInterval
-  }
+  // /** Should the app report its daily stats? */
+  // private shouldReportDailyStats(): boolean {
+  //   const lastDate = getNumber(LastDailyStatsReportKey, 0)
+  //   const now = Date.now()
+  //   return now - lastDate > DailyStatsReportInterval
+  // }
 
-  /** Report any stats which are eligible for reporting. */
-  public async reportStats(
-    accounts: ReadonlyArray<Account>,
-    repositories: ReadonlyArray<Repository>
-  ) {
-    if (this.optOut) {
-      return
-    }
+  // /** Report any stats which are eligible for reporting. */
+  // public async reportStats(
+  //   accounts: ReadonlyArray<Account>,
+  //   // repositories: ReadonlyArray<Repository>
+  // ) {
+  //   if (this.optOut) {
+  //     return
+  //   }
 
-    // Never report stats while in dev or test. They could be pretty crazy.
-    if (__DEV__ || process.env.TEST_ENV) {
-      return
-    }
+  //   // Never report stats while in dev or test. They could be pretty crazy.
+  //   if (__DEV__ || process.env.TEST_ENV) {
+  //     return
+  //   }
 
-    // don't report until the user has had a chance to view and opt-in for
-    // sharing their stats with us
-    // if (!hasShownWelcomeFlow()) {
-    //   return
-    // }
+  //   // don't report until the user has had a chance to view and opt-in for
+  //   // sharing their stats with us
+  //   // if (!hasShownWelcomeFlow()) {
+  //   //   return
+  //   // }
 
-    if (!this.shouldReportDailyStats()) {
-      return
-    }
+  //   if (!this.shouldReportDailyStats()) {
+  //     return
+  //   }
 
-    const now = Date.now()
-    const payload = await this.getDailyStats(accounts, repositories)
+  //   const now = Date.now()
+  //   const payload = await this.getDailyStats(accounts, repositories)
 
-    try {
-      const response = await this.post(payload)
-      if (!response.ok) {
-        throw new Error(
-          `Unexpected status: ${response.statusText} (${response.status})`
-        )
-      }
+  //   try {
+  //     const response = await this.post(payload)
+  //     if (!response.ok) {
+  //       throw new Error(
+  //         `Unexpected status: ${response.statusText} (${response.status})`
+  //       )
+  //     }
 
-      log.info('Stats reported.')
+  //     log.info('Stats reported.')
 
-      await this.clearDailyStats()
-      setNumber(LastDailyStatsReportKey, now)
-    } catch (e) {
-      log.error('Error reporting stats:', e)
-    }
-  }
+  //     await this.clearDailyStats()
+  //     setNumber(LastDailyStatsReportKey, now)
+  //   } catch (e) {
+  //     log.error('Error reporting stats:', e)
+  //   }
+  // }
 
   /** Record the given launch stats. */
   public async recordLaunchStats(stats: ILaunchStats) {
@@ -532,154 +532,154 @@ export class StatsStore implements IStatsStore {
     this.uiActivityMonitorSubscription = null
   }
 
-  /** Get the daily stats. */
-  private async getDailyStats(
-    accounts: ReadonlyArray<Account>,
-    repositories: ReadonlyArray<Repository>
-  ): Promise<DailyStats> {
-    const launchStats = await this.getAverageLaunchStats()
-    const dailyMeasures = await this.getDailyMeasures()
-    const userType = this.determineUserType(accounts)
-    const repositoryCounts = this.categorizedRepositoryCounts(repositories)
-    const onboardingStats = this.getOnboardingStats()
-    const selectedTerminalEmulator =
-      localStorage.getItem(terminalEmulatorKey) || 'none'
-    const selectedTextEditor = localStorage.getItem(textEditorKey) || 'none'
-    const repositoriesCommittedInWithoutWriteAccess = getNumberArray(
-      RepositoriesCommittedInWithoutWriteAccessKey
-    ).length
-    const diffMode = getShowSideBySideDiff() ? 'split' : 'unified'
+  // /** Get the daily stats. */
+  // private async getDailyStats(
+  //   accounts: ReadonlyArray<Account>,
+  //   repositories: ReadonlyArray<Repository>
+  // ): Promise<DailyStats> {
+  //   const launchStats = await this.getAverageLaunchStats()
+  //   const dailyMeasures = await this.getDailyMeasures()
+  //   const userType = this.determineUserType(accounts)
+  //   const repositoryCounts = this.categorizedRepositoryCounts(repositories)
+  //   const onboardingStats = this.getOnboardingStats()
+  //   const selectedTerminalEmulator =
+  //     localStorage.getItem(terminalEmulatorKey) || 'none'
+  //   const selectedTextEditor = localStorage.getItem(textEditorKey) || 'none'
+  //   const repositoriesCommittedInWithoutWriteAccess = getNumberArray(
+  //     RepositoriesCommittedInWithoutWriteAccessKey
+  //   ).length
+  //   const diffMode = getShowSideBySideDiff() ? 'split' : 'unified'
 
-    // isInApplicationsFolder is undefined when not running on Darwin
-    const launchedFromApplicationsFolder = __DARWIN__
-      ? await isInApplicationFolder()
-      : null
+  //   // isInApplicationsFolder is undefined when not running on Darwin
+  //   const launchedFromApplicationsFolder = __DARWIN__
+  //     ? await isInApplicationFolder()
+  //     : null
 
-    return {
-      eventType: 'usage',
-      version: getVersion(),
-      osVersion: getOS(),
-      platform: process.platform,
-      architecture: await getAppArchitecture(),
-      theme: getPersistedThemeName(),
-      selectedTerminalEmulator,
-      selectedTextEditor,
-      notificationsEnabled: getNotificationsEnabled(),
-      ...launchStats,
-      ...dailyMeasures,
-      ...userType,
-      ...onboardingStats,
-      guid: await getRendererGUID(),
-      ...repositoryCounts,
-      repositoriesCommittedInWithoutWriteAccess,
-      diffMode,
-      launchedFromApplicationsFolder,
-    }
-  }
+  //   return {
+  //     eventType: 'usage',
+  //     version: getVersion(),
+  //     osVersion: getOS(),
+  //     platform: process.platform,
+  //     architecture: await getAppArchitecture(),
+  //     theme: getPersistedThemeName(),
+  //     selectedTerminalEmulator,
+  //     selectedTextEditor,
+  //     notificationsEnabled: getNotificationsEnabled(),
+  //     ...launchStats,
+  //     ...dailyMeasures,
+  //     ...userType,
+  //     ...onboardingStats,
+  //     guid: await getRendererGUID(),
+  //     ...repositoryCounts,
+  //     repositoriesCommittedInWithoutWriteAccess,
+  //     diffMode,
+  //     launchedFromApplicationsFolder,
+  //   }
+  // }
 
-  private getOnboardingStats(): IOnboardingStats {
-    const wizardInitiatedAt = getLocalStorageTimestamp(
-      WelcomeWizardInitiatedAtKey
-    )
+  // private getOnboardingStats(): IOnboardingStats {
+  //   const wizardInitiatedAt = getLocalStorageTimestamp(
+  //     WelcomeWizardInitiatedAtKey
+  //   )
 
-    // If we don't have a start time for the wizard none of our other metrics
-    // makes sense. This will happen for users who installed the app before
-    // we started tracking onboarding stats.
-    if (wizardInitiatedAt === null) {
-      return {}
-    }
+  //   // If we don't have a start time for the wizard none of our other metrics
+  //   // makes sense. This will happen for users who installed the app before
+  //   // we started tracking onboarding stats.
+  //   if (wizardInitiatedAt === null) {
+  //     return {}
+  //   }
 
-    const timeToWelcomeWizardTerminated = timeTo(WelcomeWizardCompletedAtKey)
-    const timeToFirstAddedRepository = timeTo(FirstRepositoryAddedAtKey)
-    const timeToFirstClonedRepository = timeTo(FirstRepositoryClonedAtKey)
-    const timeToFirstCreatedRepository = timeTo(FirstRepositoryCreatedAtKey)
-    const timeToFirstCommit = timeTo(FirstCommitCreatedAtKey)
-    const timeToFirstGitHubPush = timeTo(FirstPushToGitHubAtKey)
-    const timeToFirstNonDefaultBranchCheckout = timeTo(
-      FirstNonDefaultBranchCheckoutAtKey
-    )
+  //   const timeToWelcomeWizardTerminated = timeTo(WelcomeWizardCompletedAtKey)
+  //   const timeToFirstAddedRepository = timeTo(FirstRepositoryAddedAtKey)
+  //   const timeToFirstClonedRepository = timeTo(FirstRepositoryClonedAtKey)
+  //   const timeToFirstCreatedRepository = timeTo(FirstRepositoryCreatedAtKey)
+  //   const timeToFirstCommit = timeTo(FirstCommitCreatedAtKey)
+  //   const timeToFirstGitHubPush = timeTo(FirstPushToGitHubAtKey)
+  //   const timeToFirstNonDefaultBranchCheckout = timeTo(
+  //     FirstNonDefaultBranchCheckoutAtKey
+  //   )
 
 
-    return {
-      timeToWelcomeWizardTerminated,
-      timeToFirstAddedRepository,
-      timeToFirstClonedRepository,
-      timeToFirstCreatedRepository,
-      timeToFirstCommit,
-      timeToFirstGitHubPush,
-      timeToFirstNonDefaultBranchCheckout,
-    }
-  }
+  //   return {
+  //     timeToWelcomeWizardTerminated,
+  //     timeToFirstAddedRepository,
+  //     timeToFirstClonedRepository,
+  //     timeToFirstCreatedRepository,
+  //     timeToFirstCommit,
+  //     timeToFirstGitHubPush,
+  //     timeToFirstNonDefaultBranchCheckout,
+  //   }
+  // }
 
-  private categorizedRepositoryCounts(repositories: ReadonlyArray<Repository>) {
-    return {
-      repositoryCount: repositories.length,
-      gitHubRepositoryCount: repositories.filter(r => r.gitHubRepository)
-        .length,
-    }
-  }
+  // private categorizedRepositoryCounts(repositories: ReadonlyArray<Repository>) {
+  //   return {
+  //     repositoryCount: repositories.length,
+  //     gitHubRepositoryCount: repositories.filter(r => r.gitHubRepository)
+  //       .length,
+  //   }
+  // }
 
-  /** Determines if an account is a dotCom and/or enterprise user */
-  private determineUserType(accounts: ReadonlyArray<Account>) {
-    const dotComAccount = !!accounts.find(
-      a => a.endpoint === getDotComAPIEndpoint()
-    )
-    const enterpriseAccount = !!accounts.find(
-      a => a.endpoint !== getDotComAPIEndpoint()
-    )
+  // /** Determines if an account is a dotCom and/or enterprise user */
+  // private determineUserType(accounts: ReadonlyArray<Account>) {
+  //   const dotComAccount = !!accounts.find(
+  //     a => a.endpoint === getDotComAPIEndpoint()
+  //   )
+  //   const enterpriseAccount = !!accounts.find(
+  //     a => a.endpoint !== getDotComAPIEndpoint()
+  //   )
 
-    return {
-      dotComAccount,
-      enterpriseAccount,
-    }
-  }
+  //   return {
+  //     dotComAccount,
+  //     enterpriseAccount,
+  //   }
+  // }
 
-  /** Calculate the average launch stats. */
-  private async getAverageLaunchStats(): Promise<ILaunchStats> {
-    const launches: ReadonlyArray<ILaunchStats> | undefined =
-      await this.db.launches.toArray()
-    if (!launches || !launches.length) {
-      return {
-        mainReadyTime: -1,
-        loadTime: -1,
-        rendererReadyTime: -1,
-      }
-    }
+  // /** Calculate the average launch stats. */
+  // private async getAverageLaunchStats(): Promise<ILaunchStats> {
+  //   const launches: ReadonlyArray<ILaunchStats> | undefined =
+  //     await this.db.launches.toArray()
+  //   if (!launches || !launches.length) {
+  //     return {
+  //       mainReadyTime: -1,
+  //       loadTime: -1,
+  //       rendererReadyTime: -1,
+  //     }
+  //   }
 
-    const start: ILaunchStats = {
-      mainReadyTime: 0,
-      loadTime: 0,
-      rendererReadyTime: 0,
-    }
+  //   const start: ILaunchStats = {
+  //     mainReadyTime: 0,
+  //     loadTime: 0,
+  //     rendererReadyTime: 0,
+  //   }
 
-    const totals = launches.reduce((running, current) => {
-      return {
-        mainReadyTime: running.mainReadyTime + current.mainReadyTime,
-        loadTime: running.loadTime + current.loadTime,
-        rendererReadyTime:
-          running.rendererReadyTime + current.rendererReadyTime,
-      }
-    }, start)
+  //   const totals = launches.reduce((running, current) => {
+  //     return {
+  //       mainReadyTime: running.mainReadyTime + current.mainReadyTime,
+  //       loadTime: running.loadTime + current.loadTime,
+  //       rendererReadyTime:
+  //         running.rendererReadyTime + current.rendererReadyTime,
+  //     }
+  //   }, start)
 
-    return {
-      mainReadyTime: totals.mainReadyTime / launches.length,
-      loadTime: totals.loadTime / launches.length,
-      rendererReadyTime: totals.rendererReadyTime / launches.length,
-    }
-  }
+  //   return {
+  //     mainReadyTime: totals.mainReadyTime / launches.length,
+  //     loadTime: totals.loadTime / launches.length,
+  //     rendererReadyTime: totals.rendererReadyTime / launches.length,
+  //   }
+  // }
 
-  /** Get the daily measures. */
-  private async getDailyMeasures(): Promise<IDailyMeasures> {
-    const measures: IDailyMeasures | undefined = await this.db.dailyMeasures
-      .limit(1)
-      .first()
-    return {
-      ...DefaultDailyMeasures,
-      ...measures,
-      // We could spread the database ID in, but we really don't want it.
-      id: undefined,
-    }
-  }
+  // /** Get the daily measures. */
+  // private async getDailyMeasures(): Promise<IDailyMeasures> {
+  //   const measures: IDailyMeasures | undefined = await this.db.dailyMeasures
+  //     .limit(1)
+  //     .first()
+  //   return {
+  //     ...DefaultDailyMeasures,
+  //     ...measures,
+  //     // We could spread the database ID in, but we really don't want it.
+  //     id: undefined,
+  //   }
+  // }
 
   private async updateDailyMeasures<K extends keyof IDailyMeasures>(
     fn: (measures: IDailyMeasures) => Pick<IDailyMeasures, K>
@@ -924,67 +924,67 @@ export class StatsStore implements IStatsStore {
     return this.optOut
   }
 
-  public async recordPush(
-    githubAccount: Account | null,
-    options?: PushOptions
-  ) {
-    if (githubAccount === null) {
-      await this.recordPushToGenericRemote(options)
-    } else if (githubAccount.endpoint === getDotComAPIEndpoint()) {
-      await this.recordPushToGitHub(options)
-    } else {
-      await this.recordPushToGitHubEnterprise(options)
-    }
-  }
+  // public async recordPush(
+  //   githubAccount: Account | null,
+  //   options?: PushOptions
+  // ) {
+  //   if (githubAccount === null) {
+  //     await this.recordPushToGenericRemote(options)
+  //   } else if (githubAccount.endpoint === getDotComAPIEndpoint()) {
+  //     await this.recordPushToGitHub(options)
+  //   } else {
+  //     await this.recordPushToGitHubEnterprise(options)
+  //   }
+  // }
 
-  /** Record that the user pushed to GitHub.com */
-  private async recordPushToGitHub(options?: PushOptions): Promise<void> {
-    if (options && options.forceWithLease) {
-      await this.updateDailyMeasures(m => ({
-        dotcomForcePushCount: m.dotcomForcePushCount + 1,
-      }))
-    }
+  // /** Record that the user pushed to GitHub.com */
+  // private async recordPushToGitHub(options?: PushOptions): Promise<void> {
+  //   if (options && options.forceWithLease) {
+  //     await this.updateDailyMeasures(m => ({
+  //       dotcomForcePushCount: m.dotcomForcePushCount + 1,
+  //     }))
+  //   }
 
-    await this.updateDailyMeasures(m => ({
-      dotcomPushCount: m.dotcomPushCount + 1,
-    }))
+  //   await this.updateDailyMeasures(m => ({
+  //     dotcomPushCount: m.dotcomPushCount + 1,
+  //   }))
 
-    createLocalStorageTimestamp(FirstPushToGitHubAtKey)
-  }
+  //   createLocalStorageTimestamp(FirstPushToGitHubAtKey)
+  // }
 
-  /** Record that the user pushed to a GitHub Enterprise instance */
-  private async recordPushToGitHubEnterprise(
-    options?: PushOptions
-  ): Promise<void> {
-    if (options && options.forceWithLease) {
-      await this.updateDailyMeasures(m => ({
-        enterpriseForcePushCount: m.enterpriseForcePushCount + 1,
-      }))
-    }
+  // /** Record that the user pushed to a GitHub Enterprise instance */
+  // private async recordPushToGitHubEnterprise(
+  //   options?: PushOptions
+  // ): Promise<void> {
+  //   if (options && options.forceWithLease) {
+  //     await this.updateDailyMeasures(m => ({
+  //       enterpriseForcePushCount: m.enterpriseForcePushCount + 1,
+  //     }))
+  //   }
 
-    await this.updateDailyMeasures(m => ({
-      enterprisePushCount: m.enterprisePushCount + 1,
-    }))
+  //   await this.updateDailyMeasures(m => ({
+  //     enterprisePushCount: m.enterprisePushCount + 1,
+  //   }))
 
-    // Note, this is not a typo. We track both GitHub.com and
-    // GitHub Enterprise under the same key
-    createLocalStorageTimestamp(FirstPushToGitHubAtKey)
-  }
+  //   // Note, this is not a typo. We track both GitHub.com and
+  //   // GitHub Enterprise under the same key
+  //   createLocalStorageTimestamp(FirstPushToGitHubAtKey)
+  // }
 
-  /** Record that the user pushed to a generic remote */
-  private async recordPushToGenericRemote(
-    options?: PushOptions
-  ): Promise<void> {
-    if (options && options.forceWithLease) {
-      await this.updateDailyMeasures(m => ({
-        externalForcePushCount: m.externalForcePushCount + 1,
-      }))
-    }
+  // /** Record that the user pushed to a generic remote */
+  // private async recordPushToGenericRemote(
+  //   options?: PushOptions
+  // ): Promise<void> {
+  //   if (options && options.forceWithLease) {
+  //     await this.updateDailyMeasures(m => ({
+  //       externalForcePushCount: m.externalForcePushCount + 1,
+  //     }))
+  //   }
 
-    await this.updateDailyMeasures(m => ({
-      externalPushCount: m.externalPushCount + 1,
-    }))
-  }
+  //   await this.updateDailyMeasures(m => ({
+  //     externalPushCount: m.externalPushCount + 1,
+  //   }))
+  // }
 
   /** Record that the user saw a 'merge conflicts' warning but continued with the merge */
   public recordUserProceededWhileLoading(): Promise<void> {
@@ -1497,11 +1497,11 @@ export class StatsStore implements IStatsStore {
     }))
   }
 
-  private recordCherryPickSuccessful(): Promise<void> {
-    return this.updateDailyMeasures(m => ({
-      cherryPickSuccessfulCount: m.cherryPickSuccessfulCount + 1,
-    }))
-  }
+  // private recordCherryPickSuccessful(): Promise<void> {
+  //   return this.updateDailyMeasures(m => ({
+  //     cherryPickSuccessfulCount: m.cherryPickSuccessfulCount + 1,
+  //   }))
+  // }
 
   public recordCherryPickViaDragAndDrop(): Promise<void> {
     return this.updateDailyMeasures(m => ({
@@ -1541,11 +1541,11 @@ export class StatsStore implements IStatsStore {
     }))
   }
 
-  private recordCherryPickUndone(): Promise<void> {
-    return this.updateDailyMeasures(m => ({
-      cherryPickUndoneCount: m.cherryPickUndoneCount + 1,
-    }))
-  }
+  // private recordCherryPickUndone(): Promise<void> {
+  //   return this.updateDailyMeasures(m => ({
+  //     cherryPickUndoneCount: m.cherryPickUndoneCount + 1,
+  //   }))
+  // }
 
   public recordCherryPickBranchCreatedCount(): Promise<void> {
     return this.updateDailyMeasures(m => ({
@@ -1553,11 +1553,11 @@ export class StatsStore implements IStatsStore {
     }))
   }
 
-  private recordReorderSuccessful(): Promise<void> {
-    return this.updateDailyMeasures(m => ({
-      reorderSuccessfulCount: m.reorderSuccessfulCount + 1,
-    }))
-  }
+  // private recordReorderSuccessful(): Promise<void> {
+  //   return this.updateDailyMeasures(m => ({
+  //     reorderSuccessfulCount: m.reorderSuccessfulCount + 1,
+  //   }))
+  // }
 
   public recordReorderStarted(): Promise<void> {
     return this.updateDailyMeasures(m => ({
@@ -1565,18 +1565,18 @@ export class StatsStore implements IStatsStore {
     }))
   }
 
-  private recordReorderConflictsEncountered(): Promise<void> {
-    return this.updateDailyMeasures(m => ({
-      reorderConflictsEncounteredCount: m.reorderConflictsEncounteredCount + 1,
-    }))
-  }
+  // private recordReorderConflictsEncountered(): Promise<void> {
+  //   return this.updateDailyMeasures(m => ({
+  //     reorderConflictsEncounteredCount: m.reorderConflictsEncounteredCount + 1,
+  //   }))
+  // }
 
-  private recordReorderSuccessfulWithConflicts(): Promise<void> {
-    return this.updateDailyMeasures(m => ({
-      reorderSuccessfulWithConflictsCount:
-        m.reorderSuccessfulWithConflictsCount + 1,
-    }))
-  }
+  // private recordReorderSuccessfulWithConflicts(): Promise<void> {
+  //   return this.updateDailyMeasures(m => ({
+  //     reorderSuccessfulWithConflictsCount:
+  //       m.reorderSuccessfulWithConflictsCount + 1,
+  //   }))
+  // }
 
   public recordReorderMultipleCommits(): Promise<void> {
     return this.updateDailyMeasures(m => ({
@@ -1584,17 +1584,17 @@ export class StatsStore implements IStatsStore {
     }))
   }
 
-  private recordReorderUndone(): Promise<void> {
-    return this.updateDailyMeasures(m => ({
-      reorderUndoneCount: m.reorderUndoneCount + 1,
-    }))
-  }
+  // private recordReorderUndone(): Promise<void> {
+  //   return this.updateDailyMeasures(m => ({
+  //     reorderUndoneCount: m.reorderUndoneCount + 1,
+  //   }))
+  // }
 
-  private recordSquashConflictsEncountered(): Promise<void> {
-    return this.updateDailyMeasures(m => ({
-      squashConflictsEncounteredCount: m.squashConflictsEncounteredCount + 1,
-    }))
-  }
+  // private recordSquashConflictsEncountered(): Promise<void> {
+  //   return this.updateDailyMeasures(m => ({
+  //     squashConflictsEncounteredCount: m.squashConflictsEncounteredCount + 1,
+  //   }))
+  // }
 
   public recordSquashMultipleCommitsInvoked(): Promise<void> {
     return this.updateDailyMeasures(m => ({
@@ -1603,18 +1603,18 @@ export class StatsStore implements IStatsStore {
     }))
   }
 
-  private recordSquashSuccessful(): Promise<void> {
-    return this.updateDailyMeasures(m => ({
-      squashSuccessfulCount: m.squashSuccessfulCount + 1,
-    }))
-  }
+  // private recordSquashSuccessful(): Promise<void> {
+  //   return this.updateDailyMeasures(m => ({
+  //     squashSuccessfulCount: m.squashSuccessfulCount + 1,
+  //   }))
+  // }
 
-  private recordSquashSuccessfulWithConflicts(): Promise<void> {
-    return this.updateDailyMeasures(m => ({
-      squashSuccessfulWithConflictsCount:
-        m.squashSuccessfulWithConflictsCount + 1,
-    }))
-  }
+  // private recordSquashSuccessfulWithConflicts(): Promise<void> {
+  //   return this.updateDailyMeasures(m => ({
+  //     squashSuccessfulWithConflictsCount:
+  //       m.squashSuccessfulWithConflictsCount + 1,
+  //   }))
+  // }
 
   public recordSquashViaContextMenuInvoked(): Promise<void> {
     return this.updateDailyMeasures(m => ({
@@ -1628,96 +1628,96 @@ export class StatsStore implements IStatsStore {
     }))
   }
 
-  private recordSquashUndone(): Promise<void> {
-    return this.updateDailyMeasures(m => ({
-      squashUndoneCount: m.squashUndoneCount + 1,
-    }))
-  }
+  // private recordSquashUndone(): Promise<void> {
+  //   return this.updateDailyMeasures(m => ({
+  //     squashUndoneCount: m.squashUndoneCount + 1,
+  //   }))
+  // }
 
-  public async recordOperationConflictsEncounteredCount(
-    kind: MultiCommitOperationKind
-  ): Promise<void> {
-    switch (kind) {
-      case MultiCommitOperationKind.Squash:
-        return this.recordSquashConflictsEncountered()
-      case MultiCommitOperationKind.Reorder:
-        return this.recordReorderConflictsEncountered()
-      case MultiCommitOperationKind.Rebase:
-        // ignored because rebase records different stats
-        return
-      case MultiCommitOperationKind.CherryPick:
-      case MultiCommitOperationKind.Merge:
-        log.error(
-          `[recordOperationConflictsEncounteredCount] - Operation not supported: ${kind}`
-        )
-        return
-      default:
-        return assertNever(kind, `Unknown operation kind of ${kind}.`)
-    }
-  }
+  // public async recordOperationConflictsEncounteredCount(
+  //   kind: MultiCommitOperationKind
+  // ): Promise<void> {
+  //   switch (kind) {
+  //     case MultiCommitOperationKind.Squash:
+  //       return this.recordSquashConflictsEncountered()
+  //     case MultiCommitOperationKind.Reorder:
+  //       return this.recordReorderConflictsEncountered()
+  //     case MultiCommitOperationKind.Rebase:
+  //       // ignored because rebase records different stats
+  //       return
+  //     case MultiCommitOperationKind.CherryPick:
+  //     case MultiCommitOperationKind.Merge:
+  //       log.error(
+  //         `[recordOperationConflictsEncounteredCount] - Operation not supported: ${kind}`
+  //       )
+  //       return
+  //     default:
+  //       return assertNever(kind, `Unknown operation kind of ${kind}.`)
+  //   }
+  // }
 
-  public async recordOperationSuccessful(
-    kind: MultiCommitOperationKind
-  ): Promise<void> {
-    switch (kind) {
-      case MultiCommitOperationKind.Squash:
-        return this.recordSquashSuccessful()
-      case MultiCommitOperationKind.Reorder:
-        return this.recordReorderSuccessful()
-      case MultiCommitOperationKind.CherryPick:
-        return this.recordCherryPickSuccessful()
-      case MultiCommitOperationKind.Rebase:
-        // ignored because rebase records different stats
-        return
-      case MultiCommitOperationKind.Merge:
-        log.error(
-          `[recordOperationSuccessful] - Operation not supported: ${kind}`
-        )
-        return
-      default:
-        return assertNever(kind, `Unknown operation kind of ${kind}.`)
-    }
-  }
+  // public async recordOperationSuccessful(
+  //   kind: MultiCommitOperationKind
+  // ): Promise<void> {
+  //   switch (kind) {
+  //     case MultiCommitOperationKind.Squash:
+  //       return this.recordSquashSuccessful()
+  //     case MultiCommitOperationKind.Reorder:
+  //       return this.recordReorderSuccessful()
+  //     case MultiCommitOperationKind.CherryPick:
+  //       return this.recordCherryPickSuccessful()
+  //     case MultiCommitOperationKind.Rebase:
+  //       // ignored because rebase records different stats
+  //       return
+  //     case MultiCommitOperationKind.Merge:
+  //       log.error(
+  //         `[recordOperationSuccessful] - Operation not supported: ${kind}`
+  //       )
+  //       return
+  //     default:
+  //       return assertNever(kind, `Unknown operation kind of ${kind}.`)
+  //   }
+  // }
 
-  public async recordOperationSuccessfulWithConflicts(
-    kind: MultiCommitOperationKind
-  ): Promise<void> {
-    switch (kind) {
-      case MultiCommitOperationKind.Squash:
-        return this.recordSquashSuccessfulWithConflicts()
-      case MultiCommitOperationKind.Reorder:
-        return this.recordReorderSuccessfulWithConflicts()
-      case MultiCommitOperationKind.Rebase:
-        return this.recordRebaseSuccessAfterConflicts()
-      case MultiCommitOperationKind.CherryPick:
-      case MultiCommitOperationKind.Merge:
-        log.error(
-          `[recordOperationSuccessfulWithConflicts] - Operation not supported: ${kind}`
-        )
-        return
-      default:
-        return assertNever(kind, `Unknown operation kind of ${kind}.`)
-    }
-  }
+  // public async recordOperationSuccessfulWithConflicts(
+  //   kind: MultiCommitOperationKind
+  // ): Promise<void> {
+  //   switch (kind) {
+  //     case MultiCommitOperationKind.Squash:
+  //       return this.recordSquashSuccessfulWithConflicts()
+  //     case MultiCommitOperationKind.Reorder:
+  //       return this.recordReorderSuccessfulWithConflicts()
+  //     case MultiCommitOperationKind.Rebase:
+  //       return this.recordRebaseSuccessAfterConflicts()
+  //     case MultiCommitOperationKind.CherryPick:
+  //     case MultiCommitOperationKind.Merge:
+  //       log.error(
+  //         `[recordOperationSuccessfulWithConflicts] - Operation not supported: ${kind}`
+  //       )
+  //       return
+  //     default:
+  //       return assertNever(kind, `Unknown operation kind of ${kind}.`)
+  //   }
+  // }
 
-  public async recordOperationUndone(
-    kind: MultiCommitOperationKind
-  ): Promise<void> {
-    switch (kind) {
-      case MultiCommitOperationKind.Squash:
-        return this.recordSquashUndone()
-      case MultiCommitOperationKind.Reorder:
-        return this.recordReorderUndone()
-      case MultiCommitOperationKind.CherryPick:
-        return this.recordCherryPickUndone()
-      case MultiCommitOperationKind.Rebase:
-      case MultiCommitOperationKind.Merge:
-        log.error(`[recordOperationUndone] - Operation not supported: ${kind}`)
-        return
-      default:
-        return assertNever(kind, `Unknown operation kind of ${kind}.`)
-    }
-  }
+  // public async recordOperationUndone(
+  //   kind: MultiCommitOperationKind
+  // ): Promise<void> {
+  //   switch (kind) {
+  //     case MultiCommitOperationKind.Squash:
+  //       return this.recordSquashUndone()
+  //     case MultiCommitOperationKind.Reorder:
+  //       return this.recordReorderUndone()
+  //     case MultiCommitOperationKind.CherryPick:
+  //       return this.recordCherryPickUndone()
+  //     case MultiCommitOperationKind.Rebase:
+  //     case MultiCommitOperationKind.Merge:
+  //       log.error(`[recordOperationUndone] - Operation not supported: ${kind}`)
+  //       return
+  //     default:
+  //       return assertNever(kind, `Unknown operation kind of ${kind}.`)
+  //   }
+  // }
 
   public recordSquashMergeSuccessfulWithConflicts(): Promise<void> {
     return this.updateDailyMeasures(m => ({
@@ -1961,10 +1961,10 @@ function createLocalStorageTimestamp(key: string) {
  * If the key doesn't exist or if the stored value can't
  * be converted into a number this method will return null.
  */
-function getLocalStorageTimestamp(key: string): number | null {
-  const timestamp = getNumber(key)
-  return timestamp === undefined ? null : timestamp
-}
+// function getLocalStorageTimestamp(key: string): number | null {
+//   const timestamp = getNumber(key)
+//   return timestamp === undefined ? null : timestamp
+// }
 
 /**
  * Calculate the duration (in seconds) between the time the
@@ -1978,18 +1978,18 @@ function getLocalStorageTimestamp(key: string): number | null {
  * happen if a user manually manipulated localStorage in order
  * to run the wizard again) this method will return undefined.
  */
-function timeTo(key: string): number | undefined {
-  const startTime = getLocalStorageTimestamp(WelcomeWizardInitiatedAtKey)
+// function timeTo(key: string): number | undefined {
+//   const startTime = getLocalStorageTimestamp(WelcomeWizardInitiatedAtKey)
 
-  if (startTime === null) {
-    return undefined
-  }
+//   if (startTime === null) {
+//     return undefined
+//   }
 
-  const endTime = getLocalStorageTimestamp(key)
-  return endTime === null || endTime <= startTime
-    ? -1
-    : Math.round((endTime - startTime) / 1000)
-}
+//   const endTime = getLocalStorageTimestamp(key)
+//   return endTime === null || endTime <= startTime
+//     ? -1
+//     : Math.round((endTime - startTime) / 1000)
+// }
 
 /**
  * Return a value indicating whether the user has opted out of stats reporting
