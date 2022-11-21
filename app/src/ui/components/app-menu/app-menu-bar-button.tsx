@@ -2,7 +2,7 @@ import * as React from 'react'
 import { IMenu, ISubmenuItem } from '../../../models/app-menu'
 import { MenuListItem } from './menu-list-item'
 import { AppMenu, CloseSource } from './app-menu'
-import { ToolbarDropdown } from '../../toolbar'
+import { ToolbarDropdown } from '../toolbar'
 import { Dispatcher } from '../../dispatcher'
 
 interface IAppMenuBarButtonProps {

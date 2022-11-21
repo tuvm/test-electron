@@ -2,36 +2,25 @@ import * as React from 'react'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import {
   IAppState,
-  // RepositorySectionTab,
   FoldoutType,
 } from '../lib/app-state'
 import { Dispatcher } from './dispatcher'
 import { AppStore } from '../lib/stores'
 import { assertNever } from '../lib/fatal-error'
-// import { shell } from '../lib/app-shell'
 import { updateStore, UpdateStatus } from './common/update-store'
-// import { RetryAction } from '../models/retry-actions'
 import { shouldRenderApplicationMenu } from './common/features'
 
 import { getDotComAPIEndpoint } from '../lib/api'
 import { getVersion, getName } from './common/app-proxy'
 import { getOS } from '../lib/get-os'
-// import { MenuEvent } from '../main-process/menu'
-// import {
-//   Repository,
-//   // getGitHubHtmlUrl,
-//   // getNonForkGitHubRepository,
-//   // isRepositoryWithGitHubRepository,
-// } from '../models/repository'
+
 import { PreferencesTab } from '../models/preferences'
 import { findItemByAccessKey, itemIsSelectable } from '../models/app-menu'
 import { Account } from '../models/account'
-// import { TipState } from '../models/tip'
 
 import { TitleBar, ZoomInfo, FullScreenInfo } from './components/window'
 
 import {
-  // showCertificateTrustDialog,
   sendReady,
   isInApplicationFolder,
 } from './main-process-proxy'
@@ -40,18 +29,12 @@ import { renderBanner } from './components/banners'
 import { Preferences } from './components/preferences'
 import { AppError } from './app-error'
 import { DeviceRegister } from './components/device-register'
-// import { InstallGit } from './install-git'
 import { EditorError } from './components/editor'
 import { About } from './components/about'
 
 import { Acknowledgements } from './components/acknowledgements'
-// import { UntrustedCertificate } from './untrusted-certificate'
 import { TermsAndConditions } from './components/terms-and-conditions'
-// import { CLIInstalled } from './cli-installed'
-// import { GenericGitAuthentication } from './generic-git-auth'
 import { ShellError } from './components/shell'
-// import { InitializeLFS, AttributeMismatch } from './lfs'
-// import { ReleaseNotes } from './release-notes'
 
 import { AppTheme } from './app-theme'
 import { ApplicationTheme } from './common/application-theme'
@@ -72,13 +55,7 @@ import { ReleaseNote } from '../models/release-notes'
 import { DragType, DropTargetSelector } from '../models/drag-drop'
 import { dragAndDropManager } from '../lib/drag-and-drop-manager'
 
-// import { InvalidatedToken } from './invalidated-token/invalidated-token'
-// import { AddSSHHost } from './ssh/add-ssh-host'
-// import { SSHKeyPassphrase } from './ssh/ssh-key-passphrase'
-
 import * as ipcRenderer from '../lib/ipc-renderer'
-
-// import { SSHUserPassword } from './ssh/ssh-user-password'
 
 import { Button } from './common/button'
 
@@ -534,15 +511,6 @@ export class App extends React.Component<IAppProps, IAppState> {
             customTheme={this.state.customTheme}
           />
         )
-      // case PopupType.InstallGit:
-      //   return (
-      //     <InstallGit
-      //       key="install-git"
-      //       onDismissed={onPopupDismissedFn}
-      //       onOpenShell={this.onOpenShellIgnoreWarning}
-      //       path={popup.path}
-      //     />
-      //   )
       case PopupType.About:
         const version = __DEV__ ? __SHA__.substring(0, 10) : getVersion()
 
@@ -555,16 +523,6 @@ export class App extends React.Component<IAppProps, IAppState> {
             applicationArchitecture={process.arch}
           />
         )
-      // case PopupType.UntrustedCertificate:
-      //   return (
-      //     <UntrustedCertificate
-      //       key="untrusted-certificate"
-      //       certificate={popup.certificate}
-      //       url={popup.url}
-      //       onDismissed={onPopupDismissedFn}
-      //       onContinue={this.onContinueWithUntrustedCertificate}
-      //     />
-      //   )
       case PopupType.Acknowledgements:
         return (
           <Acknowledgements
@@ -580,20 +538,6 @@ export class App extends React.Component<IAppProps, IAppState> {
             onDismissed={onPopupDismissedFn}
           />
         )
-      // case PopupType.CLIInstalled:
-      //   return (
-      //     <CLIInstalled key="cli-installed" onDismissed={onPopupDismissedFn} />
-      //   )
-      // case PopupType.GenericGitAuthentication:
-      //   return (
-      //     <GenericGitAuthentication
-      //       key="generic-git-authentication"
-      //       hostname={popup.hostname}
-      //       onDismiss={onPopupDismissedFn}
-      //       onSave={this.onSaveCredentials}
-      //       retryAction={popup.retryAction}
-      //     />
-      //   )
       case PopupType.ExternalEditorFailed:
         const openPreferences = popup.openPreferences
         const suggestDefaultEditor = popup.suggestDefaultEditor
@@ -617,32 +561,6 @@ export class App extends React.Component<IAppProps, IAppState> {
             showPreferencesDialog={this.onShowAdvancedPreferences}
           />
         )
-      // case PopupType.InitializeLFS:
-      //   return (
-      //     <InitializeLFS
-      //       key="initialize-lfs"
-      //       repositories={popup.repositories}
-      //       onDismissed={onPopupDismissedFn}
-      //       onInitialize={this.initializeLFS}
-      //     />
-      //   )
-      // case PopupType.LFSAttributeMismatch:
-      //   return (
-      //     <AttributeMismatch
-      //       key="lsf-attribute-mismatch"
-      //       onDismissed={onPopupDismissedFn}
-      //       onUpdateExistingFilters={this.updateExistingLFSFilters}
-      //     />
-      //   )
-      // case PopupType.ReleaseNotes:
-      //   return (
-      //     <ReleaseNotes
-      //       key="release-notes"
-      //       emoji={this.state.emoji}
-      //       newReleases={popup.newReleases}
-      //       onDismissed={onPopupDismissedFn}
-      //     />
-      //   )
       case PopupType.MoveToApplicationsFolder: {
         return (
           <MoveToApplicationsFolder
@@ -662,61 +580,10 @@ export class App extends React.Component<IAppProps, IAppState> {
             onDismissed={onPopupDismissedFn}
           />
         )
-      // case PopupType.InvalidatedToken: {
-      //   return (
-      //     <InvalidatedToken
-      //       key="invalidated-token"
-      //       dispatcher={this.props.dispatcher}
-      //       account={popup.account}
-      //       onDismissed={onPopupDismissedFn}
-      //     />
-      //   )
-      // }
-      // case PopupType.AddSSHHost: {
-      //   return (
-      //     <AddSSHHost
-      //       key="add-ssh-host"
-      //       host={popup.host}
-      //       ip={popup.ip}
-      //       keyType={popup.keyType}
-      //       fingerprint={popup.fingerprint}
-      //       onSubmit={popup.onSubmit}
-      //       onDismissed={onPopupDismissedFn}
-      //     />
-      //   )
-      // }
-      // case PopupType.SSHKeyPassphrase: {
-      //   return (
-      //     <SSHKeyPassphrase
-      //       key="ssh-key-passphrase"
-      //       keyPath={popup.keyPath}
-      //       onSubmit={popup.onSubmit}
-      //       onDismissed={onPopupDismissedFn}
-      //     />
-      //   )
-      // }
-      // case PopupType.SSHUserPassword: {
-      //   return (
-      //     <SSHUserPassword
-      //       key="ssh-user-password"
-      //       username={popup.username}
-      //       onSubmit={popup.onSubmit}
-      //       onDismissed={onPopupDismissedFn}
-      //     />
-      //   )
-      // }
       default:
         return assertNever(popup as never, `Unknown popup type: ${popup}`)
     }
   }
-
-  // private updateExistingLFSFilters = () => {
-  //   this.props.dispatcher.installGlobalLFSFilters(true)
-  // }
-
-  // private initializeLFS = (repositories: ReadonlyArray<Repository>) => {
-  //   this.props.dispatcher.installLFSHooks(repositories)
-  // }
 
   private onShowAdvancedPreferences = () => {
     this.props.dispatcher.showPopup({
@@ -724,32 +591,6 @@ export class App extends React.Component<IAppProps, IAppState> {
       initialSelectedTab: PreferencesTab.Advanced,
     })
   }
-
-  // private onBranchCreatedFromCommit = () => {
-  //   const repositoryView = this.repositoryViewRef.current
-  //   if (repositoryView !== null) {
-  //     repositoryView.scrollCompareListToTop()
-  //   }
-  // }
-
-  // private onOpenShellIgnoreWarning = (path: string) => {
-  //   this.props.dispatcher.openShell(path, true)
-  // }
-
-  // private onSaveCredentials = async (
-  //   hostname: string,
-  //   username: string,
-  //   password: string,
-  //   retryAction: RetryAction
-  // ) => {
-  //   await this.props.dispatcher.saveGenericGitCredentials(
-  //     hostname,
-  //     username,
-  //     password
-  //   )
-
-  //   // this.props.dispatcher.performRetry(retryAction)
-  // }
 
   private renderPopup() {
     const popupContent = this.currentPopupContent()
@@ -781,14 +622,9 @@ export class App extends React.Component<IAppProps, IAppState> {
         errors={this.state.errors}
         onClearError={this.clearError}
         onShowPopup={this.showPopup}
-        // onRetryAction={() => {}}
       />
     )
   }
-
-  // private onRetryAction = (retryAction: RetryAction) => {
-  //   // this.props.dispatcher.performRetry(retryAction)
-  // }
 
   private showPopup = (popup: Popup) => {
     this.props.dispatcher.showPopup(popup)
@@ -826,31 +662,9 @@ export class App extends React.Component<IAppProps, IAppState> {
       </div>
     )
   }
-
-  // private viewOnGitHub = (
-  //   repository: Repository | CloningRepository | null
-  // ) => {
-  //   if (!(repository instanceof Repository)) {
-  //     return
-  //   }
-
-  //   const url = getGitHubHtmlUrl(repository)
-
-  //   if (url) {
-  //     this.props.dispatcher.openInBrowser(url)
-  //   }
-  // }
-
   
   // we currently only render one banner at a time
   private renderBanner(): JSX.Element | null {
-    // The inset light title bar style without the toolbar
-    // can't support banners at the moment. So for the
-    // no-repositories blank slate we'll have to live without
-    // them.
-    // if (this.inNoRepositoriesViewState()) {
-    //   return null
-    // }
 
     let banner = null
     if (this.state.currentBanner !== null) {
@@ -876,14 +690,6 @@ export class App extends React.Component<IAppProps, IAppState> {
   }
 
   private renderToolbar() {
-    /**
-     * No toolbar if we're in the blank slate view.
-     */
-    // if (this.inNoRepositoriesViewState()) {
-    //   return null
-    // }
-
-    // const width = clamp(this.state.sidebarWidth)
 
     return null;
   }
@@ -962,14 +768,6 @@ export class App extends React.Component<IAppProps, IAppState> {
       </div>
     )
   }
-
-  // private inNoRepositoriesViewState() {
-  //   return this.state.repositories.length === 0 || this.isTutorialPaused()
-  // }
-
-  // private isTutorialPaused() {
-  //   return this.state.currentOnboardingTutorialStep === TutorialStep.Paused
-  // }
 
   /**
    * Check if the user signed into their dotCom account has been tagged in

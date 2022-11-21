@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import * as React from 'react'
-import { clamp } from '../../lib/clamp'
+import { clamp } from '../../../lib/clamp'
 
 const DefaultMaxWidth = 350
 const DefaultMinWidth = 200

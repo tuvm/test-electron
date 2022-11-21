@@ -1,15 +1,15 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import * as React from 'react'
-import { Octicon, OcticonSymbolType } from '../octicons'
-import * as OcticonSymbol from '../octicons/octicons.generated'
-import { assertNever } from '../../lib/fatal-error'
+import { Octicon, OcticonSymbolType } from '../../octicons'
+import * as OcticonSymbol from '../../octicons/octicons.generated'
+import { assertNever } from '../../../lib/fatal-error'
 import { ToolbarButton, ToolbarButtonStyle } from './button'
-import { rectEquals } from '../common/rect'
+import { rectEquals } from '../../common/rect'
 import classNames from 'classnames'
 import FocusTrap from 'focus-trap-react'
 import { Options as FocusTrapOptions } from 'focus-trap'
-import { TooltipTarget } from '../common/tooltip'
+import { TooltipTarget } from '../../common/tooltip'
 
 export type DropdownState = 'open' | 'closed'
 

@@ -1,21 +1,21 @@
 import * as React from 'react'
 
-import { AppFileStatus, AppFileStatusKind } from '../../models/status'
-import { Octicon } from '../octicons'
-import * as OcticonSymbol from '../octicons/octicons.generated'
+// import { AppFileStatus, AppFileStatusKind } from '../../models/status'
+// import { Octicon } from '../octicons'
+// import * as OcticonSymbol from '../octicons/octicons.generated'
 import { PathText } from './path-text'
 
 interface IPathLabelProps {
   /** the current path of the file */
   readonly path: string
   /** the type of change applied to the file */
-  readonly status: AppFileStatus
+  // readonly status: AppFileStatus
 
   readonly availableWidth?: number
 }
 
 /** The pixel width reserved to give the resize arrow padding on either side. */
-const ResizeArrowPadding = 10
+// const ResizeArrowPadding = 10
 
 /**
  * Render the path details for a given file.
@@ -30,31 +30,31 @@ export class PathLabel extends React.Component<IPathLabelProps, {}> {
       className: 'path-label-component',
     }
 
-    const { status } = this.props
+    // const { status } = this.props
 
     const availableWidth = this.props.availableWidth
-    if (
-      status.kind === AppFileStatusKind.Renamed ||
-      status.kind === AppFileStatusKind.Copied
-    ) {
-      const segmentWidth = availableWidth
-        ? availableWidth / 2 - ResizeArrowPadding
-        : undefined
-      return (
-        // eslint-disable-next-line jsx-a11y/label-has-associated-control
-        <label {...props}>
-          <PathText path={status.oldPath} availableWidth={segmentWidth} />
-          <Octicon className="rename-arrow" symbol={OcticonSymbol.arrowRight} />
-          <PathText path={this.props.path} availableWidth={segmentWidth} />
-        </label>
-      )
-    } else {
+    // if (
+    //   status.kind === AppFileStatusKind.Renamed ||
+    //   status.kind === AppFileStatusKind.Copied
+    // ) {
+    //   const segmentWidth = availableWidth
+    //     ? availableWidth / 2 - ResizeArrowPadding
+    //     : undefined
+    //   return (
+    //     // eslint-disable-next-line jsx-a11y/label-has-associated-control
+    //     <label {...props}>
+    //       <PathText path={status.oldPath} availableWidth={segmentWidth} />
+    //       <Octicon className="rename-arrow" symbol={OcticonSymbol.arrowRight} />
+    //       <PathText path={this.props.path} availableWidth={segmentWidth} />
+    //     </label>
+    //   )
+    // } else {
       return (
         // eslint-disable-next-line jsx-a11y/label-has-associated-control
         <label {...props}>
           <PathText path={this.props.path} availableWidth={availableWidth} />
         </label>
       )
-    }
+    // }
   }
 }

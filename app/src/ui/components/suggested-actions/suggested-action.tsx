@@ -1,6 +1,6 @@
 import * as React from 'react'
 import classNames from 'classnames'
-import { Button } from '../common/button'
+import { Button } from '../../common/button'
 
 interface ISuggestedActionProps {
   /**

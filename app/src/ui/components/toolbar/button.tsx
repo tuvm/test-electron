@@ -1,12 +1,12 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import * as React from 'react'
-import { Octicon, OcticonSymbolType } from '../octicons'
+import { Octicon, OcticonSymbolType } from '../../octicons'
 import classNames from 'classnames'
-import { assertNever } from '../../lib/fatal-error'
-import { Button } from '../common/button'
-import { clamp } from '../../lib/clamp'
-import { createObservableRef } from '../common/observable-ref'
-import { Tooltip, TooltipDirection, TooltipTarget } from '../common/tooltip'
+import { assertNever } from '../../../lib/fatal-error'
+import { Button } from '../../common/button'
+import { clamp } from '../../../lib/clamp'
+import { createObservableRef } from '../../common/observable-ref'
+import { Tooltip, TooltipDirection, TooltipTarget } from '../../common/tooltip'
 
 /** The button style. */
 export enum ToolbarButtonStyle {
