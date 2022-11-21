@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { ErrorType } from './shared'
-import { TitleBar } from '../ui/window/title-bar'
+import { TitleBar } from '../ui/components/window/title-bar'
 import { encodePathAsUrl } from '../lib/path'
 import { WindowState } from '../lib/window-state'
 import { Octicon } from '../ui/octicons'

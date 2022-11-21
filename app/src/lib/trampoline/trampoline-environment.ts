@@ -3,11 +3,11 @@ import { withTrampolineToken } from './trampoline-tokens'
 import * as Path from 'path'
 import { getDesktopTrampolineFilename } from 'desktop-trampoline'
 import { TrampolineCommandIdentifier } from '../trampoline/trampoline-command'
-import { getSSHEnvironment } from '../ssh/ssh'
-import {
-  removePendingSSHSecretToStore,
-  storePendingSSHSecret,
-} from '../ssh/ssh-secret-storage'
+// import { getSSHEnvironment } from '../ssh/ssh'
+// import {
+//   removePendingSSHSecretToStore,
+//   storePendingSSHSecret,
+// } from '../ssh/ssh-secret-storage'
 
 /**
  * Allows invoking a function with a set of environment variables to use when
@@ -23,7 +23,7 @@ import {
 export async function withTrampolineEnv<T>(
   fn: (env: object) => Promise<T>
 ): Promise<T> {
-  const sshEnv = await getSSHEnvironment()
+  // const sshEnv = await getSSHEnvironment()
 
   return withTrampolineToken(async token => {
     // The code below assumes a few things in order to manage SSH key passphrases
@@ -43,14 +43,14 @@ export async function withTrampolineEnv<T>(
         GIT_ASKPASS: getDesktopTrampolinePath(),
         DESKTOP_TRAMPOLINE_IDENTIFIER: TrampolineCommandIdentifier.AskPass,
 
-        ...sshEnv,
+        // ...sshEnv,
       })
 
-      await storePendingSSHSecret(token)
+      // await storePendingSSHSecret(token)
 
       return result
     } finally {
-      removePendingSSHSecretToStore(token)
+      // removePendingSSHSecretToStore(token)
     }
   })
 }
@@ -64,7 +64,7 @@ export function getDesktopTrampolinePath(): string {
   )
 }
 
-/** Returns the path of the ssh-wrapper binary. */
-export function getSSHWrapperPath(): string {
-  return Path.resolve(__dirname, 'desktop-trampoline', 'ssh-wrapper')
-}
+// /** Returns the path of the ssh-wrapper binary. */
+// export function getSSHWrapperPath(): string {
+//   return Path.resolve(__dirname, 'desktop-trampoline', 'ssh-wrapper')
+// }

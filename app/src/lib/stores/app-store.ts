@@ -4,9 +4,9 @@ import {
 } from '.'
 import { Account } from '../../models/account'
 import { AppMenu, IMenu } from '../../models/app-menu'
-import {
-  ImageDiffType,
-} from '../../models/diff'
+// import {
+//   ImageDiffType,
+// } from '../../models/diff'
 // import { PullRequest } from '../../models/pull-request'
 // import {
 //   ILocalRepositoryState,
@@ -88,11 +88,6 @@ import { Banner, BannerType } from '../../models/banner'
 //   TutorialStep,
 // } from '../../models/tutorial-step'
 import { parseRemote } from '../../lib/remote-parsing'
-import {
-  ShowSideBySideDiffDefault,
-  getShowSideBySideDiff,
-  setShowSideBySideDiff,
-} from '../../ui/common/diff-mode'
 import { DragElement } from '../../models/drag-drop'
 import { ILastThankYou } from '../../models/last-thank-you'
 // import { UseWindowsOpenSSHKey } from '../ssh/ssh'
@@ -134,19 +129,19 @@ const askToMoveToApplicationsFolderKey: string = 'askToMoveToApplicationsFolder'
 
 // const uncommittedChangesStrategyKey = 'uncommittedChangesStrategyKind'
 
-const imageDiffTypeDefault = ImageDiffType.TwoUp
-const imageDiffTypeKey = 'image-diff-type'
+// const imageDiffTypeDefault = ImageDiffType.TwoUp
+// const imageDiffTypeKey = 'image-diff-type'
 
-const hideWhitespaceInChangesDiffDefault = false
-const hideWhitespaceInChangesDiffKey = 'hide-whitespace-in-changes-diff'
-const hideWhitespaceInHistoryDiffDefault = false
-const hideWhitespaceInHistoryDiffKey = 'hide-whitespace-in-diff'
-const hideWhitespaceInPullRequestDiffDefault = false
-const hideWhitespaceInPullRequestDiffKey =
-  'hide-whitespace-in-pull-request-diff'
+// const hideWhitespaceInChangesDiffDefault = false
+// const hideWhitespaceInChangesDiffKey = 'hide-whitespace-in-changes-diff'
+// const hideWhitespaceInHistoryDiffDefault = false
+// const hideWhitespaceInHistoryDiffKey = 'hide-whitespace-in-diff'
+// const hideWhitespaceInPullRequestDiffDefault = false
+// const hideWhitespaceInPullRequestDiffKey =
+//   'hide-whitespace-in-pull-request-diff'
 
-const commitSpellcheckEnabledDefault = true
-const commitSpellcheckEnabledKey = 'commit-spellcheck-enabled'
+// const commitSpellcheckEnabledDefault = true
+// const commitSpellcheckEnabledKey = 'commit-spellcheck-enabled'
 
 const shellKey = 'shell'
 
@@ -164,7 +159,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
   // private showWelcomeFlow = false
   private showDeviceRegisterFlow = false
-  private focusCommitMessage = false
+  // private focusCommitMessage = false
   private currentPopup: Popup | null = null
   private currentFoldout: Foldout | null = null
   private currentBanner: Banner | null = null
@@ -218,16 +213,16 @@ export class AppStore extends TypedBaseStore<IAppState> {
   // private confirmDiscardStash: boolean = confirmDiscardStashDefault
   // private askForConfirmationOnForcePush = askForConfirmationOnForcePushDefault
   // private confirmUndoCommit: boolean = confirmUndoCommitDefault
-  private imageDiffType: ImageDiffType = imageDiffTypeDefault
-  private hideWhitespaceInChangesDiff: boolean =
-    hideWhitespaceInChangesDiffDefault
-  private hideWhitespaceInHistoryDiff: boolean =
-    hideWhitespaceInHistoryDiffDefault
-  private hideWhitespaceInPullRequestDiff: boolean =
-    hideWhitespaceInPullRequestDiffDefault
+  // private imageDiffType: ImageDiffType = imageDiffTypeDefault
+  // private hideWhitespaceInChangesDiff: boolean =
+  //   hideWhitespaceInChangesDiffDefault
+  // private hideWhitespaceInHistoryDiff: boolean =
+  //   hideWhitespaceInHistoryDiffDefault
+  // private hideWhitespaceInPullRequestDiff: boolean =
+  //   hideWhitespaceInPullRequestDiffDefault
   /** Whether or not the spellchecker is enabled for commit summary and description */
-  private commitSpellcheckEnabled: boolean = commitSpellcheckEnabledDefault
-  private showSideBySideDiff: boolean = ShowSideBySideDiffDefault
+  // private commitSpellcheckEnabled: boolean = commitSpellcheckEnabledDefault
+  // private showSideBySideDiff: boolean = ShowSideBySideDiffDefault
 
   // private uncommittedChangesStrategy = defaultUncommittedChangesStrategy
 
@@ -493,7 +488,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       errors: this.errors,
       // showWelcomeFlow: this.showWelcomeFlow,
       showDeviceRegisterFlow: this.showDeviceRegisterFlow,
-      focusCommitMessage: this.focusCommitMessage,
+      // focusCommitMessage: this.focusCommitMessage,
       emoji: this.emoji,
       sidebarWidth: this.sidebarWidth,
       // commitSummaryWidth: this.commitSummaryWidth,
@@ -516,11 +511,11 @@ export class AppStore extends TypedBaseStore<IAppState> {
       // askForConfirmationOnUndoCommit: this.confirmUndoCommit,
       // uncommittedChangesStrategy: this.uncommittedChangesStrategy,
       selectedExternalEditor: this.selectedExternalEditor,
-      imageDiffType: this.imageDiffType,
-      hideWhitespaceInChangesDiff: this.hideWhitespaceInChangesDiff,
-      hideWhitespaceInHistoryDiff: this.hideWhitespaceInHistoryDiff,
-      hideWhitespaceInPullRequestDiff: this.hideWhitespaceInPullRequestDiff,
-      showSideBySideDiff: this.showSideBySideDiff,
+      // imageDiffType: this.imageDiffType,
+      // hideWhitespaceInChangesDiff: this.hideWhitespaceInChangesDiff,
+      // hideWhitespaceInHistoryDiff: this.hideWhitespaceInHistoryDiff,
+      // hideWhitespaceInPullRequestDiff: this.hideWhitespaceInPullRequestDiff,
+      // showSideBySideDiff: this.showSideBySideDiff,
       selectedShell: this.selectedShell,
       repositoryFilterText: this.repositoryFilterText,
       resolvedExternalEditor: this.resolvedExternalEditor,
@@ -532,7 +527,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       optOutOfUsageTracking: this.statsStore.getOptOut(),
       // currentOnboardingTutorialStep: this.currentOnboardingTutorialStep,
       repositoryIndicatorsEnabled: this.repositoryIndicatorsEnabled,
-      commitSpellcheckEnabled: this.commitSpellcheckEnabled,
+      // commitSpellcheckEnabled: this.commitSpellcheckEnabled,
       currentDragElement: this.currentDragElement,
       lastThankYou: this.lastThankYou,
       showCIStatusPopover: this.showCIStatusPopover,
@@ -639,29 +634,29 @@ export class AppStore extends TypedBaseStore<IAppState> {
     const shellValue = localStorage.getItem(shellKey)
     this.selectedShell = shellValue ? parseShell(shellValue) : DefaultShell
 
-    const imageDiffTypeValue = localStorage.getItem(imageDiffTypeKey)
-    this.imageDiffType =
-      imageDiffTypeValue === null
-        ? imageDiffTypeDefault
-        : parseInt(imageDiffTypeValue)
+    // const imageDiffTypeValue = localStorage.getItem(imageDiffTypeKey)
+    // this.imageDiffType =
+    //   imageDiffTypeValue === null
+    //     ? imageDiffTypeDefault
+    //     : parseInt(imageDiffTypeValue)
 
-    this.hideWhitespaceInChangesDiff = getBoolean(
-      hideWhitespaceInChangesDiffKey,
-      false
-    )
-    this.hideWhitespaceInHistoryDiff = getBoolean(
-      hideWhitespaceInHistoryDiffKey,
-      false
-    )
-    this.hideWhitespaceInPullRequestDiff = getBoolean(
-      hideWhitespaceInPullRequestDiffKey,
-      false
-    )
-    this.commitSpellcheckEnabled = getBoolean(
-      commitSpellcheckEnabledKey,
-      commitSpellcheckEnabledDefault
-    )
-    this.showSideBySideDiff = getShowSideBySideDiff()
+    // this.hideWhitespaceInChangesDiff = getBoolean(
+    //   hideWhitespaceInChangesDiffKey,
+    //   false
+    // )
+    // this.hideWhitespaceInHistoryDiff = getBoolean(
+    //   hideWhitespaceInHistoryDiffKey,
+    //   false
+    // )
+    // this.hideWhitespaceInPullRequestDiff = getBoolean(
+    //   hideWhitespaceInPullRequestDiffKey,
+    //   false
+    // )
+    // this.commitSpellcheckEnabled = getBoolean(
+    //   commitSpellcheckEnabledKey,
+    //   commitSpellcheckEnabledDefault
+    // )
+    // this.showSideBySideDiff = getShowSideBySideDiff()
 
     this.selectedTheme = getPersistedThemeName()
     this.customTheme = getObject<ICustomTheme>(customThemeKey)
@@ -879,12 +874,12 @@ export class AppStore extends TypedBaseStore<IAppState> {
   //   return Promise.resolve()
   // }
 
-  public _setCommitMessageFocus(focus: boolean) {
-    if (this.focusCommitMessage !== focus) {
-      this.focusCommitMessage = focus
-      this.emitUpdate()
-    }
-  }
+  // public _setCommitMessageFocus(focus: boolean) {
+  //   if (this.focusCommitMessage !== focus) {
+  //     this.focusCommitMessage = focus
+  //     this.emitUpdate()
+  //   }
+  // }
 
   public _setSidebarWidth(width: number): Promise<void> {
     this.sidebarWidth = { ...this.sidebarWidth, value: width }
@@ -1103,22 +1098,22 @@ export class AppStore extends TypedBaseStore<IAppState> {
     return Promise.resolve()
   }
 
-  public _changeImageDiffType(type: ImageDiffType): Promise<void> {
-    this.imageDiffType = type
-    localStorage.setItem(imageDiffTypeKey, JSON.stringify(this.imageDiffType))
-    this.emitUpdate()
+  // public _changeImageDiffType(type: ImageDiffType): Promise<void> {
+  //   this.imageDiffType = type
+  //   localStorage.setItem(imageDiffTypeKey, JSON.stringify(this.imageDiffType))
+  //   this.emitUpdate()
 
-    return Promise.resolve()
-  }
+  //   return Promise.resolve()
+  // }
 
-  public _setShowSideBySideDiff(showSideBySideDiff: boolean) {
-    if (showSideBySideDiff !== this.showSideBySideDiff) {
-      setShowSideBySideDiff(showSideBySideDiff)
-      this.showSideBySideDiff = showSideBySideDiff
-      this.statsStore.recordDiffModeChanged()
-      this.emitUpdate()
-    }
-  }
+  // public _setShowSideBySideDiff(showSideBySideDiff: boolean) {
+  //   if (showSideBySideDiff !== this.showSideBySideDiff) {
+  //     setShowSideBySideDiff(showSideBySideDiff)
+  //     this.showSideBySideDiff = showSideBySideDiff
+  //     this.statsStore.recordDiffModeChanged()
+  //     this.emitUpdate()
+  //   }
+  // }
 
   public _setUpdateBannerVisibility(visibility: boolean) {
     this.isUpdateAvailableBannerVisible = visibility

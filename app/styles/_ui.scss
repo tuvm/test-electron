@@ -11,10 +11,10 @@
 @import 'ui/octicons';
 @import 'ui/list';
 @import 'ui/list-item-insertion-overlay';
-@import 'ui/repository-list';
+// @import 'ui/repository-list';
 // @import 'ui/changes';
 // @import 'ui/diff';
-@import 'ui/history';
+// @import 'ui/history';
 // @import 'ui/repository';
 @import 'ui/resizable';
 @import 'ui/toolbar/toolbar';
@@ -34,7 +34,7 @@
 @import 'ui/preferences';
 @import 'ui/path-text';
 @import 'ui/path-label';
-@import 'ui/configure-git-user';
+// @import 'ui/configure-git-user';
 @import 'ui/form';
 @import 'ui/text-box';
 @import 'ui/ref-name-text-box';
@@ -81,7 +81,7 @@
 @import 'ui/suggested-actions/suggested-action';
 @import 'ui/suggested-actions/suggested-action-group';
 @import 'ui/config-lock-file-exists';
-@import 'ui/local-changes-overwritten';
+// @import 'ui/local-changes-overwritten';
 // @import 'ui/side-by-side-diff';
 // @import 'ui/diff-options';
 // @import 'ui/commit-message-avatar';
@@ -98,7 +98,7 @@
 @import 'ui/_sandboxed-markdown';
 // @import 'ui/_pull-request-quick-view';
 // @import 'ui/discard-changes-retry';
-@import 'ui/_git-email-not-found-warning';
+// @import 'ui/_git-email-not-found-warning';
 // @import 'ui/_branch-select';
 @import 'ui/_popover-dropdown';
 // @import 'ui/_pull-request-files-changed';

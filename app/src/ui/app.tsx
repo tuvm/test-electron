@@ -28,7 +28,7 @@ import { findItemByAccessKey, itemIsSelectable } from '../models/app-menu'
 import { Account } from '../models/account'
 // import { TipState } from '../models/tip'
 
-import { TitleBar, ZoomInfo, FullScreenInfo } from './window'
+import { TitleBar, ZoomInfo, FullScreenInfo } from './components/window'
 
 import {
   // showCertificateTrustDialog,
@@ -36,20 +36,20 @@ import {
   isInApplicationFolder,
 } from './main-process-proxy'
 
-import { renderBanner } from './banners'
-import { Preferences } from './preferences'
+import { renderBanner } from './components/banners'
+import { Preferences } from './components/preferences'
 import { AppError } from './app-error'
-import { DeviceRegister } from './device-register'
+import { DeviceRegister } from './components/device-register'
 // import { InstallGit } from './install-git'
-import { EditorError } from './editor'
-import { About } from './about'
+import { EditorError } from './components/editor'
+import { About } from './components/about'
 
-import { Acknowledgements } from './acknowledgements'
+import { Acknowledgements } from './components/acknowledgements'
 // import { UntrustedCertificate } from './untrusted-certificate'
-import { TermsAndConditions } from './terms-and-conditions'
-import { CLIInstalled } from './cli-installed'
+import { TermsAndConditions } from './components/terms-and-conditions'
+// import { CLIInstalled } from './cli-installed'
 // import { GenericGitAuthentication } from './generic-git-auth'
-import { ShellError } from './shell'
+import { ShellError } from './components/shell'
 // import { InitializeLFS, AttributeMismatch } from './lfs'
 // import { ReleaseNotes } from './release-notes'
 
@@ -61,8 +61,8 @@ import { Banner, BannerType } from '../models/banner'
 
 import memoizeOne from 'memoize-one'
 import classNames from 'classnames'
-import { MoveToApplicationsFolder } from './move-to-applications-folder'
-import { ThankYou } from './thank-you'
+import { MoveToApplicationsFolder } from './components/move-to-applications-folder'
+import { ThankYou } from './components/thank-you'
 import {
   getUserContributions,
   hasUserAlreadyBeenCheckedOrThanked,
@@ -72,13 +72,13 @@ import { ReleaseNote } from '../models/release-notes'
 import { DragType, DropTargetSelector } from '../models/drag-drop'
 import { dragAndDropManager } from '../lib/drag-and-drop-manager'
 
-import { InvalidatedToken } from './invalidated-token/invalidated-token'
-import { AddSSHHost } from './ssh/add-ssh-host'
-import { SSHKeyPassphrase } from './ssh/ssh-key-passphrase'
+// import { InvalidatedToken } from './invalidated-token/invalidated-token'
+// import { AddSSHHost } from './ssh/add-ssh-host'
+// import { SSHKeyPassphrase } from './ssh/ssh-key-passphrase'
 
 import * as ipcRenderer from '../lib/ipc-renderer'
 
-import { SSHUserPassword } from './ssh/ssh-user-password'
+// import { SSHUserPassword } from './ssh/ssh-user-password'
 
 import { Button } from './common/button'
 
@@ -580,10 +580,10 @@ export class App extends React.Component<IAppProps, IAppState> {
             onDismissed={onPopupDismissedFn}
           />
         )
-      case PopupType.CLIInstalled:
-        return (
-          <CLIInstalled key="cli-installed" onDismissed={onPopupDismissedFn} />
-        )
+      // case PopupType.CLIInstalled:
+      //   return (
+      //     <CLIInstalled key="cli-installed" onDismissed={onPopupDismissedFn} />
+      //   )
       // case PopupType.GenericGitAuthentication:
       //   return (
       //     <GenericGitAuthentication
@@ -662,49 +662,49 @@ export class App extends React.Component<IAppProps, IAppState> {
             onDismissed={onPopupDismissedFn}
           />
         )
-      case PopupType.InvalidatedToken: {
-        return (
-          <InvalidatedToken
-            key="invalidated-token"
-            dispatcher={this.props.dispatcher}
-            account={popup.account}
-            onDismissed={onPopupDismissedFn}
-          />
-        )
-      }
-      case PopupType.AddSSHHost: {
-        return (
-          <AddSSHHost
-            key="add-ssh-host"
-            host={popup.host}
-            ip={popup.ip}
-            keyType={popup.keyType}
-            fingerprint={popup.fingerprint}
-            onSubmit={popup.onSubmit}
-            onDismissed={onPopupDismissedFn}
-          />
-        )
-      }
-      case PopupType.SSHKeyPassphrase: {
-        return (
-          <SSHKeyPassphrase
-            key="ssh-key-passphrase"
-            keyPath={popup.keyPath}
-            onSubmit={popup.onSubmit}
-            onDismissed={onPopupDismissedFn}
-          />
-        )
-      }
-      case PopupType.SSHUserPassword: {
-        return (
-          <SSHUserPassword
-            key="ssh-user-password"
-            username={popup.username}
-            onSubmit={popup.onSubmit}
-            onDismissed={onPopupDismissedFn}
-          />
-        )
-      }
+      // case PopupType.InvalidatedToken: {
+      //   return (
+      //     <InvalidatedToken
+      //       key="invalidated-token"
+      //       dispatcher={this.props.dispatcher}
+      //       account={popup.account}
+      //       onDismissed={onPopupDismissedFn}
+      //     />
+      //   )
+      // }
+      // case PopupType.AddSSHHost: {
+      //   return (
+      //     <AddSSHHost
+      //       key="add-ssh-host"
+      //       host={popup.host}
+      //       ip={popup.ip}
+      //       keyType={popup.keyType}
+      //       fingerprint={popup.fingerprint}
+      //       onSubmit={popup.onSubmit}
+      //       onDismissed={onPopupDismissedFn}
+      //     />
+      //   )
+      // }
+      // case PopupType.SSHKeyPassphrase: {
+      //   return (
+      //     <SSHKeyPassphrase
+      //       key="ssh-key-passphrase"
+      //       keyPath={popup.keyPath}
+      //       onSubmit={popup.onSubmit}
+      //       onDismissed={onPopupDismissedFn}
+      //     />
+      //   )
+      // }
+      // case PopupType.SSHUserPassword: {
+      //   return (
+      //     <SSHUserPassword
+      //       key="ssh-user-password"
+      //       username={popup.username}
+      //       onSubmit={popup.onSubmit}
+      //       onDismissed={onPopupDismissedFn}
+      //     />
+      //   )
+      // }
       default:
         return assertNever(popup as never, `Unknown popup type: ${popup}`)
     }

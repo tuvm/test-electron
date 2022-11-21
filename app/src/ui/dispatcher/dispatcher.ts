@@ -29,7 +29,7 @@ import { Popup, PopupType } from '../../models/popup'
 import { Banner, BannerType } from '../../models/banner'
 
 import { ApplicationTheme, ICustomTheme } from '../common/application-theme'
-import { installCLI } from '../common/install-cli'
+// import { installCLI } from '../common/install-cli'
 import {
   executeMenuItem,
   moveToApplicationsFolder,
@@ -210,10 +210,10 @@ export class Dispatcher {
   //   return this.appStore._endWelcomeFlow()
   // }
 
-  /** Set the commit message input's focus. */
-  public setCommitMessageFocus(focus: boolean) {
-    this.appStore._setCommitMessageFocus(focus)
-  }
+  // /** Set the commit message input's focus. */
+  // public setCommitMessageFocus(focus: boolean) {
+  //   this.appStore._setCommitMessageFocus(focus)
+  // }
 
   /** Remove the given account from the app. */
   public removeAccount(account: Account): Promise<void> {
@@ -419,22 +419,22 @@ export class Dispatcher {
     return this.appStore._setShell(shell)
   }
 
-  /**
-   * Install the CLI tool.
-   *
-   * This is used only on macOS.
-   */
-  public async installCLI() {
-    try {
-      await installCLI()
+  // /**
+  //  * Install the CLI tool.
+  //  *
+  //  * This is used only on macOS.
+  //  */
+  // public async installCLI() {
+  //   try {
+  //     await installCLI()
 
-      this.showPopup({ type: PopupType.CLIInstalled })
-    } catch (e) {
-      log.error('Error installing CLI', e)
+  //     this.showPopup({ type: PopupType.CLIInstalled })
+  //   } catch (e) {
+  //     log.error('Error installing CLI', e)
 
-      this.postError(e)
-    }
-  }
+  //     this.postError(e)
+  //   }
+  // }
 
   /** Save the generic git credentials. */
   public async saveGenericGitCredentials(
@@ -457,10 +457,10 @@ export class Dispatcher {
     }
   }
 
-  /** Change the side by side diff setting */
-  public onShowSideBySideDiffChanged(showSideBySideDiff: boolean) {
-    return this.appStore._setShowSideBySideDiff(showSideBySideDiff)
-  }
+  // /** Change the side by side diff setting */
+  // public onShowSideBySideDiffChanged(showSideBySideDiff: boolean) {
+  //   return this.appStore._setShowSideBySideDiff(showSideBySideDiff)
+  // }
 
   /** Install the global Git LFS filters. */
   // public installGlobalLFSFilters(force: boolean): Promise<void> {
@@ -488,40 +488,40 @@ export class Dispatcher {
   //   return this.appStore._setConfirmUndoCommitSetting(value)
   // }
 
-  /**
-   * Updates the application state to indicate a conflict is in-progress
-   * as a result of a pull and increments the relevant metric.
-   */
-  public mergeConflictDetectedFromPull() {
-    return this.statsStore.recordMergeConflictFromPull()
-  }
+  // /**
+  //  * Updates the application state to indicate a conflict is in-progress
+  //  * as a result of a pull and increments the relevant metric.
+  //  */
+  // public mergeConflictDetectedFromPull() {
+  //   return this.statsStore.recordMergeConflictFromPull()
+  // }
 
-  /**
-   * Updates the application state to indicate a conflict is in-progress
-   * as a result of a merge and increments the relevant metric.
-   */
-  public mergeConflictDetectedFromExplicitMerge() {
-    return this.statsStore.recordMergeConflictFromExplicitMerge()
-  }
+  // /**
+  //  * Updates the application state to indicate a conflict is in-progress
+  //  * as a result of a merge and increments the relevant metric.
+  //  */
+  // public mergeConflictDetectedFromExplicitMerge() {
+  //   return this.statsStore.recordMergeConflictFromExplicitMerge()
+  // }
 
-  /** Increments the `openSubmoduleFromDiffCount` metric */
-  public recordOpenSubmoduleFromDiffCount() {
-    return this.statsStore.recordOpenSubmoduleFromDiffCount()
-  }
+  // /** Increments the `openSubmoduleFromDiffCount` metric */
+  // public recordOpenSubmoduleFromDiffCount() {
+  //   return this.statsStore.recordOpenSubmoduleFromDiffCount()
+  // }
 
-  /**
-   * Increments the `mergeIntoCurrentBranchMenuCount` metric
-   */
-  public recordMenuInitiatedMerge(isSquash: boolean = true) {
-    return this.statsStore.recordMenuInitiatedMerge(isSquash)
-  }
+  // /**
+  //  * Increments the `mergeIntoCurrentBranchMenuCount` metric
+  //  */
+  // public recordMenuInitiatedMerge(isSquash: boolean = true) {
+  //   return this.statsStore.recordMenuInitiatedMerge(isSquash)
+  // }
 
-  /**
-   * Increments the `rebaseIntoCurrentBranchMenuCount` metric
-   */
-  public recordMenuInitiatedRebase() {
-    return this.statsStore.recordMenuInitiatedRebase()
-  }
+  // /**
+  //  * Increments the `rebaseIntoCurrentBranchMenuCount` metric
+  //  */
+  // public recordMenuInitiatedRebase() {
+  //   return this.statsStore.recordMenuInitiatedRebase()
+  // }
 
   /**
    * Increments the `updateFromDefaultBranchMenuCount` metric
@@ -530,12 +530,12 @@ export class Dispatcher {
     return this.statsStore.recordMenuInitiatedUpdate()
   }
 
-  /**
-   * Increments the `mergesInitiatedFromComparison` metric
-   */
-  public recordCompareInitiatedMerge() {
-    return this.statsStore.recordCompareInitiatedMerge()
-  }
+  // /**
+  //  * Increments the `mergesInitiatedFromComparison` metric
+  //  */
+  // public recordCompareInitiatedMerge() {
+  //   return this.statsStore.recordCompareInitiatedMerge()
+  // }
 
   /**
    * Set the application-wide theme
@@ -551,88 +551,88 @@ export class Dispatcher {
     return this.appStore._setCustomTheme(theme)
   }
 
-  /**
-   * Increments either the `repoWithIndicatorClicked` or
-   * the `repoWithoutIndicatorClicked` metric
-   */
-  public recordRepoClicked(repoHasIndicator: boolean) {
-    return this.statsStore.recordRepoClicked(repoHasIndicator)
+  // /**
+  //  * Increments either the `repoWithIndicatorClicked` or
+  //  * the `repoWithoutIndicatorClicked` metric
+  //  */
+  // public recordRepoClicked(repoHasIndicator: boolean) {
+  //   return this.statsStore.recordRepoClicked(repoHasIndicator)
+  // }
+
+  // /**
+  //  * Increments the `createPullRequestCount` metric
+  //  */
+  // public recordCreatePullRequest() {
+  //   return this.statsStore.recordCreatePullRequest()
+  // }
+
+  public recordDeviceRegisterWizardInitiated() {
+    return this.statsStore.recordDeviceRegisterWizardInitiated()
   }
 
-  /**
-   * Increments the `createPullRequestCount` metric
-   */
-  public recordCreatePullRequest() {
-    return this.statsStore.recordCreatePullRequest()
-  }
+  // public recordCreateRepository() {
+  //   this.statsStore.recordCreateRepository()
+  // }
 
-  public recordWelcomeWizardInitiated() {
-    return this.statsStore.recordWelcomeWizardInitiated()
-  }
+  // public recordAddExistingRepository() {
+  //   this.statsStore.recordAddExistingRepository()
+  // }
 
-  public recordCreateRepository() {
-    this.statsStore.recordCreateRepository()
-  }
+  // /**
+  //  * Increments the `mergeConflictsDialogDismissalCount` metric
+  //  */
+  // public recordMergeConflictsDialogDismissal() {
+  //   this.statsStore.recordMergeConflictsDialogDismissal()
+  // }
 
-  public recordAddExistingRepository() {
-    this.statsStore.recordAddExistingRepository()
-  }
+  // /**
+  //  * Increments the `mergeConflictsDialogReopenedCount` metric
+  //  */
+  // public recordMergeConflictsDialogReopened() {
+  //   this.statsStore.recordMergeConflictsDialogReopened()
+  // }
 
-  /**
-   * Increments the `mergeConflictsDialogDismissalCount` metric
-   */
-  public recordMergeConflictsDialogDismissal() {
-    this.statsStore.recordMergeConflictsDialogDismissal()
-  }
+  // /**
+  //  * Increments the `anyConflictsLeftOnMergeConflictsDialogDismissalCount` metric
+  //  */
+  // public recordAnyConflictsLeftOnMergeConflictsDialogDismissal() {
+  //   this.statsStore.recordAnyConflictsLeftOnMergeConflictsDialogDismissal()
+  // }
 
-  /**
-   * Increments the `mergeConflictsDialogReopenedCount` metric
-   */
-  public recordMergeConflictsDialogReopened() {
-    this.statsStore.recordMergeConflictsDialogReopened()
-  }
+  // /**
+  //  * Increments the `guidedConflictedMergeCompletionCount` metric
+  //  */
+  // public recordGuidedConflictedMergeCompletion() {
+  //   this.statsStore.recordGuidedConflictedMergeCompletion()
+  // }
 
-  /**
-   * Increments the `anyConflictsLeftOnMergeConflictsDialogDismissalCount` metric
-   */
-  public recordAnyConflictsLeftOnMergeConflictsDialogDismissal() {
-    this.statsStore.recordAnyConflictsLeftOnMergeConflictsDialogDismissal()
-  }
-
-  /**
-   * Increments the `guidedConflictedMergeCompletionCount` metric
-   */
-  public recordGuidedConflictedMergeCompletion() {
-    this.statsStore.recordGuidedConflictedMergeCompletion()
-  }
-
-  /**
-   * Increments the `unguidedConflictedMergeCompletionCount` metric
-   */
-  public recordUnguidedConflictedMergeCompletion() {
-    this.statsStore.recordUnguidedConflictedMergeCompletion()
-  }
+  // /**
+  //  * Increments the `unguidedConflictedMergeCompletionCount` metric
+  //  */
+  // public recordUnguidedConflictedMergeCompletion() {
+  //   this.statsStore.recordUnguidedConflictedMergeCompletion()
+  // }
 
   // TODO: more rebase-related actions
 
-  /**
-   * Increments the `rebaseConflictsDialogDismissalCount` metric
-   */
-  public recordRebaseConflictsDialogDismissal() {
-    this.statsStore.recordRebaseConflictsDialogDismissal()
-  }
+  // /**
+  //  * Increments the `rebaseConflictsDialogDismissalCount` metric
+  //  */
+  // public recordRebaseConflictsDialogDismissal() {
+  //   this.statsStore.recordRebaseConflictsDialogDismissal()
+  // }
 
-  /**
-   * Increments the `rebaseConflictsDialogReopenedCount` metric
-   */
-  public recordRebaseConflictsDialogReopened() {
-    this.statsStore.recordRebaseConflictsDialogReopened()
-  }
+  // /**
+  //  * Increments the `rebaseConflictsDialogReopenedCount` metric
+  //  */
+  // public recordRebaseConflictsDialogReopened() {
+  //   this.statsStore.recordRebaseConflictsDialogReopened()
+  // }
 
-  /** Increments the `errorWhenSwitchingBranchesWithUncommmittedChanges` metric */
-  public recordErrorWhenSwitchingBranchesWithUncommmittedChanges() {
-    return this.statsStore.recordErrorWhenSwitchingBranchesWithUncommmittedChanges()
-  }
+  // /** Increments the `errorWhenSwitchingBranchesWithUncommmittedChanges` metric */
+  // public recordErrorWhenSwitchingBranchesWithUncommmittedChanges() {
+  //   return this.statsStore.recordErrorWhenSwitchingBranchesWithUncommmittedChanges()
+  // }
 
   // /**
   //  * Set the width of the commit summary column in the
@@ -658,63 +658,63 @@ export class Dispatcher {
     return this.statsStore.recordSuggestedStepOpenInExternalEditor()
   }
 
-  /**
-   * Increment the number of times the user has opened their repository in
-   * Finder/Explorer from the suggested next steps view
-   */
-  public recordSuggestedStepOpenWorkingDirectory(): Promise<void> {
-    return this.statsStore.recordSuggestedStepOpenWorkingDirectory()
-  }
+  // /**
+  //  * Increment the number of times the user has opened their repository in
+  //  * Finder/Explorer from the suggested next steps view
+  //  */
+  // public recordSuggestedStepOpenWorkingDirectory(): Promise<void> {
+  //   return this.statsStore.recordSuggestedStepOpenWorkingDirectory()
+  // }
 
-  /**
-   * Increment the number of times the user has opened their repository on
-   * GitHub from the suggested next steps view
-   */
-  public recordSuggestedStepViewOnGitHub(): Promise<void> {
-    return this.statsStore.recordSuggestedStepViewOnGitHub()
-  }
+  // /**
+  //  * Increment the number of times the user has opened their repository on
+  //  * GitHub from the suggested next steps view
+  //  */
+  // public recordSuggestedStepViewOnGitHub(): Promise<void> {
+  //   return this.statsStore.recordSuggestedStepViewOnGitHub()
+  // }
 
-  /**
-   * Increment the number of times the user has used the publish repository
-   * action from the suggested next steps view
-   */
-  public recordSuggestedStepPublishRepository(): Promise<void> {
-    return this.statsStore.recordSuggestedStepPublishRepository()
-  }
+  // /**
+  //  * Increment the number of times the user has used the publish repository
+  //  * action from the suggested next steps view
+  //  */
+  // public recordSuggestedStepPublishRepository(): Promise<void> {
+  //   return this.statsStore.recordSuggestedStepPublishRepository()
+  // }
 
-  /**
-   * Increment the number of times the user has used the publish branch
-   * action branch from the suggested next steps view
-   */
-  public recordSuggestedStepPublishBranch(): Promise<void> {
-    return this.statsStore.recordSuggestedStepPublishBranch()
-  }
+  // /**
+  //  * Increment the number of times the user has used the publish branch
+  //  * action branch from the suggested next steps view
+  //  */
+  // public recordSuggestedStepPublishBranch(): Promise<void> {
+  //   return this.statsStore.recordSuggestedStepPublishBranch()
+  // }
 
-  /**
-   * Increment the number of times the user has used the Create PR suggestion
-   * in the suggested next steps view.
-   */
-  public recordSuggestedStepCreatePullRequest(): Promise<void> {
-    return this.statsStore.recordSuggestedStepCreatePullRequest()
-  }
+  // /**
+  //  * Increment the number of times the user has used the Create PR suggestion
+  //  * in the suggested next steps view.
+  //  */
+  // public recordSuggestedStepCreatePullRequest(): Promise<void> {
+  //   return this.statsStore.recordSuggestedStepCreatePullRequest()
+  // }
 
-  /**
-   * Increment the number of times the user has used the View Stash suggestion
-   * in the suggested next steps view.
-   */
-  public recordSuggestedStepViewStash(): Promise<void> {
-    return this.statsStore.recordSuggestedStepViewStash()
-  }
+  // /**
+  //  * Increment the number of times the user has used the View Stash suggestion
+  //  * in the suggested next steps view.
+  //  */
+  // public recordSuggestedStepViewStash(): Promise<void> {
+  //   return this.statsStore.recordSuggestedStepViewStash()
+  // }
 
-  /** Record when the user takes no action on the stash entry */
-  public recordNoActionTakenOnStash(): Promise<void> {
-    return this.statsStore.recordNoActionTakenOnStash()
-  }
+  // /** Record when the user takes no action on the stash entry */
+  // public recordNoActionTakenOnStash(): Promise<void> {
+  //   return this.statsStore.recordNoActionTakenOnStash()
+  // }
 
-  /** Record when the user views the stash entry */
-  public recordStashView(): Promise<void> {
-    return this.statsStore.recordStashView()
-  }
+  // /** Record when the user views the stash entry */
+  // public recordStashView(): Promise<void> {
+  //   return this.statsStore.recordStashView()
+  // }
 
   // /** Call when the user opts to skip the pick editor step of the onboarding tutorial */
   // public skipPickEditorTutorialStep(repository: Repository) {
@@ -734,9 +734,9 @@ export class Dispatcher {
    * elected to create a fork when presented with a dialog informing
    * them that they don't have write access to the current repository.
    */
-  public recordForkCreated() {
-    return this.statsStore.recordForkCreated()
-  }
+  // public recordForkCreated() {
+  //   return this.statsStore.recordForkCreated()
+  // }
 
   // public setCommitSpellcheckEnabled(commitSpellcheckEnabled: boolean) {
   //   this.appStore._setCommitSpellcheckEnabled(commitSpellcheckEnabled)
@@ -750,14 +750,14 @@ export class Dispatcher {
     this.appStore._setNotificationsEnabled(notificationsEnabled)
   }
 
-  public recordDiffOptionsViewed() {
-    return this.statsStore.recordDiffOptionsViewed()
-  }
+  // public recordDiffOptionsViewed() {
+  //   return this.statsStore.recordDiffOptionsViewed()
+  // }
 
-  /** Method to record cherry pick initiated via the context menu. */
-  public recordCherryPickViaContextMenu() {
-    this.statsStore.recordCherryPickViaContextMenu()
-  }
+  // /** Method to record cherry pick initiated via the context menu. */
+  // public recordCherryPickViaContextMenu() {
+  //   this.statsStore.recordCherryPickViaContextMenu()
+  // }
 
   /** Method to record an operation started via drag and drop and canceled. */
   public recordDragStartedAndCanceled() {
@@ -774,14 +774,14 @@ export class Dispatcher {
     this.appStore._setLastThankYou(lastThankYou)
   }
 
-  /** Records the squash that a squash has been invoked by either drag and drop or context menu */
-  public recordSquashInvoked(isInvokedByContextMenu: boolean): void {
-    if (isInvokedByContextMenu) {
-      this.statsStore.recordSquashViaContextMenuInvoked()
-    } else {
-      this.statsStore.recordSquashViaDragAndDropInvokedCount()
-    }
-  }
+  // /** Records the squash that a squash has been invoked by either drag and drop or context menu */
+  // public recordSquashInvoked(isInvokedByContextMenu: boolean): void {
+  //   if (isInvokedByContextMenu) {
+  //     this.statsStore.recordSquashViaContextMenuInvoked()
+  //   } else {
+  //     this.statsStore.recordSquashViaDragAndDropInvokedCount()
+  //   }
+  // }
 
   // public initializeMergeOperation(
   //   repository: Repository,
@@ -815,16 +815,16 @@ export class Dispatcher {
   //   )
   // }
 
-  public setShowCIStatusPopover(showCIStatusPopover: boolean) {
-    this.appStore._setShowCIStatusPopover(showCIStatusPopover)
-    if (showCIStatusPopover) {
-      this.statsStore.recordCheckRunsPopoverOpened()
-    }
-  }
+  // public setShowCIStatusPopover(showCIStatusPopover: boolean) {
+  //   this.appStore._setShowCIStatusPopover(showCIStatusPopover)
+  //   if (showCIStatusPopover) {
+  //     this.statsStore.recordCheckRunsPopoverOpened()
+  //   }
+  // }
 
-  public _toggleCIStatusPopover() {
-    this.appStore._toggleCIStatusPopover()
-  }
+  // public _toggleCIStatusPopover() {
+  //   this.appStore._toggleCIStatusPopover()
+  // }
 
   public recordCheckViewedOnline() {
     this.statsStore.recordCheckViewedOnline()

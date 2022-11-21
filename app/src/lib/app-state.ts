@@ -1,10 +1,10 @@
 import { Account } from '../models/account'
-import { IDiff, ImageDiffType } from '../models/diff'
+// import { IDiff, ImageDiffType } from '../models/diff'
 
-import { CommittedFileChange, WorkingDirectoryStatus } from '../models/status'
+// import { CommittedFileChange, WorkingDirectoryStatus } from '../models/status'
 import { IMenu } from '../models/app-menu'
 import { IRemote } from '../models/remote'
-import { IAuthor } from '../models/author'
+// import { IAuthor } from '../models/author'
 import {
   IRevertProgress,
   Progress,
@@ -25,7 +25,7 @@ import {
 import { IAccountRepositories } from './stores/api-repositories-store'
 import { ManualConflictResolution } from '../models/manual-conflict-resolution'
 import { Banner } from '../models/banner'
-import { IStashEntry } from '../models/stash-entry'
+// import { IStashEntry } from '../models/stash-entry'
 // import { UncommittedChangesStrategy } from '../models/uncommitted-changes-strategy'
 import { DragElement } from '../models/drag-drop'
 import { ILastThankYou } from '../models/last-thank-you'
@@ -92,7 +92,7 @@ export interface IAppState {
 
   // readonly showWelcomeFlow: boolean
   readonly showDeviceRegisterFlow: boolean
-  readonly focusCommitMessage: boolean
+  // readonly focusCommitMessage: boolean
   readonly currentPopup: Popup | null
   readonly currentFoldout: Foldout | null
   readonly currentBanner: Banner | null
@@ -206,19 +206,19 @@ export interface IAppState {
   readonly resolvedExternalEditor: string | null
 
   /** What type of visual diff mode we should use to compare images */
-  readonly imageDiffType: ImageDiffType
+  // readonly imageDiffType: ImageDiffType
 
   /** Whether we should hide white space changes in changes diff */
-  readonly hideWhitespaceInChangesDiff: boolean
+  // readonly hideWhitespaceInChangesDiff: boolean
 
   /** Whether we should hide white space changes in history diff */
-  readonly hideWhitespaceInHistoryDiff: boolean
+  // readonly hideWhitespaceInHistoryDiff: boolean
 
   /** Whether we should hide white space changes in the pull request diff */
-  readonly hideWhitespaceInPullRequestDiff: boolean
+  // readonly hideWhitespaceInPullRequestDiff: boolean
 
   /** Whether we should show side by side diffs */
-  readonly showSideBySideDiff: boolean
+  // readonly showSideBySideDiff: boolean
 
   /** The user's preferred shell. */
   readonly selectedShell: Shell
@@ -264,7 +264,7 @@ export interface IAppState {
   /**
    * Whether or not the app should use spell check on commit summary and description
    */
-  readonly commitSpellcheckEnabled: boolean
+  // readonly commitSpellcheckEnabled: boolean
 
   /**
    * Record of what logged in users have been checked to see if thank you is in
@@ -395,8 +395,8 @@ export type ConflictState =
   | CherryPickConflictState
 
 export interface IRepositoryState {
-  readonly commitSelection: ICommitSelection
-  readonly changesState: IChangesState
+  // readonly commitSelection: ICommitSelection
+  // readonly changesState: IChangesState
   readonly compareState: ICompareState
   readonly selectedSection: RepositorySectionTab
 
@@ -456,125 +456,125 @@ export interface IRepositoryState {
   readonly multiCommitOperationState: IMultiCommitOperationState | null
 }
 
-export interface ICommitSelection {
-  /** The commits currently selected in the app */
-  readonly shas: ReadonlyArray<string>
+// export interface ICommitSelection {
+//   /** The commits currently selected in the app */
+//   readonly shas: ReadonlyArray<string>
 
-  /**
-   * When multiple commits are selected, the diff is created using the rev range
-   * of firstSha^..lastSha in the selected shas. Thus comparing the trees of the
-   * the lastSha and the first parent of the first sha. However, our history
-   * list shows commits in chronological order. Thus, when a branch is merged,
-   * the commits from that branch are injected in their chronological order into
-   * the history list. Therefore, given a branch history of A, B, C, D,
-   * MergeCommit where B and C are from the merged branch, diffing on the
-   * selection of A through D would not have the changes from B an C.
-   *
-   * This is a list of the shas that are reachable by following the parent links
-   * (aka the graph) from the lastSha to the firstSha^ in the selection.
-   *
-   * Other notes: Given a selection A through D, executing `git diff A..D` would
-   * give us the changes since A but not including A; since the user will have
-   * selected A, we do `git diff A^..D` so that we include the changes of A.
-   * */
-  readonly shasInDiff: ReadonlyArray<string>
+//   /**
+//    * When multiple commits are selected, the diff is created using the rev range
+//    * of firstSha^..lastSha in the selected shas. Thus comparing the trees of the
+//    * the lastSha and the first parent of the first sha. However, our history
+//    * list shows commits in chronological order. Thus, when a branch is merged,
+//    * the commits from that branch are injected in their chronological order into
+//    * the history list. Therefore, given a branch history of A, B, C, D,
+//    * MergeCommit where B and C are from the merged branch, diffing on the
+//    * selection of A through D would not have the changes from B an C.
+//    *
+//    * This is a list of the shas that are reachable by following the parent links
+//    * (aka the graph) from the lastSha to the firstSha^ in the selection.
+//    *
+//    * Other notes: Given a selection A through D, executing `git diff A..D` would
+//    * give us the changes since A but not including A; since the user will have
+//    * selected A, we do `git diff A^..D` so that we include the changes of A.
+//    * */
+//   readonly shasInDiff: ReadonlyArray<string>
 
-  /**
-   * Whether the a selection of commits are group of adjacent to each other.
-   * Example: Given these are indexes of sha's in history, 3, 4, 5, 6 is contiguous as
-   * opposed to 3, 5, 8.
-   *
-   * Technically order does not matter, but shas are stored in order.
-   *
-   * Contiguous selections can be diffed. Non-contiguous selections can be
-   * cherry-picked, reordered, or squashed.
-   *
-   * Assumed that a selections of zero or one commit are contiguous.
-   * */
-  readonly isContiguous: boolean
+//   /**
+//    * Whether the a selection of commits are group of adjacent to each other.
+//    * Example: Given these are indexes of sha's in history, 3, 4, 5, 6 is contiguous as
+//    * opposed to 3, 5, 8.
+//    *
+//    * Technically order does not matter, but shas are stored in order.
+//    *
+//    * Contiguous selections can be diffed. Non-contiguous selections can be
+//    * cherry-picked, reordered, or squashed.
+//    *
+//    * Assumed that a selections of zero or one commit are contiguous.
+//    * */
+//   readonly isContiguous: boolean
 
-  /** The changeset data associated with the selected commit */
-  // readonly changesetData: IChangesetData
+//   /** The changeset data associated with the selected commit */
+//   // readonly changesetData: IChangesetData
 
-  /** The selected file inside the selected commit */
-  readonly file: CommittedFileChange | null
+//   /** The selected file inside the selected commit */
+//   readonly file: CommittedFileChange | null
 
-  /** The diff of the currently-selected file */
-  readonly diff: IDiff | null
-}
+//   /** The diff of the currently-selected file */
+//   // readonly diff: IDiff | null
+// }
 
-export enum ChangesSelectionKind {
-  WorkingDirectory = 'WorkingDirectory',
-  Stash = 'Stash',
-}
+// export enum ChangesSelectionKind {
+//   WorkingDirectory = 'WorkingDirectory',
+//   Stash = 'Stash',
+// }
 
-export type ChangesWorkingDirectorySelection = {
-  readonly kind: ChangesSelectionKind.WorkingDirectory
+// export type ChangesWorkingDirectorySelection = {
+//   readonly kind: ChangesSelectionKind.WorkingDirectory
 
-  /**
-   * The ID of the selected files. The files themselves can be looked up in
-   * the `workingDirectory` property in `IChangesState`.
-   */
-  readonly selectedFileIDs: ReadonlyArray<string>
-  readonly diff: IDiff | null
-}
+//   /**
+//    * The ID of the selected files. The files themselves can be looked up in
+//    * the `workingDirectory` property in `IChangesState`.
+//    */
+//   readonly selectedFileIDs: ReadonlyArray<string>
+//   // readonly diff: IDiff | null
+// }
 
-export type ChangesStashSelection = {
-  readonly kind: ChangesSelectionKind.Stash
+// export type ChangesStashSelection = {
+//   readonly kind: ChangesSelectionKind.Stash
 
-  /** Currently selected file in the stash diff viewer UI (aka the file we want to show the diff for) */
-  readonly selectedStashedFile: CommittedFileChange | null
+//   /** Currently selected file in the stash diff viewer UI (aka the file we want to show the diff for) */
+//   readonly selectedStashedFile: CommittedFileChange | null
 
-  /** Currently selected file's diff */
-  readonly selectedStashedFileDiff: IDiff | null
-}
+//   /** Currently selected file's diff */
+//   readonly selectedStashedFileDiff: IDiff | null
+// }
 
-export type ChangesSelection =
-  | ChangesWorkingDirectorySelection
-  | ChangesStashSelection
+// export type ChangesSelection =
+//   | ChangesWorkingDirectorySelection
+//   | ChangesStashSelection
 
-export interface IChangesState {
-  readonly workingDirectory: WorkingDirectoryStatus
+// export interface IChangesState {
+//   readonly workingDirectory: WorkingDirectoryStatus
 
-  /**
-   * Whether or not to show a field for adding co-authors to
-   * a commit (currently only supported for GH/GHE repositories)
-   */
-  readonly showCoAuthoredBy: boolean
+//   /**
+//    * Whether or not to show a field for adding co-authors to
+//    * a commit (currently only supported for GH/GHE repositories)
+//    */
+//   readonly showCoAuthoredBy: boolean
 
-  /**
-   * A list of authors (name, email pairs) which have been
-   * entered into the co-authors input box in the commit form
-   * and which _may_ be used in the subsequent commit to add
-   * Co-Authored-By commit message trailers depending on whether
-   * the user has chosen to do so.
-   */
-  readonly coAuthors: ReadonlyArray<IAuthor>
+//   /**
+//    * A list of authors (name, email pairs) which have been
+//    * entered into the co-authors input box in the commit form
+//    * and which _may_ be used in the subsequent commit to add
+//    * Co-Authored-By commit message trailers depending on whether
+//    * the user has chosen to do so.
+//    */
+//   readonly coAuthors: ReadonlyArray<IAuthor>
 
-  /**
-   * Stores information about conflicts in the working directory
-   *
-   * The absence of a value means there is no merge or rebase conflict underway
-   */
-  readonly conflictState: ConflictState | null
+//   /**
+//    * Stores information about conflicts in the working directory
+//    *
+//    * The absence of a value means there is no merge or rebase conflict underway
+//    */
+//   readonly conflictState: ConflictState | null
 
-  /**
-   * The latest GitHub Desktop stash entry for the current branch, or `null`
-   * if no stash exists for the current branch.
-   */
-  readonly stashEntry: IStashEntry | null
+//   /**
+//    * The latest GitHub Desktop stash entry for the current branch, or `null`
+//    * if no stash exists for the current branch.
+//    */
+//   readonly stashEntry: IStashEntry | null
 
-  /**
-   * The current selection state in the Changes view. Can be either
-   * working directory or a stash. In the case of a working directory
-   * selection multiple files may be selected. See `ChangesSelection`
-   * for more information about the differences between the two.
-   */
-  readonly selection: ChangesSelection
+//   /**
+//    * The current selection state in the Changes view. Can be either
+//    * working directory or a stash. In the case of a working directory
+//    * selection multiple files may be selected. See `ChangesSelection`
+//    * for more information about the differences between the two.
+//    */
+//   readonly selection: ChangesSelection
 
-  /** `true` if the GitHub API reports that the branch is protected */
-  readonly currentBranchProtected: boolean
-}
+//   /** `true` if the GitHub API reports that the branch is protected */
+//   readonly currentBranchProtected: boolean
+// }
 
 /**
  * This represents the various states the History tab can be in.

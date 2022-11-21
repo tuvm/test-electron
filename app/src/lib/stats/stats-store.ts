@@ -54,8 +54,8 @@ const StatsOptOutKey = 'stats-opt-out'
 /** Have we successfully sent the stats opt-in? */
 const HasSentOptInPingKey = 'has-sent-stats-opt-in-ping'
 
-const WelcomeWizardInitiatedAtKey = 'welcome-wizard-initiated-at'
-const WelcomeWizardCompletedAtKey = 'welcome-wizard-terminated-at'
+const DeviceRegisterWizardInitiatedAtKey = 'device-register-wizard-initiated-at'
+const DeviceRegisterWizardCompletedAtKey = 'device-register-wizard-terminated-at'
 const FirstRepositoryAddedAtKey = 'first-repository-added-at'
 const FirstRepositoryClonedAtKey = 'first-repository-cloned-at'
 const FirstRepositoryCreatedAtKey = 'first-repository-created-at'
@@ -1132,13 +1132,13 @@ export class StatsStore implements IStatsStore {
     }))
   }
 
-  public recordWelcomeWizardInitiated() {
-    setNumber(WelcomeWizardInitiatedAtKey, Date.now())
-    localStorage.removeItem(WelcomeWizardCompletedAtKey)
+  public recordDeviceRegisterWizardInitiated() {
+    setNumber(DeviceRegisterWizardInitiatedAtKey, Date.now())
+    localStorage.removeItem(DeviceRegisterWizardCompletedAtKey)
   }
 
-  public recordWelcomeWizardTerminated() {
-    setNumber(WelcomeWizardCompletedAtKey, Date.now())
+  public recordDeviceRegisterWizardTerminated() {
+    setNumber(DeviceRegisterWizardCompletedAtKey, Date.now())
   }
 
   public recordAddExistingRepository() {
