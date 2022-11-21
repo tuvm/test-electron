@@ -40,7 +40,7 @@ import {
   withSourceMappedStack,
 } from '../lib/source-map-support'
 import { UiActivityMonitor } from './lib/ui-activity-monitor'
-import { RepositoryStateCache } from '../lib/stores/repository-state-cache'
+// import { RepositoryStateCache } from '../lib/stores/repository-state-cache'
 import { ApiRepositoriesStore } from '../lib/stores/api-repositories-store'
 // import { CommitStatusStore } from '../lib/stores/commit-status-store'
 
@@ -217,7 +217,7 @@ const deviceRegisterStore = new DeviceRegisterStore()
 
 const accountsStore = new AccountsStore(localStorage, TokenStore)
 
-const repositoryStateManager = new RepositoryStateCache(statsStore)
+// const repositoryStateManager = new RepositoryStateCache(statsStore)
 
 const apiRepositoriesStore = new ApiRepositoriesStore(accountsStore)
 
@@ -240,7 +240,7 @@ const appStore = new AppStore(
   statsStore,
   deviceRegisterStore,
   accountsStore,
-  repositoryStateManager,
+  // repositoryStateManager,
   apiRepositoriesStore,
   notificationsStore
 )
@@ -251,7 +251,7 @@ appStore.onDidUpdate(state => {
 
 const dispatcher = new Dispatcher(
   appStore,
-  repositoryStateManager,
+  // repositoryStateManager,
   statsStore,
   // commitStatusStore
 )

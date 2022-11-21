@@ -3,8 +3,6 @@ import { Disposable } from 'event-kit'
 import {
   Foldout,
   FoldoutType,
-  ICompareFormUpdate,
-  MultiCommitOperationConflictState,
 } from '../../lib/app-state'
 import { fatalError } from '../../lib/fatal-error'
 import {
@@ -23,16 +21,12 @@ import {
 import { Shell } from '../../lib/shells'
 import { ILaunchStats, StatsStore } from '../../lib/stats'
 import { AppStore } from '../../lib/stores/app-store'
-import { RepositoryStateCache } from '../../lib/stores/repository-state-cache'
 
 import { Account } from '../../models/account'
 import { AppMenu, ExecutableMenuItem } from '../../models/app-menu'
 import { Branch, IAheadBehind } from '../../models/branch'
 import { BranchesTab } from '../../models/branches-tab'
 import { CloneRepositoryTab } from '../../models/clone-repository-tab'
-import { Commit, CommitOneLine } from '../../models/commit'
-import { DiffSelection } from '../../models/diff'
-import { ManualConflictResolution } from '../../models/manual-conflict-resolution'
 import { Popup, PopupType } from '../../models/popup'
 import { PullRequest } from '../../models/pull-request'
 import {
@@ -40,11 +34,6 @@ import {
   RepositoryWithGitHubRepository,
   getGitHubHtmlUrl,
 } from '../../models/repository'
-import {
-  CommittedFileChange,
-  WorkingDirectoryFileChange,
-} from '../../models/status'
-import { TipState } from '../../models/tip'
 import { Banner, BannerType } from '../../models/banner'
 
 import { ApplicationTheme, ICustomTheme } from '../lib/application-theme'
@@ -55,16 +44,8 @@ import {
   isWindowFocused,
 } from '../main-process-proxy'
 import { UncommittedChangesStrategy } from '../../models/uncommitted-changes-strategy'
-import { sleep } from '../../lib/promise'
 import { DragElement } from '../../models/drag-drop'
 import { ILastThankYou } from '../../models/last-thank-you'
-import {
-  MultiCommitOperationDetail,
-  MultiCommitOperationKind,
-  MultiCommitOperationStep,
-  MultiCommitOperationStepKind,
-} from '../../models/multi-commit-operation'
-import { getMultiCommitOperationChooseBranchStep } from '../../lib/multi-commit-operation'
 import { ValidNotificationPullRequestReviewState } from '../../lib/valid-notification-pull-request-review'
 
 /**
@@ -87,7 +68,7 @@ export class Dispatcher {
 
   public constructor(
     private readonly appStore: AppStore,
-    private readonly repositoryStateManager: RepositoryStateCache,
+    // private readonly repositoryStateManager: RepositoryStateCache,
     private readonly statsStore: StatsStore,
     // private readonly commitStatusStore: CommitStatusStore
   ) {}
@@ -97,104 +78,9 @@ export class Dispatcher {
     return this.appStore.loadInitialState()
   }
 
-  /** Resume an already started onboarding tutorial */
-  public resumeTutorial(repository: Repository) {
-    return this.appStore._resumeTutorial(repository)
-  }
-
-  /** Suspend the onboarding tutorial and go to the no repositories blank slate view */
-  public pauseTutorial(repository: Repository) {
-    return this.appStore._pauseTutorial(repository)
-  }
-
-  /**
-   * Change the selected commit in the history view.
-   *
-   * @param repository The currently active repository instance
-   *
-   * @param sha The object id of one of the commits currently
-   *            the history list, represented as a SHA-1 hash
-   *            digest. This should match exactly that of Commit.Sha
-   */
-  public changeCommitSelection(
-    repository: Repository,
-    shas: ReadonlyArray<string>,
-    isContiguous: boolean
-  ): void {
-    return this.appStore._changeCommitSelection(repository, shas, isContiguous)
-  }
-
-  /** Update the shas that should be highlighted */
-  public updateShasToHighlight(
-    repository: Repository,
-    shasToHighlight: ReadonlyArray<string>
-  ) {
-    this.appStore._updateShasToHighlight(repository, shasToHighlight)
-  }
-
-  /**
-   * Change the selected changed file in the history view.
-   *
-   * @param repository The currently active repository instance
-   *
-   * @param file A FileChange instance among those available in
-   *            IHistoryState.changedFiles
-   */
-  public changeFileSelection(
-    repository: Repository,
-    file: CommittedFileChange
-  ): Promise<void> {
-    return this.appStore._changeFileSelection(repository, file)
-  }
-
   /** Set the repository filter text. */
   public setRepositoryFilterText(text: string): Promise<void> {
     return this.appStore._setRepositoryFilterText(text)
-  }
-
-  /**
-   * Changes the selection in the changes view to the stash entry view and
-   * optionally selects a particular file from the current stash entry.
-   *
-   *  @param file  A file to select when showing the stash entry.
-   *               If undefined this method will preserve the previously selected
-   *               file or pick the first changed file if no selection exists.
-   */
-  public selectStashedFile(
-    repository: Repository,
-    file?: CommittedFileChange | null
-  ): Promise<void> {
-    return this.appStore._selectStashedFile(repository, file)
-  }
-
-  /** Change the file's includedness. */
-  public changeFileIncluded(
-    repository: Repository,
-    file: WorkingDirectoryFileChange,
-    include: boolean
-  ): Promise<void> {
-    return this.appStore._changeFileIncluded(repository, file, include)
-  }
-
-  /** Change the file's line selection state. */
-  public changeFileLineSelection(
-    repository: Repository,
-    file: WorkingDirectoryFileChange,
-    diffSelection: DiffSelection
-  ): Promise<void> {
-    return this.appStore._changeFileLineSelection(
-      repository,
-      file,
-      diffSelection
-    )
-  }
-
-  /** Change the Include All state. */
-  public changeIncludeAllFiles(
-    repository: Repository,
-    includeAll: boolean
-  ): Promise<void> {
-    return this.appStore._changeIncludeAllFiles(repository, includeAll)
   }
 
   /** Show the popup. This will close any current popup. */
@@ -223,49 +109,6 @@ export class Dispatcher {
   /** Close the specified foldout */
   public closeFoldout(foldout: FoldoutType): Promise<void> {
     return this.appStore._closeFoldout(foldout)
-  }
-
-  /** Initialize rebase flow to choose branch step **/
-  public async showRebaseDialog(
-    repository: Repository,
-    initialBranch?: Branch | null
-  ) {
-    const repositoryState = this.repositoryStateManager.get(repository)
-    const initialStep = getMultiCommitOperationChooseBranchStep(
-      repositoryState,
-      initialBranch
-    )
-
-    const { tip } = repositoryState.branchesState
-    let currentBranch: Branch | null = null
-
-    if (tip.kind === TipState.Valid) {
-      currentBranch = tip.branch
-    } else {
-      throw new Error(
-        'Tip is not in a valid state, which is required to start the rebase flow'
-      )
-    }
-
-    this.initializeMultiCommitOperation(
-      repository,
-      {
-        kind: MultiCommitOperationKind.Rebase,
-        sourceBranch: null,
-        commits: [],
-        currentTip: tip.branch.tip.sha,
-      },
-      currentBranch,
-      [],
-      currentBranch.tip.sha
-    )
-
-    this.setMultiCommitOperationStep(repository, initialStep)
-
-    this.showPopup({
-      type: PopupType.MultiCommitOperation,
-      repository,
-    })
   }
 
   /**
@@ -334,42 +177,6 @@ export class Dispatcher {
   /** Clear the given error. */
   public clearError(error: Error): Promise<void> {
     return this.appStore._clearError(error)
-  }
-
-  /** Start amending the most recent commit. */
-  public async startAmendingRepository(
-    repository: Repository,
-    commit: Commit,
-    isLocalCommit: boolean,
-    continueWithForcePush: boolean = false
-  ) {
-    const repositoryState = this.repositoryStateManager.get(repository)
-    const { tip } = repositoryState.branchesState
-    const { askForConfirmationOnForcePush } = this.appStore.getState()
-
-    if (
-      askForConfirmationOnForcePush &&
-      !continueWithForcePush &&
-      !isLocalCommit &&
-      tip.kind === TipState.Valid
-    ) {
-      return this.showPopup({
-        type: PopupType.WarnForcePush,
-        operation: 'Amend',
-        onBegin: () => {
-          this.startAmendingRepository(repository, commit, isLocalCommit, true)
-        },
-      })
-    }
-
-    this.appStore._setRepositoryCommitToAmend(repository, commit)
-
-    this.statsStore.recordAmendCommitStarted()
-  }
-
-  /** Stop amending the most recent commit. */
-  public async stopAmendingRepository(repository: Repository) {
-    this.appStore._setRepositoryCommitToAmend(repository, null)
   }
 
   /**
@@ -491,14 +298,6 @@ export class Dispatcher {
    */
   public setAccessKeyHighlightState(highlight: boolean): Promise<void> {
     return this.appStore._setAccessKeyHighlightState(highlight)
-  }
-
-  /**
-   * Update the rebase state to indicate the user has resolved conflicts in the
-   * current repository.
-   */
-  public setConflictsResolved(repository: Repository) {
-    return this.appStore._setConflictsResolved(repository)
   }
 
   /** Record the given launch stats. */
@@ -671,13 +470,6 @@ export class Dispatcher {
   }
 
   /**
-   * Sets the user's preference for an external program to open repositories in.
-   */
-  public setExternalEditor(editor: string): Promise<void> {
-    return this.appStore._setExternalEditor(editor)
-  }
-
-  /**
    * Sets the user's preferred shell.
    */
   public setShell(shell: Shell): Promise<void> {
@@ -720,19 +512,6 @@ export class Dispatcher {
 
       this.postError(e)
     }
-  }
-
-  /** Change the hide whitespace in history diff setting */
-  public onHideWhitespaceInHistoryDiffChanged(
-    hideWhitespaceInDiff: boolean,
-    repository: Repository,
-    file: CommittedFileChange | null = null
-  ): Promise<void> {
-    return this.appStore._setHideWhitespaceInHistoryDiff(
-      hideWhitespaceInDiff,
-      repository,
-      file
-    )
   }
 
   /** Change the side by side diff setting */
@@ -779,71 +558,15 @@ export class Dispatcher {
   }
 
   /**
-   * Open the Create Pull Request page on GitHub after verifying ahead/behind.
-   *
-   * Note that this method will present the user with a dialog in case the
-   * current branch in the repository is ahead or behind the remote.
-   * The dialog lets the user choose whether get in sync with the remote
-   * or open the PR anyway. This is distinct from the
-   * openCreatePullRequestInBrowser method which immediately opens the
-   * create pull request page without showing a dialog.
-   */
-  public createPullRequest(repository: Repository): Promise<void> {
-    return this.appStore._createPullRequest(repository)
-  }
-
-  /**
-   * Show the current pull request on github.com
-   */
-  public showPullRequest(repository: Repository): Promise<void> {
-    return this.appStore._showPullRequest(repository)
-  }
-
-  /**
    * Open a browser and navigate to the provided pull request
    */
   public async showPullRequestByPR(pr: PullRequest): Promise<void> {
     return this.appStore._showPullRequestByPR(pr)
   }
 
-  /**
-   * Immediately open the Create Pull Request page on GitHub.
-   *
-   * See the createPullRequest method for more details.
-   */
-  public openCreatePullRequestInBrowser(
-    repository: Repository,
-    branch: Branch
-  ): Promise<void> {
-    return this.appStore._openCreatePullRequestInBrowser(repository, branch)
-  }
-
   /** Ignore the existing `upstream` remote. */
   public ignoreExistingUpstreamRemote(repository: Repository): Promise<void> {
     return this.appStore._ignoreExistingUpstreamRemote(repository)
-  }
-
-  /** Update the compare form state for the current repository */
-  public updateCompareForm<K extends keyof ICompareFormUpdate>(
-    repository: Repository,
-    newState: Pick<ICompareFormUpdate, K>
-  ) {
-    return this.appStore._updateCompareForm(repository, newState)
-  }
-
-  /**
-   *  update the manual resolution method for a file
-   */
-  public updateManualConflictResolution(
-    repository: Repository,
-    path: string,
-    manualResolution: ManualConflictResolution | null
-  ) {
-    return this.appStore._updateManualConflictResolution(
-      repository,
-      path,
-      manualResolution
-    )
   }
 
   public setConfirmDiscardStashSetting(value: boolean) {
@@ -1020,11 +743,6 @@ export class Dispatcher {
     return this.appStore._resetStashedFilesWidth()
   }
 
-  /** Hide the diff for stashed changes */
-  public hideStashedChanges(repository: Repository) {
-    return this.appStore._hideStashedChanges(repository)
-  }
-
   /**
    * Increment the number of times the user has opened their external editor
    * from the suggested next steps view
@@ -1091,18 +809,18 @@ export class Dispatcher {
     return this.statsStore.recordStashView()
   }
 
-  /** Call when the user opts to skip the pick editor step of the onboarding tutorial */
-  public skipPickEditorTutorialStep(repository: Repository) {
-    return this.appStore._skipPickEditorTutorialStep(repository)
-  }
+  // /** Call when the user opts to skip the pick editor step of the onboarding tutorial */
+  // public skipPickEditorTutorialStep(repository: Repository) {
+  //   return this.appStore._skipPickEditorTutorialStep(repository)
+  // }
 
-  /**
-   * Call when the user has either created a pull request or opts to
-   * skip the create pull request step of the onboarding tutorial
-   */
-  public markPullRequestTutorialStepAsComplete(repository: Repository) {
-    return this.appStore._markPullRequestTutorialStepAsComplete(repository)
-  }
+  // /**
+  //  * Call when the user has either created a pull request or opts to
+  //  * skip the create pull request step of the onboarding tutorial
+  //  */
+  // public markPullRequestTutorialStepAsComplete(repository: Repository) {
+  //   return this.appStore._markPullRequestTutorialStepAsComplete(repository)
+  // }
 
   /**
    * Increments the `forksCreated ` metric` indicating that the user has
@@ -1142,48 +860,6 @@ export class Dispatcher {
     return this.statsStore.recordDiffOptionsViewed()
   }
 
-  /** Initializes multi commit operation state for cherry pick if it is null */
-  public initializeMultiCommitOperationStateCherryPick(
-    repository: Repository,
-    targetBranch: Branch,
-    commits: ReadonlyArray<CommitOneLine>,
-    sourceBranch: Branch | null
-  ): void {
-    if (
-      this.repositoryStateManager.get(repository).multiCommitOperationState !==
-      null
-    ) {
-      return
-    }
-
-    this.initializeMultiCommitOperation(
-      repository,
-      {
-        kind: MultiCommitOperationKind.CherryPick,
-        sourceBranch,
-        branchCreated: false,
-        commits,
-      },
-      targetBranch,
-      commits,
-      sourceBranch?.tip.sha ?? null
-    )
-  }
-
-  /**
-   * Moves multi commit operation step to progress and defers to allow user to
-   * see the progress dialog instead of suddenly appearing
-   * and disappearing again.
-   */
-  public async switchMultiCommitOperationToShowProgress(
-    repository: Repository
-  ) {
-    this.setMultiCommitOperationStep(repository, {
-      kind: MultiCommitOperationStepKind.ShowProgress,
-    })
-    await sleep(500)
-  }
-
   /** Method to record cherry pick initiated via the context menu. */
   public recordCherryPickViaContextMenu() {
     this.statsStore.recordCherryPickViaContextMenu()
@@ -1204,26 +880,18 @@ export class Dispatcher {
     this.appStore._setDragElement(null)
   }
 
-  /** Set the multi commit operation target branch */
-  public setMultiCommitOperationTargetBranch(
-    repository: Repository,
-    targetBranch: Branch
-  ): void {
-    this.repositoryStateManager.updateMultiCommitOperationState(
-      repository,
-      () => ({
-        targetBranch,
-      })
-    )
-  }
-
-  /** Set cherry-pick branch created state */
-  public setCherryPickBranchCreated(
-    repository: Repository,
-    branchCreated: boolean
-  ): void {
-    this.appStore._setCherryPickBranchCreated(repository, branchCreated)
-  }
+  // /** Set the multi commit operation target branch */
+  // public setMultiCommitOperationTargetBranch(
+  //   repository: Repository,
+  //   targetBranch: Branch
+  // ): void {
+  //   this.repositoryStateManager.updateMultiCommitOperationState(
+  //     repository,
+  //     () => ({
+  //       targetBranch,
+  //     })
+  //   )
+  // }
 
   /** Gets a branches ahead behind remote or null if doesn't exist on remote */
   public async getBranchAheadBehind(
@@ -1238,111 +906,6 @@ export class Dispatcher {
     this.appStore._setLastThankYou(lastThankYou)
   }
 
-  public initializeMultiCommitOperation(
-    repository: Repository,
-    operationDetail: MultiCommitOperationDetail,
-    targetBranch: Branch | null,
-    commits: ReadonlyArray<Commit | CommitOneLine>,
-    originalBranchTip: string | null
-  ) {
-    this.appStore._initializeMultiCommitOperation(
-      repository,
-      operationDetail,
-      targetBranch,
-      commits,
-      originalBranchTip
-    )
-  }
-
-  /**
-   * This method is to update the multi operation state to move it along in
-   * steps.
-   */
-  public setMultiCommitOperationStep(
-    repository: Repository,
-    step: MultiCommitOperationStep
-  ): Promise<void> {
-    return this.appStore._setMultiCommitOperationStep(repository, step)
-  }
-
-  /** Method to clear multi commit operation state. */
-  public endMultiCommitOperation(repository: Repository) {
-    this.appStore._endMultiCommitOperation(repository)
-  }
-
-  /** Opens conflicts found banner for part of multi commit operation */
-  public onConflictsFoundBanner = (
-    repository: Repository,
-    operationDescription: string | JSX.Element,
-    multiCommitOperationConflictState: MultiCommitOperationConflictState
-  ) => {
-    this.setBanner({
-      type: BannerType.ConflictsFound,
-      operationDescription,
-      onOpenConflictsDialog: async () => {
-        const { changesState } =
-          this.repositoryStateManager.get(repository)
-        const { conflictState } = changesState
-
-        if (conflictState == null) {
-          log.error(
-            '[onConflictsFoundBanner] App is in invalid state to so conflicts dialog.'
-          )
-          return
-        }
-
-        const { manualResolutions } = conflictState
-
-        this.setMultiCommitOperationStep(repository, {
-          kind: MultiCommitOperationStepKind.ShowConflicts,
-          conflictState: {
-            ...multiCommitOperationConflictState,
-            manualResolutions,
-          },
-        })
-
-        this.showPopup({
-          type: PopupType.MultiCommitOperation,
-          repository,
-        })
-      },
-    })
-  }
-
-  public startMergeBranchOperation(
-    repository: Repository,
-    isSquash: boolean = false,
-    initialBranch?: Branch | null
-  ) {
-    const { branchesState } = this.repositoryStateManager.get(repository)
-    const { defaultBranch, allBranches, recentBranches, tip } = branchesState
-    let currentBranch: Branch | null = null
-
-    if (tip.kind === TipState.Valid) {
-      currentBranch = tip.branch
-    } else {
-      throw new Error(
-        'Tip is not in a valid state, which is required to start the merge operation'
-      )
-    }
-
-    this.initializeMergeOperation(repository, isSquash, null)
-
-    this.setMultiCommitOperationStep(repository, {
-      kind: MultiCommitOperationStepKind.ChooseBranch,
-      defaultBranch,
-      currentBranch,
-      allBranches,
-      recentBranches,
-      initialBranch: initialBranch !== null ? initialBranch : undefined,
-    })
-
-    this.showPopup({
-      type: PopupType.MultiCommitOperation,
-      repository,
-    })
-  }
-
   /** Records the squash that a squash has been invoked by either drag and drop or context menu */
   public recordSquashInvoked(isInvokedByContextMenu: boolean): void {
     if (isInvokedByContextMenu) {
@@ -1352,37 +915,37 @@ export class Dispatcher {
     }
   }
 
-  public initializeMergeOperation(
-    repository: Repository,
-    isSquash: boolean,
-    sourceBranch: Branch | null
-  ) {
-    const {
-      branchesState: { tip },
-    } = this.repositoryStateManager.get(repository)
+  // public initializeMergeOperation(
+  //   repository: Repository,
+  //   isSquash: boolean,
+  //   sourceBranch: Branch | null
+  // ) {
+  //   const {
+  //     branchesState: { tip },
+  //   } = this.repositoryStateManager.get(repository)
 
-    let currentBranch: Branch | null = null
+  //   let currentBranch: Branch | null = null
 
-    if (tip.kind === TipState.Valid) {
-      currentBranch = tip.branch
-    } else {
-      throw new Error(
-        'Tip is not in a valid state, which is required to initialize the merge operation'
-      )
-    }
+  //   if (tip.kind === TipState.Valid) {
+  //     currentBranch = tip.branch
+  //   } else {
+  //     throw new Error(
+  //       'Tip is not in a valid state, which is required to initialize the merge operation'
+  //     )
+  //   }
 
-    this.initializeMultiCommitOperation(
-      repository,
-      {
-        kind: MultiCommitOperationKind.Merge,
-        isSquash,
-        sourceBranch,
-      },
-      currentBranch,
-      [],
-      currentBranch.tip.sha
-    )
-  }
+  //   this.initializeMultiCommitOperation(
+  //     repository,
+  //     {
+  //       kind: MultiCommitOperationKind.Merge,
+  //       isSquash,
+  //       sourceBranch,
+  //     },
+  //     currentBranch,
+  //     [],
+  //     currentBranch.tip.sha
+  //   )
+  // }
 
   public setShowCIStatusPopover(showCIStatusPopover: boolean) {
     this.appStore._setShowCIStatusPopover(showCIStatusPopover)

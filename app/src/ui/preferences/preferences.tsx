@@ -539,11 +539,6 @@ export class Preferences extends React.Component<
       this.state.confirmUndoCommit
     )
 
-    if (this.state.selectedExternalEditor) {
-      await this.props.dispatcher.setExternalEditor(
-        this.state.selectedExternalEditor
-      )
-    }
     await this.props.dispatcher.setShell(this.state.selectedShell)
     await this.props.dispatcher.setConfirmDiscardChangesSetting(
       this.state.confirmDiscardChanges

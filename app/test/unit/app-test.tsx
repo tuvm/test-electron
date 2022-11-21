@@ -18,7 +18,7 @@ import {
 import { StatsStore } from '../../src/lib/stats'
 import { InMemoryStore, AsyncInMemoryStore } from '../helpers/stores'
 import { TestActivityMonitor } from '../helpers/test-activity-monitor'
-import { RepositoryStateCache } from '../../src/lib/stores/repository-state-cache'
+// import { RepositoryStateCache } from '../../src/lib/stores/repository-state-cache'
 import { ApiRepositoriesStore } from '../../src/lib/stores/api-repositories-store'
 // import { CommitStatusStore } from '../../src/lib/stores/commit-status-store'
 // import { AheadBehindStore } from '../../src/lib/stores/ahead-behind-store'
@@ -29,7 +29,7 @@ describe('App', () => {
   let appStore: AppStore
   let dispatcher: Dispatcher
   let statsStore: StatsStore
-  let repositoryStateManager: RepositoryStateCache
+  // let repositoryStateManager: RepositoryStateCache
   let githubUserStore: GitHubUserStore
   // let aheadBehindStore: AheadBehindStore
 
@@ -48,7 +48,7 @@ describe('App', () => {
 
     githubUserStore = new GitHubUserStore(db)
 
-    repositoryStateManager = new RepositoryStateCache(statsStore)
+    // repositoryStateManager = new RepositoryStateCache(statsStore)
 
     const apiRepositoriesStore = new ApiRepositoriesStore(accountsStore)
     // const commitStatusStore = new CommitStatusStore(accountsStore)
@@ -70,14 +70,14 @@ describe('App', () => {
       accountsStore,
       // repositoriesStore,
       // pullRequestCoordinator,
-      repositoryStateManager,
+      // repositoryStateManager,
       apiRepositoriesStore,
       notificationsStore
     )
 
     dispatcher = new InMemoryDispatcher(
       appStore,
-      repositoryStateManager,
+      // repositoryStateManager,
       statsStore
     )
   })

@@ -9,11 +9,7 @@ import { Branch, IAheadBehind } from '../../models/branch'
 import { BranchesTab } from '../../models/branches-tab'
 import { CloneRepositoryTab } from '../../models/clone-repository-tab'
 import { CloningRepository } from '../../models/cloning-repository'
-import { Commit, CommitOneLine } from '../../models/commit'
 import {
-  DiffSelection,
-  DiffSelectionType,
-  DiffType,
   ImageDiffType,
 } from '../../models/diff'
 import { PullRequest } from '../../models/pull-request'
@@ -22,12 +18,7 @@ import {
   Repository,
   RepositoryWithGitHubRepository,
 } from '../../models/repository'
-import {
-  CommittedFileChange,
-  WorkingDirectoryFileChange,
-  WorkingDirectoryStatus,
-} from '../../models/status'
-import { TipState, IValidBranch } from '../../models/tip'
+
 import { Popup, PopupType } from '../../models/popup'
 import { themeChangeMonitor } from '../../ui/lib/theme-change-monitor'
 // import { getAppPath } from '../../ui/lib/app-proxy'
@@ -51,38 +42,25 @@ import {
 } from '../api'
 import { shell } from '../app-shell'
 import {
-  HistoryTabMode,
   Foldout,
   FoldoutType,
   IAppState,
-  ICompareFormUpdate,
-  RepositorySectionTab,
-  ChangesSelectionKind,
-  ChangesWorkingDirectorySelection,
   IConstrainedValue,
-  ICompareState,
 } from '../app-state'
 import {
   findEditorOrDefault,
-  getAvailableEditors,
   launchExternalEditor,
 } from '../editors'
-import { assertNever, forceUnwrap } from '../fatal-error'
 
 import { getAccountForRepository } from '../get-account-for-repository'
 import {
-  getCommitDiff,
-  getWorkingDirectoryDiff,
   getBranchAheadBehind,
-  getCommitRangeDiff,
 } from '../git'
 import {
   installGlobalLFSFilters,
   installLFSHooks,
 } from '../git/lfs'
 import { updateMenuState } from '../menu-update'
-import { merge } from '../merge'
-import { RetryAction } from '../../models/retry-actions'
 import {
   Default as DefaultShell,
   findShellOrDefault,
@@ -95,7 +73,7 @@ import { ILaunchStats, StatsStore } from '../stats'
 import { hasShownDeviceRegisterFlow, markDeviceRegisterFlowComplete } from '../device-register'
 import { WindowState } from '../window-state'
 import { TypedBaseStore } from './base-store'
-import { RepositoryStateCache } from './repository-state-cache'
+// import { RepositoryStateCache } from './repository-state-cache'
 // import { readEmoji } from '../read-emoji'
 import {
   setNumber,
@@ -109,21 +87,14 @@ import {
 } from '../local-storage'
 import { ExternalEditorError, suggestedExternalEditor } from '../editors/shared'
 import { ApiRepositoriesStore } from './api-repositories-store'
-import { ManualConflictResolution } from '../../models/manual-conflict-resolution'
-import { enableMultiCommitDiffs } from '../feature-flag'
 import { Banner, BannerType } from '../../models/banner'
 import {
   UncommittedChangesStrategy,
   defaultUncommittedChangesStrategy,
 } from '../../models/uncommitted-changes-strategy'
-import { StashedChangesLoadStates } from '../../models/stash-entry'
-import { arrayEquals } from '../equality'
 import {
   TutorialStep,
-  orderedTutorialSteps,
-  isValidTutorialStep,
 } from '../../models/tutorial-step'
-import { OnboardingTutorialAssessor } from './helpers/tutorial-assessor'
 import { parseRemote } from '../../lib/remote-parsing'
 import {
   ShowSideBySideDiffDefault,
@@ -132,13 +103,6 @@ import {
 } from '../../ui/lib/diff-mode'
 import { DragElement } from '../../models/drag-drop'
 import { ILastThankYou } from '../../models/last-thank-you'
-import { getTipSha } from '../tip'
-import {
-  MultiCommitOperationDetail,
-  MultiCommitOperationKind,
-  MultiCommitOperationStep,
-  MultiCommitOperationStepKind,
-} from '../../models/multi-commit-operation'
 import { UseWindowsOpenSSHKey } from '../ssh/ssh'
 import { clamp } from '../clamp'
 import { EndpointToken } from '../endpoint-token'
@@ -179,8 +143,6 @@ const confirmForcePushKey: string = 'confirmForcePush'
 const confirmUndoCommitKey: string = 'confirmUndoCommit'
 
 const uncommittedChangesStrategyKey = 'uncommittedChangesStrategyKind'
-
-const externalEditorKey: string = 'externalEditor'
 
 const imageDiffTypeDefault = ImageDiffType.TwoUp
 const imageDiffTypeKey = 'image-diff-type'
@@ -305,13 +267,10 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
   private useWindowsOpenSSH: boolean = false
 
-  private hasUserViewedStash = false
-
   private repositoryIndicatorsEnabled: boolean
 
   /** Which step the user needs to complete next in the onboarding tutorial */
   private currentOnboardingTutorialStep = TutorialStep.NotApplicable
-  private readonly tutorialAssessor: OnboardingTutorialAssessor
 
   private currentDragElement: DragElement | null = null
   private lastThankYou: ILastThankYou | undefined
@@ -326,7 +285,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
     private readonly accountsStore: AccountsStore,
     // private readonly repositoriesStore: RepositoriesStore,
     // private readonly pullRequestCoordinator: PullRequestCoordinator,
-    private readonly repositoryStateCache: RepositoryStateCache,
+    // private readonly repositoryStateCache: RepositoryStateCache,
     private readonly apiRepositoriesStore: ApiRepositoriesStore,
     private readonly notificationsStore: NotificationsStore
   ) {
@@ -357,9 +316,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
     this.wireupIpcEventHandlers()
     this.wireupStoreEventHandlers()
     getAppMenu()
-    this.tutorialAssessor = new OnboardingTutorialAssessor(
-      this.getResolvedExternalEditor
-    )
 
     // We're considering flipping the default value and have new users
     // start off with repository indicators disabled. As such we'll start
@@ -443,85 +399,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
       type: PopupType.InvalidatedToken,
       account,
     })
-  }
-
-  /** Figure out what step of the tutorial the user needs to do next */
-  private async updateCurrentTutorialStep(
-    repository: Repository
-  ): Promise<void> {
-    const currentStep = await this.tutorialAssessor.getCurrentStep(
-      repository.isTutorialRepository,
-      this.repositoryStateCache.get(repository)
-    )
-    // only emit an update if its changed
-    if (currentStep !== this.currentOnboardingTutorialStep) {
-      this.currentOnboardingTutorialStep = currentStep
-      log.info(`Current tutorial step is now ${currentStep}`)
-      this.recordTutorialStepCompleted(currentStep)
-      this.emitUpdate()
-    }
-  }
-
-  private recordTutorialStepCompleted(step: TutorialStep): void {
-    if (!isValidTutorialStep(step)) {
-      return
-    }
-
-    this.statsStore.recordHighestTutorialStepCompleted(
-      orderedTutorialSteps.indexOf(step)
-    )
-
-    switch (step) {
-      case TutorialStep.PickEditor:
-        // don't need to record anything for the first step
-        break
-      case TutorialStep.CreateBranch:
-        this.statsStore.recordTutorialEditorInstalled()
-        break
-      case TutorialStep.EditFile:
-        this.statsStore.recordTutorialBranchCreated()
-        break
-      case TutorialStep.MakeCommit:
-        this.statsStore.recordTutorialFileEdited()
-        break
-      case TutorialStep.PushBranch:
-        this.statsStore.recordTutorialCommitCreated()
-        break
-      case TutorialStep.OpenPullRequest:
-        this.statsStore.recordTutorialBranchPushed()
-        break
-      case TutorialStep.AllDone:
-        this.statsStore.recordTutorialPrCreated()
-        this.statsStore.recordTutorialCompleted()
-        break
-      default:
-        assertNever(step, 'Unaccounted for step type')
-    }
-  }
-
-  public async _resumeTutorial(repository: Repository) {
-    this.tutorialAssessor.resumeTutorial()
-    await this.updateCurrentTutorialStep(repository)
-  }
-
-  public async _pauseTutorial(repository: Repository) {
-    this.tutorialAssessor.pauseTutorial()
-    await this.updateCurrentTutorialStep(repository)
-  }
-
-  /** Call via `Dispatcher` when the user opts to skip the pick editor step of the onboarding tutorial */
-  public async _skipPickEditorTutorialStep(repository: Repository) {
-    this.tutorialAssessor.skipPickEditor()
-    await this.updateCurrentTutorialStep(repository)
-  }
-
-  /**
-   * Call  via `Dispatcher` when the user has either created a pull request or opts to
-   * skip the create pull request step of the onboarding tutorial
-   */
-  public async _markPullRequestTutorialStepAsComplete(repository: Repository) {
-    this.tutorialAssessor.markPullRequestTutorialStepAsComplete()
-    await this.updateCurrentTutorialStep(repository)
   }
 
   private wireupIpcEventHandlers() {
@@ -681,200 +558,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
   }
 
   /** This shouldn't be called directly. See `Dispatcher`. */
-  public _changeCommitSelection(
-    repository: Repository,
-    shas: ReadonlyArray<string>,
-    isContiguous: boolean
-  ): void {
-    const { commitSelection, commitLookup, compareState } =
-      this.repositoryStateCache.get(repository)
-
-    if (
-      commitSelection.shas.length === shas.length &&
-      commitSelection.shas.every((sha, i) => sha === shas[i])
-    ) {
-      return
-    }
-
-    const shasInDiff = this.getShasInDiff(shas, isContiguous, commitLookup)
-
-    if (shas.length > 1 && isContiguous) {
-      this.recordMultiCommitDiff(shas, shasInDiff, compareState)
-    }
-
-    this.repositoryStateCache.updateCommitSelection(repository, () => ({
-      shas,
-      shasInDiff,
-      isContiguous,
-      file: null,
-      changesetData: { files: [], linesAdded: 0, linesDeleted: 0 },
-      diff: null,
-    }))
-
-    this.emitUpdate()
-  }
-
-  private recordMultiCommitDiff(
-    shas: ReadonlyArray<string>,
-    shasInDiff: ReadonlyArray<string>,
-    compareState: ICompareState
-  ) {
-    const isHistoryTab = compareState.formState.kind === HistoryTabMode.History
-
-    if (isHistoryTab) {
-      this.statsStore.recordMultiCommitDiffFromHistoryCount()
-    } else {
-      this.statsStore.recordMultiCommitDiffFromCompareCount()
-    }
-
-    const hasUnreachableCommitWarning = !shas.every(s => shasInDiff.includes(s))
-
-    if (hasUnreachableCommitWarning) {
-      this.statsStore.recordMultiCommitDiffWithUnreachableCommitWarningCount()
-    }
-  }
-
-  /** This shouldn't be called directly. See `Dispatcher`. */
-  public async _updateShasToHighlight(
-    repository: Repository,
-    shasToHighlight: ReadonlyArray<string>
-  ) {
-    this.repositoryStateCache.updateCompareState(repository, () => ({
-      shasToHighlight,
-    }))
-    this.emitUpdate()
-  }
-
-  /**
-   * When multiple commits are selected, the diff is created using the rev range
-   * of firstSha^..lastSha in the selected shas. Thus comparing the trees of the
-   * the lastSha and the first parent of the first sha. However, our history
-   * list shows commits in chronological order. Thus, when a branch is merged,
-   * the commits from that branch are injected in their chronological order into
-   * the history list. Therefore, given a branch history of A, B, C, D,
-   * MergeCommit where B and C are from the merged branch, diffing on the
-   * selection of A through D would not have the changes from B an C.
-   *
-   * This method traverses the ancestral path from the last commit in the
-   * selection back to the first commit via checking the parents. The
-   * commits on this path are the commits whose changes will be seen in the
-   * diff. This is equivalent to doing `git rev-list firstSha^..lastSha`.
-   */
-  private getShasInDiff(
-    selectedShas: ReadonlyArray<string>,
-    isContiguous: boolean,
-    commitLookup: Map<string, Commit>
-  ) {
-    const shasInDiff = new Array<string>()
-
-    if (selectedShas.length <= 1 || !isContiguous) {
-      return selectedShas
-    }
-
-    const shasToTraverse = [selectedShas.at(-1)]
-    do {
-      const currentSha = shasToTraverse.pop()
-      if (currentSha === undefined) {
-        continue
-      }
-
-      shasInDiff.push(currentSha)
-
-      // shas are selection of history -> should be in lookup ->  `|| []` is for typing sake
-      const parentSHAs = commitLookup.get(currentSha)?.parentSHAs || []
-
-      const parentsInSelection = parentSHAs.filter(parentSha =>
-        selectedShas.includes(parentSha)
-      )
-
-      shasToTraverse.push(...parentsInSelection)
-    } while (shasToTraverse.length > 0)
-
-    return shasInDiff
-  }
-
-  /** This shouldn't be called directly. See `Dispatcher`. */
-  public _updateCompareForm<K extends keyof ICompareFormUpdate>(
-    repository: Repository,
-    newState: Pick<ICompareFormUpdate, K>
-  ) {
-    this.repositoryStateCache.updateCompareState(repository, state => {
-      return merge(state, newState)
-    })
-
-    this.emitUpdate()
-  }
-
-  /** This shouldn't be called directly. See `Dispatcher`. */
   public async _setRepositoryFilterText(text: string): Promise<void> {
     this.repositoryFilterText = text
-    this.emitUpdate()
-  }
-
-  /** This shouldn't be called directly. See `Dispatcher`. */
-  public async _changeFileSelection(
-    repository: Repository,
-    file: CommittedFileChange
-  ): Promise<void> {
-    this.repositoryStateCache.updateCommitSelection(repository, () => ({
-      file,
-      diff: null,
-    }))
-    this.emitUpdate()
-
-    const stateBeforeLoad = this.repositoryStateCache.get(repository)
-    const { shas, isContiguous } = stateBeforeLoad.commitSelection
-
-    if (shas.length === 0) {
-      if (__DEV__) {
-        throw new Error(
-          "No currently selected sha yet we've been asked to switch file selection"
-        )
-      } else {
-        return
-      }
-    }
-
-    if (shas.length > 1 && (!enableMultiCommitDiffs() || !isContiguous)) {
-      return
-    }
-
-    const diff =
-      shas.length > 1
-        ? await getCommitRangeDiff(
-          repository,
-          file,
-          shas,
-          this.hideWhitespaceInHistoryDiff
-        )
-        : await getCommitDiff(
-          repository,
-          file,
-          shas[0],
-          this.hideWhitespaceInHistoryDiff
-        )
-
-    const stateAfterLoad = this.repositoryStateCache.get(repository)
-    const { shas: shasAfter } = stateAfterLoad.commitSelection
-    // A whole bunch of things could have happened since we initiated the diff load
-    if (
-      shasAfter.length !== shas.length ||
-      !shas.every((sha, i) => sha === shasAfter[i])
-    ) {
-      return
-    }
-
-    if (!stateAfterLoad.commitSelection.file) {
-      return
-    }
-    if (stateAfterLoad.commitSelection.file.id !== file.id) {
-      return
-    }
-
-    this.repositoryStateCache.updateCommitSelection(repository, () => ({
-      diff,
-    }))
-
     this.emitUpdate()
   }
 
@@ -969,10 +654,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
     this.uncommittedChangesStrategy =
       getEnum(uncommittedChangesStrategyKey, UncommittedChangesStrategy) ??
       defaultUncommittedChangesStrategy
-
-    this.updateSelectedExternalEditor(
-      await this.lookupSelectedExternalEditor()
-    ).catch(e => log.error('Failed resolving current editor at startup', e))
 
     const shellValue = localStorage.getItem(shellKey)
     this.selectedShell = shellValue ? parseShell(shellValue) : DefaultShell
@@ -1093,35 +774,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
     )
   }
 
-  private updateSelectedExternalEditor(
-    selectedEditor: string | null
-  ): Promise<void> {
-    this.selectedExternalEditor = selectedEditor
-
-    // Make sure we keep the resolved (cached) editor
-    // in sync when the user changes their editor choice.
-    return this._resolveCurrentEditor()
-  }
-
-  private async lookupSelectedExternalEditor(): Promise<string | null> {
-    const editors = (await getAvailableEditors()).map(found => found.editor)
-
-    const value = localStorage.getItem(externalEditorKey)
-    // ensure editor is still installed
-    if (value && editors.includes(value)) {
-      return value
-    }
-
-    if (editors.length) {
-      const value = editors[0]
-      // store this value to avoid the lookup next time
-      localStorage.setItem(externalEditorKey, value)
-      return value
-    }
-
-    return null
-  }
-
   private updateRepositorySelectionAfterRepositoriesChanged() {
     const selectedRepository = this.selectedRepository
     let newSelectedRepository: Repository | CloningRepository | null =
@@ -1149,346 +801,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
       }
     }
 
-  }
-
-  /**
-   * Loads or re-loads (refreshes) the diff for the currently selected file
-   * in the working directory. This operation is a noop if there's no currently
-   * selected file.
-   */
-  private async updateChangesWorkingDirectoryDiff(
-    repository: Repository
-  ): Promise<void> {
-    const stateBeforeLoad = this.repositoryStateCache.get(repository)
-    const changesStateBeforeLoad = stateBeforeLoad.changesState
-
-    if (
-      changesStateBeforeLoad.selection.kind !==
-      ChangesSelectionKind.WorkingDirectory
-    ) {
-      return
-    }
-
-    const selectionBeforeLoad = changesStateBeforeLoad.selection
-    const selectedFileIDsBeforeLoad = selectionBeforeLoad.selectedFileIDs
-
-    // We only render diffs when a single file is selected.
-    if (selectedFileIDsBeforeLoad.length !== 1) {
-      if (selectionBeforeLoad.diff !== null) {
-        this.repositoryStateCache.updateChangesState(repository, () => ({
-          selection: {
-            ...selectionBeforeLoad,
-            diff: null,
-          },
-        }))
-        this.emitUpdate()
-      }
-      return
-    }
-
-    const selectedFileIdBeforeLoad = selectedFileIDsBeforeLoad[0]
-    const selectedFileBeforeLoad =
-      changesStateBeforeLoad.workingDirectory.findFileWithID(
-        selectedFileIdBeforeLoad
-      )
-
-    if (selectedFileBeforeLoad === null) {
-      return
-    }
-
-    const diff = await getWorkingDirectoryDiff(
-      repository,
-      selectedFileBeforeLoad,
-      this.hideWhitespaceInChangesDiff
-    )
-
-    const stateAfterLoad = this.repositoryStateCache.get(repository)
-    const changesState = stateAfterLoad.changesState
-
-    // A different file (or files) could have been selected while we were
-    // loading the diff in which case we no longer care about the diff we
-    // just loaded.
-    if (
-      changesState.selection.kind !== ChangesSelectionKind.WorkingDirectory ||
-      !arrayEquals(
-        changesState.selection.selectedFileIDs,
-        selectedFileIDsBeforeLoad
-      )
-    ) {
-      return
-    }
-
-    const selectedFileID = changesState.selection.selectedFileIDs[0]
-
-    if (selectedFileID !== selectedFileIdBeforeLoad) {
-      return
-    }
-
-    const currentlySelectedFile =
-      changesState.workingDirectory.findFileWithID(selectedFileID)
-    if (currentlySelectedFile === null) {
-      return
-    }
-
-    const selectableLines = new Set<number>()
-    if (diff.kind === DiffType.Text || diff.kind === DiffType.LargeText) {
-      // The diff might have changed dramatically since last we loaded it.
-      // Ideally we would be more clever about validating that any partial
-      // selection state is still valid by ensuring that selected lines still
-      // exist but for now we'll settle on just updating the selectable lines
-      // such that any previously selected line which now no longer exists or
-      // has been turned into a context line isn't still selected.
-      diff.hunks.forEach(h => {
-        h.lines.forEach((line, index) => {
-          if (line.isIncludeableLine()) {
-            selectableLines.add(h.unifiedDiffStart + index)
-          }
-        })
-      })
-    }
-
-    const newSelection =
-      currentlySelectedFile.selection.withSelectableLines(selectableLines)
-    const selectedFile = currentlySelectedFile.withSelection(newSelection)
-    const updatedFiles = changesState.workingDirectory.files.map(f =>
-      f.id === selectedFile.id ? selectedFile : f
-    )
-    const workingDirectory = WorkingDirectoryStatus.fromFiles(updatedFiles)
-
-    const selection: ChangesWorkingDirectorySelection = {
-      ...changesState.selection,
-      diff,
-    }
-
-    this.repositoryStateCache.updateChangesState(repository, () => ({
-      selection,
-      workingDirectory,
-    }))
-    this.emitUpdate()
-  }
-
-  public _hideStashedChanges(repository: Repository) {
-    const { changesState } = this.repositoryStateCache.get(repository)
-
-    // makes this safe to call even when the stash ui is not visible
-    if (changesState.selection.kind !== ChangesSelectionKind.Stash) {
-      return
-    }
-
-    this.repositoryStateCache.updateChangesState(repository, state => {
-      const files = state.workingDirectory.files
-      const selectedFileIds = files
-        .filter(f => f.selection.getSelectionType() !== DiffSelectionType.None)
-        .map(f => f.id)
-
-      return {
-        selection: {
-          kind: ChangesSelectionKind.WorkingDirectory,
-          diff: null,
-          selectedFileIDs: selectedFileIds,
-        },
-      }
-    })
-    this.emitUpdate()
-
-  }
-
-  /**
-   * Changes the selection in the changes view to the stash entry view and
-   * optionally selects a particular file from the current stash entry.
-   *
-   *  @param file  A file to select when showing the stash entry.
-   *               If undefined this method will preserve the previously selected
-   *               file or pick the first changed file if no selection exists.
-   *
-   * Note: This shouldn't be called directly. See `Dispatcher`.
-   */
-  public async _selectStashedFile(
-    repository: Repository,
-    file?: CommittedFileChange | null
-  ): Promise<void> {
-    this.repositoryStateCache.update(repository, () => ({
-      selectedSection: RepositorySectionTab.Changes,
-    }))
-    this.repositoryStateCache.updateChangesState(repository, state => {
-      let selectedStashedFile: CommittedFileChange | null = null
-      const { stashEntry, selection } = state
-
-      const currentlySelectedFile =
-        selection.kind === ChangesSelectionKind.Stash
-          ? selection.selectedStashedFile
-          : null
-
-      const currentFiles =
-        stashEntry !== null &&
-          stashEntry.files.kind === StashedChangesLoadStates.Loaded
-          ? stashEntry.files.files
-          : []
-
-      if (file === undefined) {
-        if (currentlySelectedFile !== null) {
-          // Ensure the requested file exists in the stash entry and
-          // that we can use reference equality to figure out which file
-          // is selected in the list. If we can't find it we'll pick the
-          // first file available or null if no files have been loaded.
-          selectedStashedFile =
-            currentFiles.find(x => x.id === currentlySelectedFile.id) ||
-            currentFiles[0] ||
-            null
-        } else {
-          // No current selection, let's just pick the first file available
-          // or null if no files have been loaded.
-          selectedStashedFile = currentFiles[0] || null
-        }
-      } else if (file !== null) {
-        // Look up the selected file in the stash entry, it's possible that
-        // the stash entry or file list has changed since the consumer called
-        // us. The working directory selection handles this by using IDs rather
-        // than references.
-        selectedStashedFile = currentFiles.find(x => x.id === file.id) || null
-      }
-
-      return {
-        selection: {
-          kind: ChangesSelectionKind.Stash,
-          selectedStashedFile,
-          selectedStashedFileDiff: null,
-        },
-      }
-    })
-
-    this.emitUpdate()
-    this.updateChangesStashDiff(repository)
-
-    if (!this.hasUserViewedStash) {
-      // `hasUserViewedStash` is reset to false on every branch checkout
-      // so we increment the metric before setting `hasUserViewedStash` to true
-      // to make sure we only increment on the first view after checkout
-      this.statsStore.recordStashViewedAfterCheckout()
-      this.hasUserViewedStash = true
-    }
-  }
-
-  private async updateChangesStashDiff(repository: Repository) {
-    const stateBeforeLoad = this.repositoryStateCache.get(repository)
-    const changesStateBeforeLoad = stateBeforeLoad.changesState
-    const selectionBeforeLoad = changesStateBeforeLoad.selection
-
-    if (selectionBeforeLoad.kind !== ChangesSelectionKind.Stash) {
-      return
-    }
-
-    const stashEntry = changesStateBeforeLoad.stashEntry
-
-    if (stashEntry === null) {
-      return
-    }
-
-    let file = selectionBeforeLoad.selectedStashedFile
-
-    if (file === null) {
-      if (stashEntry.files.kind === StashedChangesLoadStates.Loaded) {
-        if (stashEntry.files.files.length > 0) {
-          file = stashEntry.files.files[0]
-        }
-      }
-    }
-
-    if (file === null) {
-      this.repositoryStateCache.updateChangesState(repository, () => ({
-        selection: {
-          kind: ChangesSelectionKind.Stash,
-          selectedStashedFile: null,
-          selectedStashedFileDiff: null,
-        },
-      }))
-      this.emitUpdate()
-      return
-    }
-
-    const diff = await getCommitDiff(repository, file, file.commitish)
-
-    const stateAfterLoad = this.repositoryStateCache.get(repository)
-    const changesStateAfterLoad = stateAfterLoad.changesState
-
-    // Something has changed during our async getCommitDiff, bail
-    if (
-      changesStateAfterLoad.selection.kind !== ChangesSelectionKind.Stash ||
-      changesStateAfterLoad.selection.selectedStashedFile !==
-      selectionBeforeLoad.selectedStashedFile
-    ) {
-      return
-    }
-
-    this.repositoryStateCache.updateChangesState(repository, () => ({
-      selection: {
-        kind: ChangesSelectionKind.Stash,
-        selectedStashedFile: file,
-        selectedStashedFileDiff: diff,
-      },
-    }))
-    this.emitUpdate()
-  }
-
-  /** This shouldn't be called directly. See `Dispatcher`. */
-  public _changeFileIncluded(
-    repository: Repository,
-    file: WorkingDirectoryFileChange,
-    include: boolean
-  ): Promise<void> {
-    const selection = include
-      ? file.selection.withSelectAll()
-      : file.selection.withSelectNone()
-    this.updateWorkingDirectoryFileSelection(repository, file, selection)
-    return Promise.resolve()
-  }
-
-  /** This shouldn't be called directly. See `Dispatcher`. */
-  public _changeFileLineSelection(
-    repository: Repository,
-    file: WorkingDirectoryFileChange,
-    diffSelection: DiffSelection
-  ): Promise<void> {
-    this.updateWorkingDirectoryFileSelection(repository, file, diffSelection)
-    return Promise.resolve()
-  }
-
-  /**
-   * Updates the selection for the given file in the working directory state and
-   * emits an update event.
-   */
-  private updateWorkingDirectoryFileSelection(
-    repository: Repository,
-    file: WorkingDirectoryFileChange,
-    selection: DiffSelection
-  ) {
-    this.repositoryStateCache.updateChangesState(repository, state => {
-      const newFiles = state.workingDirectory.files.map(f =>
-        f.id === file.id ? f.withSelection(selection) : f
-      )
-
-      const workingDirectory = WorkingDirectoryStatus.fromFiles(newFiles)
-
-      return { workingDirectory }
-    })
-
-    this.emitUpdate()
-  }
-
-  /** This shouldn't be called directly. See `Dispatcher`. */
-  public _changeIncludeAllFiles(
-    repository: Repository,
-    includeAll: boolean
-  ): Promise<void> {
-    this.repositoryStateCache.updateChangesState(repository, state => {
-      const workingDirectory =
-        state.workingDirectory.withIncludeAllFiles(includeAll)
-      return { workingDirectory }
-    })
-
-    this.emitUpdate()
-
-    return Promise.resolve()
   }
 
   public _setCommitSpellcheckEnabled(commitSpellcheckEnabled: boolean) {
@@ -1604,19 +916,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
     return Promise.resolve()
   }
 
-  public _setRepositoryCommitToAmend(
-    repository: Repository,
-    commit: Commit | null
-  ) {
-    this.repositoryStateCache.update(repository, () => {
-      return {
-        commitToAmend: commit,
-      }
-    })
-
-    this.emitUpdate()
-  }
-
   // public _endWelcomeFlow(): Promise<void> {
   //   this.showWelcomeFlow = false
   //   this.emitUpdate()
@@ -1713,27 +1012,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
     }
 
     return Promise.resolve()
-  }
-
-  /** This shouldn't be called directly. See `Dispatcher`. */
-  public _setConflictsResolved(repository: Repository) {
-    const { multiCommitOperationState } =
-      this.repositoryStateCache.get(repository)
-
-    // the operation has already completed.
-    if (multiCommitOperationState === null) {
-      return
-    }
-
-    // an update is not emitted here because there is no need
-    // to trigger a re-render at this point
-
-    this.repositoryStateCache.updateMultiCommitOperationState(
-      repository,
-      () => ({
-        userHasResolvedConflicts: true,
-      })
-    )
   }
 
   /** This shouldn't be called directly. See `Dispatcher`. */
@@ -1865,14 +1143,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
     return Promise.resolve()
   }
 
-  public _setExternalEditor(selectedEditor: string) {
-    const promise = this.updateSelectedExternalEditor(selectedEditor)
-    localStorage.setItem(externalEditorKey, selectedEditor)
-    this.emitUpdate()
-
-    return promise
-  }
-
   public _setShell(shell: Shell): Promise<void> {
     this.selectedShell = shell
     localStorage.setItem(shellKey, shell)
@@ -1887,21 +1157,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
     this.emitUpdate()
 
     return Promise.resolve()
-  }
-
-  public _setHideWhitespaceInHistoryDiff(
-    hideWhitespaceInDiff: boolean,
-    repository: Repository,
-    file: CommittedFileChange | null
-  ): Promise<void> {
-    setBoolean(hideWhitespaceInHistoryDiffKey, hideWhitespaceInDiff)
-    this.hideWhitespaceInHistoryDiff = hideWhitespaceInDiff
-
-    if (file === null) {
-      return this.updateChangesWorkingDirectoryDiff(repository)
-    } else {
-      return this._changeFileSelection(repository, file)
-    }
   }
 
   public _setShowSideBySideDiff(showSideBySideDiff: boolean) {
@@ -2056,56 +1311,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
     await this._openInBrowser(url.toString())
   }
 
-  public async _createPullRequest(repository: Repository): Promise<void> {
-    const gitHubRepository = repository.gitHubRepository
-    if (!gitHubRepository) {
-      return
-    }
-
-    const state = this.repositoryStateCache.get(repository)
-    const tip = state.branchesState.tip
-
-    if (tip.kind !== TipState.Valid) {
-      return
-    }
-
-    const branch = tip.branch
-    const aheadBehind = state.aheadBehind
-
-    if (aheadBehind == null) {
-      this._showPopup({
-        type: PopupType.PushBranchCommits,
-        repository,
-        branch,
-      })
-    } else if (aheadBehind.ahead > 0) {
-      this._showPopup({
-        type: PopupType.PushBranchCommits,
-        repository,
-        branch,
-        unPushedCommits: aheadBehind.ahead,
-      })
-    } else {
-      await this._openCreatePullRequestInBrowser(repository, branch)
-    }
-  }
-
-  public async _showPullRequest(repository: Repository): Promise<void> {
-    // no pull requests from non github repos
-    if (repository.gitHubRepository === null) {
-      return
-    }
-
-    const currentPullRequest =
-      this.repositoryStateCache.get(repository).branchesState.currentPullRequest
-
-    if (currentPullRequest === null) {
-      return
-    }
-
-    return this._showPullRequestByPR(currentPullRequest)
-  }
-
   public async _showPullRequestByPR(pr: PullRequest): Promise<void> {
     const { htmlURL: baseRepoUrl } = pr.base.gitHubRepository
 
@@ -2116,25 +1321,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
     const showPrUrl = `${baseRepoUrl}/pull/${pr.pullRequestNumber}`
 
     await this._openInBrowser(showPrUrl)
-  }
-
-  public async _openCreatePullRequestInBrowser(
-    repository: Repository,
-    branch: Branch
-  ): Promise<void> {
-    const gitHubRepository = repository.gitHubRepository
-    if (!gitHubRepository) {
-      return
-    }
-
-    const urlEncodedBranchName = encodeURIComponent(branch.nameWithoutRemote)
-    const baseURL = `${gitHubRepository.htmlURL}/pull/new/${urlEncodedBranchName}`
-
-    await this._openInBrowser(baseURL)
-
-    if (this.currentOnboardingTutorialStep === TutorialStep.OpenPullRequest) {
-      this._markPullRequestTutorialStepAsComplete(repository)
-    }
   }
 
   private getIgnoreExistingUpstreamRemoteKey(repository: Repository): string {
@@ -2171,92 +1357,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
     return Promise.resolve()
   }
 
-  public async _resolveCurrentEditor() {
-    const match = await findEditorOrDefault(this.selectedExternalEditor)
-    const resolvedExternalEditor = match != null ? match.editor : null
-    if (this.resolvedExternalEditor !== resolvedExternalEditor) {
-      this.resolvedExternalEditor = resolvedExternalEditor
-
-      // Make sure we let the tutorial assessor know that we have a new editor
-      // in case it's stuck waiting for one to be selected.
-      if (this.currentOnboardingTutorialStep === TutorialStep.PickEditor) {
-        if (this.selectedRepository instanceof Repository) {
-          this.updateCurrentTutorialStep(this.selectedRepository)
-        }
-      }
-
-      this.emitUpdate()
-    }
-  }
-
   public getResolvedExternalEditor = () => {
     return this.resolvedExternalEditor
-  }
-
-  /** This shouldn't be called directly. See `Dispatcher`. */
-  public _updateManualConflictResolution(
-    repository: Repository,
-    path: string,
-    manualResolution: ManualConflictResolution | null
-  ) {
-    this.repositoryStateCache.updateChangesState(repository, state => {
-      const { conflictState } = state
-
-      if (conflictState === null) {
-        // not currently in a conflict, whatever
-        return { conflictState }
-      }
-
-      const updatedManualResolutions = new Map(conflictState.manualResolutions)
-
-      if (manualResolution !== null) {
-        updatedManualResolutions.set(path, manualResolution)
-      } else {
-        updatedManualResolutions.delete(path)
-      }
-
-      return {
-        conflictState: {
-          ...conflictState,
-          manualResolutions: updatedManualResolutions,
-        },
-      }
-    })
-
-    this.updateMultiCommitOperationStateAfterManualResolution(repository)
-
-    this.emitUpdate()
-  }
-
-  /**
-   * Updates the multi commit operation conflict step state as the manual
-   * resolutions have been changed.
-   */
-  private updateMultiCommitOperationStateAfterManualResolution(
-    repository: Repository
-  ): void {
-    const currentState = this.repositoryStateCache.get(repository)
-
-    const { changesState, multiCommitOperationState } = currentState
-
-    if (
-      changesState.conflictState === null ||
-      multiCommitOperationState === null ||
-      multiCommitOperationState.step.kind !==
-      MultiCommitOperationStepKind.ShowConflicts
-    ) {
-      return
-    }
-    const { step } = multiCommitOperationState
-
-    const { manualResolutions } = changesState.conflictState
-    const conflictState = { ...step.conflictState, manualResolutions }
-    this.repositoryStateCache.updateMultiCommitOperationState(
-      repository,
-      () => ({
-        step: { ...step, conflictState },
-      })
-    )
   }
 
   /** This shouldn't be called directly. See `Dispatcher`. */
@@ -2296,91 +1398,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
   }
 
   /** This shouldn't be called directly. See `Dispatcher`. */
-  public _initializeCherryPickProgress(
-    repository: Repository,
-    commits: ReadonlyArray<CommitOneLine>
-  ) {
-    // This shouldn't happen... but in case throw error.
-    const lastCommit = forceUnwrap(
-      'Unable to initialize cherry-pick progress. No commits provided.',
-      commits.at(-1)
-    )
-
-    this.repositoryStateCache.updateMultiCommitOperationState(
-      repository,
-      () => ({
-        progress: {
-          kind: 'multiCommitOperation',
-          value: 0,
-          position: 1,
-          totalCommitCount: commits.length,
-          currentCommitSummary: lastCommit.summary,
-        },
-      })
-    )
-
-    this.emitUpdate()
-  }
-
-  /**
-   * Checks for uncommitted changes
-   *
-   * If uncommitted changes exist, ask user to stash, retry provided retry
-   * action and return true.
-   *
-   * If no uncommitted changes, return false.
-   *
-   * This shouldn't be called directly. See `Dispatcher`.
-   */
-  public _checkForUncommittedChanges(
-    repository: Repository,
-    retryAction: RetryAction
-  ): boolean {
-    const { changesState } = this.repositoryStateCache.get(repository)
-    const hasChanges = changesState.workingDirectory.files.length > 0
-    if (!hasChanges) {
-      return false
-    }
-
-    this._showPopup({
-      type: PopupType.LocalChangesOverwritten,
-      repository,
-      retryAction,
-      files: changesState.workingDirectory.files.map(f => f.path),
-    })
-
-    return true
-  }
-
-  /** This shouldn't be called directly. See `Dispatcher`. */
-  public _setCherryPickBranchCreated(
-    repository: Repository,
-    branchCreated: boolean
-  ): void {
-    const { multiCommitOperationState: opState } =
-      this.repositoryStateCache.get(repository)
-
-    if (
-      opState === null ||
-      opState.operationDetail.kind !== MultiCommitOperationKind.CherryPick
-    ) {
-      log.error(
-        '[setCherryPickBranchCreated] - Not in cherry-pick operation state'
-      )
-      return
-    }
-
-    // An update is not emitted here because there is no need
-    // to trigger a re-render at this point. (storing for later)
-    this.repositoryStateCache.updateMultiCommitOperationState(
-      repository,
-      () => ({
-        operationDetail: { ...opState.operationDetail, branchCreated },
-      })
-    )
-  }
-
-  /** This shouldn't be called directly. See `Dispatcher`. */
   public async _setDragElement(dragElement: DragElement | null): Promise<void> {
     this.currentDragElement = dragElement
     this.emitUpdate()
@@ -2411,114 +1428,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
     setObject(lastThankYouKey, lastThankYou)
     this.lastThankYou = lastThankYou
-
-    this.emitUpdate()
-  }
-
-  /** This shouldn't be called directly. See `Dispatcher`. */
-  public _addBranchToForcePushList = (
-    repository: Repository,
-    tipWithBranch: IValidBranch,
-    beforeChangeSha: string
-  ) => {
-    // if the commit id of the branch is unchanged, it can be excluded from
-    // this list
-    if (tipWithBranch.branch.tip.sha === beforeChangeSha) {
-      return
-    }
-
-    const currentState = this.repositoryStateCache.get(repository)
-    const { forcePushBranches } = currentState.branchesState
-
-    const updatedMap = new Map<string, string>(forcePushBranches)
-    updatedMap.set(
-      tipWithBranch.branch.nameWithoutRemote,
-      tipWithBranch.branch.tip.sha
-    )
-
-    this.repositoryStateCache.updateBranchesState(repository, () => ({
-      forcePushBranches: updatedMap,
-    }))
-  }
-
-  /** This shouldn't be called directly. See `Dispatcher`. */
-  public _setMultiCommitOperationUndoState(
-    repository: Repository,
-    tip: IValidBranch
-  ): void {
-    // An update is not emitted here because there is no need
-    // to trigger a re-render at this point. (storing for later)
-    this.repositoryStateCache.updateMultiCommitOperationUndoState(
-      repository,
-      () => ({
-        undoSha: getTipSha(tip),
-        branchName: tip.branch.name,
-      })
-    )
-  }
-
-  /** This shouldn't be called directly. See `Dispatcher`. */
-  public async _setMultiCommitOperationStep(
-    repository: Repository,
-    step: MultiCommitOperationStep
-  ): Promise<void> {
-    this.repositoryStateCache.updateMultiCommitOperationState(
-      repository,
-      () => ({
-        step,
-      })
-    )
-
-    this.emitUpdate()
-  }
-
-  public _setMultiCommitOperationTargetBranch(
-    repository: Repository,
-    targetBranch: Branch
-  ): void {
-    this.repositoryStateCache.updateMultiCommitOperationState(
-      repository,
-      () => ({
-        targetBranch,
-      })
-    )
-  }
-
-  /** This shouldn't be called directly. See `Dispatcher`. */
-  public _endMultiCommitOperation(repository: Repository): void {
-    this.repositoryStateCache.clearMultiCommitOperationState(repository)
-    this.emitUpdate()
-  }
-
-  /** This shouldn't be called directly. See `Dispatcher`. */
-  public _initializeMultiCommitOperation(
-    repository: Repository,
-    operationDetail: MultiCommitOperationDetail,
-    targetBranch: Branch | null,
-    commits: ReadonlyArray<Commit | CommitOneLine>,
-    originalBranchTip: string | null,
-    emitUpdate: boolean = true
-  ): void {
-    this.repositoryStateCache.initializeMultiCommitOperationState(repository, {
-      step: {
-        kind: MultiCommitOperationStepKind.ShowProgress,
-      },
-      operationDetail,
-      progress: {
-        kind: 'multiCommitOperation',
-        currentCommitSummary: commits.length > 0 ? commits[0].summary : '',
-        position: 1,
-        totalCommitCount: commits.length,
-        value: 0,
-      },
-      userHasResolvedConflicts: false,
-      originalBranchTip,
-      targetBranch,
-    })
-
-    if (!emitUpdate) {
-      return
-    }
 
     this.emitUpdate()
   }
