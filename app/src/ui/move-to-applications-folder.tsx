@@ -6,7 +6,7 @@ import {
   OkCancelButtonGroup,
 } from './common/dialog'
 import { Dispatcher } from './dispatcher'
-import { Checkbox, CheckboxValue } from './lib/checkbox'
+import { Checkbox, CheckboxValue } from './common/checkbox'
 
 interface IMoveToApplicationsFolderProps {
   readonly dispatcher: Dispatcher

@@ -1,7 +1,7 @@
 import {
   UiActivityKind,
   IUiActivityMonitor,
-} from '../../src/ui/lib/ui-activity-monitor'
+} from '../../src/ui/common/ui-activity-monitor'
 import { Emitter, Disposable } from 'event-kit'
 
 export class TestActivityMonitor implements IUiActivityMonitor {

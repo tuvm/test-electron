@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Dialog, DialogContent, DefaultDialogFooter } from '../common/dialog'
-import { InstalledCLIPath } from '../lib/install-cli'
+import { InstalledCLIPath } from '../common/install-cli'
 
 interface ICLIInstalledProps {
   /** Called when the popup should be dismissed. */

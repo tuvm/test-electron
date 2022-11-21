@@ -1,8 +1,8 @@
-import { ApplicationTheme } from '../../src/ui/lib/application-theme'
+import { ApplicationTheme } from '../../src/ui/common/application-theme'
 import {
   buildCustomThemeStyles,
   CustomThemeDefaults,
-} from '../../src/ui/lib/custom-theme'
+} from '../../src/ui/common/custom-theme'
 
 describe('CustomTheme', () => {
   describe('buildCustomThemeStyles', () => {

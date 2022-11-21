@@ -1,4 +1,4 @@
-import { validateURL } from '../../src/ui/lib/enterprise-validate-url'
+import { validateURL } from '../../src/ui/common/enterprise-validate-url'
 
 describe('validateURL', () => {
   it('passes through a valid url', () => {

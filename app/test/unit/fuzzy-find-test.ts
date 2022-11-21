@@ -1,5 +1,5 @@
 import { match } from '../../src/lib/fuzzy-find'
-import { getText } from '../../src/ui/lib/filter-list'
+import { getText } from '../../src/ui/common/filter-list'
 describe('fuzzy find', () => {
   const items = [
     {

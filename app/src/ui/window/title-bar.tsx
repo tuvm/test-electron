@@ -13,7 +13,7 @@ import {
   minimizeWindow,
   restoreWindow,
 } from '../main-process-proxy'
-import { LinkButton } from '../lib/link-button';
+import { LinkButton } from '../common/link-button';
 
 /** Get the height (in pixels) of the title bar depending on the platform */
 export function getTitleBarHeight() {

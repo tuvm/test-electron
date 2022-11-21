@@ -4,7 +4,7 @@ import classNames from 'classnames'
 import { Octicon } from '../octicons'
 import * as OcticonSymbol from '../octicons/octicons.generated'
 import { MenuItem } from '../../models/app-menu'
-import { AccessText } from '../lib/access-text'
+import { AccessText } from '../common/access-text'
 import { getPlatformSpecificNameOrSymbolForModifier } from '../../lib/menu-item'
 
 interface IMenuListItemProps {

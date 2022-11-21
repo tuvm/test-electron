@@ -9,7 +9,7 @@ import {
   IKeyboardSource,
   IMouseClickSource,
   SelectionSource,
-} from '../lib/list'
+} from '../common/list'
 import {
   MenuItem,
   itemIsSelectable,

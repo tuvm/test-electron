@@ -1,4 +1,4 @@
-import { round } from '../../src/ui/lib/round'
+import { round } from '../../src/ui/common/round'
 
 describe('round', () => {
   it('rounds to the desired number decimals', () => {

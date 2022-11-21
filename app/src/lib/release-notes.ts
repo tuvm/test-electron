@@ -6,7 +6,7 @@ import {
   ReleaseNote,
   ReleaseSummary,
 } from '../models/release-notes'
-import { getVersion } from '../ui/lib/app-proxy'
+import { getVersion } from '../ui/common/app-proxy'
 import { formatDate } from './format-date'
 import { offsetFromNow } from './offset-from'
 import { encodePathAsUrl } from './path'

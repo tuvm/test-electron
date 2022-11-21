@@ -7,7 +7,7 @@ import { StatsDatabase, ILaunchStats, IDailyMeasures } from './stats-database'
 // import { Repository } from '../../models/repository'
 import { merge } from '../../lib/merge'
 // import { getPersistedThemeName } from '../../ui/lib/application-theme'
-import { IUiActivityMonitor } from '../../ui/lib/ui-activity-monitor'
+import { IUiActivityMonitor } from '../../ui/common/ui-activity-monitor'
 import { Disposable } from 'event-kit'
 // import { assertNever } from '../fatal-error'
 import {

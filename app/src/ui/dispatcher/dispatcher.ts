@@ -28,8 +28,8 @@ import { Popup, PopupType } from '../../models/popup'
 
 import { Banner, BannerType } from '../../models/banner'
 
-import { ApplicationTheme, ICustomTheme } from '../lib/application-theme'
-import { installCLI } from '../lib/install-cli'
+import { ApplicationTheme, ICustomTheme } from '../common/application-theme'
+import { installCLI } from '../common/install-cli'
 import {
   executeMenuItem,
   moveToApplicationsFolder,

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Dialog, DialogContent, DialogFooter } from '../common/dialog'
 import { Dispatcher } from '../dispatcher'
-import { Row } from '../lib/row'
+import { Row } from '../common/row'
 import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 import { Account } from '../../models/account'
 import { getDotComAPIEndpoint } from '../../lib/api'

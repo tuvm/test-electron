@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { Loading } from '../lib/loading'
-import { Button } from '../lib/button'
-import { TextBox } from '../lib/text-box'
-import { Form } from '../lib/form'
-import { Errors } from '../lib/errors'
+import { Loading } from '../common/loading'
+import { Button } from '../common/button'
+import { TextBox } from '../common/text-box'
+import { Form } from '../common/form'
+import { Errors } from '../common/errors'
 
 interface ICodeVerificationProps {
   /**

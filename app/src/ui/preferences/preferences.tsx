@@ -11,7 +11,7 @@ import { Shell, getAvailableShells } from '../../lib/shells'
 import { getAvailableEditors } from '../../lib/editors/lookup'
 
 import { Appearance } from './appearance'
-import { ApplicationTheme, ICustomTheme } from '../lib/application-theme'
+import { ApplicationTheme, ICustomTheme } from '../common/application-theme'
 import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 import { Integrations } from './integrations'
 

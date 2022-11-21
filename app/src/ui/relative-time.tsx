@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { TooltippedContent } from './lib/tooltipped-content'
+import { TooltippedContent } from './common/tooltipped-content'
 import { formatDate } from '../lib/format-date'
 import { formatRelative } from '../lib/format-relative'
 

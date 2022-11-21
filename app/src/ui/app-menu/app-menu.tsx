@@ -2,7 +2,7 @@ import * as React from 'react'
 import { MenuPane } from './menu-pane'
 import { Dispatcher } from '../dispatcher'
 import { IMenu, MenuItem, ISubmenuItem } from '../../models/app-menu'
-import { SelectionSource, ClickSource } from '../lib/list'
+import { SelectionSource, ClickSource } from '../common/list'
 
 interface IAppMenuProps {
   /**

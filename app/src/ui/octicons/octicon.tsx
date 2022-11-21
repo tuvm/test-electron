@@ -2,8 +2,8 @@ import * as React from 'react'
 import { OcticonSymbolType } from './octicons.generated'
 import classNames from 'classnames'
 import ReactDOM from 'react-dom'
-import { createObservableRef } from '../lib/observable-ref'
-import { Tooltip, TooltipDirection } from '../lib/tooltip'
+import { createObservableRef } from '../common/observable-ref'
+import { Tooltip, TooltipDirection } from '../common/tooltip'
 
 interface IOcticonProps {
   /**

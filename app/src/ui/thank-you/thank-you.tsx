@@ -8,7 +8,7 @@ import {
 } from '../../lib/release-notes'
 import { ReleaseNote } from '../../models/release-notes'
 import { Dialog, DialogContent } from '../common/dialog'
-import { RichText } from '../lib/rich-text'
+import { RichText } from '../common/rich-text'
 
 interface IThankYouProps {
   readonly onDismissed: () => void

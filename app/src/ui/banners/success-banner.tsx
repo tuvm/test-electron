@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { LinkButton } from '../lib/link-button'
+import { LinkButton } from '../common/link-button'
 import { Octicon } from '../octicons'
 import * as OcticonSymbol from '../octicons/octicons.generated'
 import { Banner } from './banner'

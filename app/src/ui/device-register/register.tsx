@@ -2,11 +2,11 @@ import * as React from 'react'
 // import { LinkButton } from '../lib/link-button'
 // import { Octicon } from '../octicons'
 // import * as OcticonSymbol from '../octicons/octicons.generated'
-import { Loading } from '../lib/loading'
-import { Form } from '../lib/form'
-import { Button } from '../lib/button'
-import { TextBox } from '../lib/text-box'
-import { Errors } from '../lib/errors'
+import { Loading } from '../common/loading'
+import { Form } from '../common/form'
+import { Button } from '../common/button'
+import { TextBox } from '../common/text-box'
+import { Errors } from '../common/errors'
 
 /** Text to let the user know their browser will send them back to GH Desktop */
 export const BrowserRedirectMessage =

@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { Dialog, DialogContent, DialogFooter } from '../common/dialog'
-import { Row } from '../lib/row'
+import { Row } from '../common/row'
 import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
-import { TextBox } from '../lib/text-box'
-import { Checkbox, CheckboxValue } from '../lib/checkbox'
+import { TextBox } from '../common/text-box'
+import { Checkbox, CheckboxValue } from '../common/checkbox'
 
 interface ISSHKeyPassphraseProps {
   readonly keyPath: string

@@ -9,12 +9,12 @@ import { Dispatcher } from './dispatcher'
 import { AppStore } from '../lib/stores'
 import { assertNever } from '../lib/fatal-error'
 // import { shell } from '../lib/app-shell'
-import { updateStore, UpdateStatus } from './lib/update-store'
+import { updateStore, UpdateStatus } from './common/update-store'
 // import { RetryAction } from '../models/retry-actions'
-import { shouldRenderApplicationMenu } from './lib/features'
+import { shouldRenderApplicationMenu } from './common/features'
 
 import { getDotComAPIEndpoint } from '../lib/api'
-import { getVersion, getName } from './lib/app-proxy'
+import { getVersion, getName } from './common/app-proxy'
 import { getOS } from '../lib/get-os'
 // import { MenuEvent } from '../main-process/menu'
 // import {
@@ -31,7 +31,7 @@ import { Account } from '../models/account'
 import { TitleBar, ZoomInfo, FullScreenInfo } from './window'
 
 import {
-  showCertificateTrustDialog,
+  // showCertificateTrustDialog,
   sendReady,
   isInApplicationFolder,
 } from './main-process-proxy'
@@ -40,12 +40,12 @@ import { renderBanner } from './banners'
 import { Preferences } from './preferences'
 import { AppError } from './app-error'
 import { DeviceRegister } from './device-register'
-import { InstallGit } from './install-git'
+// import { InstallGit } from './install-git'
 import { EditorError } from './editor'
 import { About } from './about'
 
 import { Acknowledgements } from './acknowledgements'
-import { UntrustedCertificate } from './untrusted-certificate'
+// import { UntrustedCertificate } from './untrusted-certificate'
 import { TermsAndConditions } from './terms-and-conditions'
 import { CLIInstalled } from './cli-installed'
 // import { GenericGitAuthentication } from './generic-git-auth'
@@ -54,7 +54,7 @@ import { ShellError } from './shell'
 // import { ReleaseNotes } from './release-notes'
 
 import { AppTheme } from './app-theme'
-import { ApplicationTheme } from './lib/application-theme'
+import { ApplicationTheme } from './common/application-theme'
 import { PopupType, Popup } from '../models/popup'
 
 import { Banner, BannerType } from '../models/banner'
@@ -80,7 +80,7 @@ import * as ipcRenderer from '../lib/ipc-renderer'
 
 import { SSHUserPassword } from './ssh/ssh-user-password'
 
-import { Button } from './lib/button'
+import { Button } from './common/button'
 
 const MinuteInMilliseconds = 1000 * 60
 const HourInMilliseconds = MinuteInMilliseconds * 60
@@ -491,14 +491,14 @@ export class App extends React.Component<IAppProps, IAppState> {
     return this.props.dispatcher.closePopup(popupType)
   }
 
-  private onContinueWithUntrustedCertificate = (
-    certificate: Electron.Certificate
-  ) => {
-    showCertificateTrustDialog(
-      certificate,
-      'Could not securely connect to the server, because its certificate is not trusted. Attackers might be trying to steal your information.\n\nTo connect unsafely, which may put your data at risk, you can “Always trust” the certificate and try again.'
-    )
-  }
+  // private onContinueWithUntrustedCertificate = (
+  //   certificate: Electron.Certificate
+  // ) => {
+  //   showCertificateTrustDialog(
+  //     certificate,
+  //     'Could not securely connect to the server, because its certificate is not trusted. Attackers might be trying to steal your information.\n\nTo connect unsafely, which may put your data at risk, you can “Always trust” the certificate and try again.'
+  //   )
+  // }
 
   private currentPopupContent(): JSX.Element | null {
     // Hide any dialogs while we're displaying an error
@@ -534,15 +534,15 @@ export class App extends React.Component<IAppProps, IAppState> {
             customTheme={this.state.customTheme}
           />
         )
-      case PopupType.InstallGit:
-        return (
-          <InstallGit
-            key="install-git"
-            onDismissed={onPopupDismissedFn}
-            onOpenShell={this.onOpenShellIgnoreWarning}
-            path={popup.path}
-          />
-        )
+      // case PopupType.InstallGit:
+      //   return (
+      //     <InstallGit
+      //       key="install-git"
+      //       onDismissed={onPopupDismissedFn}
+      //       onOpenShell={this.onOpenShellIgnoreWarning}
+      //       path={popup.path}
+      //     />
+      //   )
       case PopupType.About:
         const version = __DEV__ ? __SHA__.substring(0, 10) : getVersion()
 
@@ -555,16 +555,16 @@ export class App extends React.Component<IAppProps, IAppState> {
             applicationArchitecture={process.arch}
           />
         )
-      case PopupType.UntrustedCertificate:
-        return (
-          <UntrustedCertificate
-            key="untrusted-certificate"
-            certificate={popup.certificate}
-            url={popup.url}
-            onDismissed={onPopupDismissedFn}
-            onContinue={this.onContinueWithUntrustedCertificate}
-          />
-        )
+      // case PopupType.UntrustedCertificate:
+      //   return (
+      //     <UntrustedCertificate
+      //       key="untrusted-certificate"
+      //       certificate={popup.certificate}
+      //       url={popup.url}
+      //       onDismissed={onPopupDismissedFn}
+      //       onContinue={this.onContinueWithUntrustedCertificate}
+      //     />
+      //   )
       case PopupType.Acknowledgements:
         return (
           <Acknowledgements
@@ -732,9 +732,9 @@ export class App extends React.Component<IAppProps, IAppState> {
   //   }
   // }
 
-  private onOpenShellIgnoreWarning = (path: string) => {
-    this.props.dispatcher.openShell(path, true)
-  }
+  // private onOpenShellIgnoreWarning = (path: string) => {
+  //   this.props.dispatcher.openShell(path, true)
+  // }
 
   // private onSaveCredentials = async (
   //   hostname: string,

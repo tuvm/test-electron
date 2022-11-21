@@ -5,7 +5,7 @@ import * as Win32 from './win32'
 import * as Linux from './linux'
 import { IFoundShell } from './found-shell'
 import { ShellError } from './error'
-import { pathExists } from '../../ui/lib/path-exists'
+import { pathExists } from '../../ui/common/path-exists'
 
 export type Shell = Darwin.Shell | Win32.Shell | Linux.Shell
 

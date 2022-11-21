@@ -4,13 +4,13 @@ import {
   supportsSystemThemeChanges,
   getCurrentlyAppliedTheme,
   ICustomTheme,
-} from '../lib/application-theme'
-import { Row } from '../lib/row'
+} from '../common/application-theme'
+import { Row } from '../common/row'
 import { DialogContent } from '../common/dialog'
 import {
   VerticalSegmentedControl,
   ISegmentedItem,
-} from '../lib/vertical-segmented-control'
+} from '../common/vertical-segmented-control'
 import { CustomThemeSelector } from './custom-theme-selector'
 import { enableHighContrastTheme } from '../../lib/feature-flag'
 

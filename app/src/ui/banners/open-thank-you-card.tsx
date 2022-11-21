@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { LinkButton } from '../lib/link-button'
-import { RichText } from '../lib/rich-text'
+import { LinkButton } from '../common/link-button'
+import { RichText } from '../common/rich-text'
 import { Banner } from './banner'
 
 interface IOpenThankYouCardProps {

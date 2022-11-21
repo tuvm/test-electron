@@ -1,4 +1,4 @@
-import { truncateMid, truncatePath, extract } from '../../src/ui/lib/path-text'
+import { truncateMid, truncatePath, extract } from '../../src/ui/common/path-text'
 
 describe('PathText', () => {
   describe('truncateMid', () => {

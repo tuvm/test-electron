@@ -6,7 +6,7 @@ import { IFoundShell } from './found-shell'
 import { enableWSLDetection } from '../feature-flag'
 import { findGitOnPath } from '../is-git-on-path'
 import { parseEnumValue } from '../enum'
-import { pathExists } from '../../ui/lib/path-exists'
+import { pathExists } from '../../ui/common/path-exists'
 
 export enum Shell {
   Cmd = 'Command Prompt',
@@ -202,8 +202,8 @@ async function findHyper(): Promise<string | null> {
     const path = commandPieces
       ? commandPieces[2]
       : localAppData != null
-      ? localAppData.concat('\\hyper\\Hyper.exe')
-      : null // fall back to the launcher in install root
+        ? localAppData.concat('\\hyper\\Hyper.exe')
+        : null // fall back to the launcher in install root
 
     if (path == null) {
       log.debug(

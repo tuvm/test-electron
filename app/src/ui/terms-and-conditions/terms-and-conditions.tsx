@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Dialog, DialogContent, DefaultDialogFooter } from '../common/dialog'
-import { LinkButton } from '../lib/link-button'
+import { LinkButton } from '../common/link-button'
 
 interface ITermsAndConditionsProps {
   /** A function called when the dialog is dismissed. */

@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { Row } from '../lib/row'
+import { Row } from '../common/row'
 import {
   Dialog,
   DialogContent,

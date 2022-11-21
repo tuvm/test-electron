@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Dialog, DialogContent, DialogFooter } from '../common/dialog'
-import { Row } from '../lib/row'
+import { Row } from '../common/row'
 import { OkCancelButtonGroup } from '../common/dialog/ok-cancel-button-group'
 
 interface IAddSSHHostProps {

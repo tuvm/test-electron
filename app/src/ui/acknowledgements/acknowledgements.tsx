@@ -1,9 +1,9 @@
 import * as Path from 'path'
 import * as Fs from 'fs'
 import * as React from 'react'
-import { getAppPath } from '../lib/app-proxy'
-import { Loading } from '../lib/loading'
-import { LinkButton } from '../lib/link-button'
+import { getAppPath } from '../common/app-proxy'
+import { Loading } from '../common/loading'
+import { LinkButton } from '../common/link-button'
 import { Dialog, DialogContent, DefaultDialogFooter } from '../common/dialog'
 
 const WebsiteURL = 'https://desktop.github.com'

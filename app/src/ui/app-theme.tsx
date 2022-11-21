@@ -4,9 +4,9 @@ import {
   getThemeName,
   getCurrentlyAppliedTheme,
   ICustomTheme,
-} from './lib/application-theme'
-import { isHexColorLight } from './lib/color-manipulation'
-import { buildCustomThemeStyles } from './lib/custom-theme'
+} from './common/application-theme'
+import { isHexColorLight } from './common/color-manipulation'
+import { buildCustomThemeStyles } from './common/custom-theme'
 
 interface IAppThemeProps {
   readonly theme: ApplicationTheme

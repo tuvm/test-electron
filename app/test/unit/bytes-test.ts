@@ -1,4 +1,4 @@
-import { formatBytes } from '../../src/ui/lib/bytes'
+import { formatBytes } from '../../src/ui/common/bytes'
 
 describe('formatBytes', () => {
   it('rounds to the desired number decimals', () => {

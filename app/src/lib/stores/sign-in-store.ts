@@ -6,7 +6,7 @@ import {
   validateURL,
   InvalidURLErrorName,
   InvalidProtocolErrorName,
-} from '../../ui/lib/enterprise-validate-url'
+} from '../../ui/common/enterprise-validate-url'
 
 import {
   createAuthorization,

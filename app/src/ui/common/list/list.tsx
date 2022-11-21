@@ -2,7 +2,7 @@ import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import { Grid, AutoSizer } from 'react-virtualized'
 import { shallowEquals, arrayEquals } from '../../../lib/equality'
-import { FocusContainer } from '../../lib/focus-container'
+import { FocusContainer } from '../focus-container'
 import { ListRow } from './list-row'
 import {
   findNextSelectableRow,
@@ -13,7 +13,7 @@ import {
   ISelectAllSource,
   findLastSelectableRow,
 } from './selection'
-import { createUniqueId, releaseUniqueId } from '../../lib/id-pool'
+import { createUniqueId, releaseUniqueId } from '../id-pool'
 import { range } from '../../../lib/range'
 import { ListItemInsertionOverlay } from './list-item-insertion-overlay'
 import { DragData, DragType } from '../../../models/drag-drop'

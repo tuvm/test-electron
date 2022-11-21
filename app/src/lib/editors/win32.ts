@@ -6,7 +6,7 @@ import {
   RegistryValue,
   RegistryValueType,
 } from 'registry-js'
-import { pathExists } from '../../ui/lib/path-exists'
+import { pathExists } from '../../ui/common/path-exists'
 
 import { IFoundEditor } from './found-editor'
 
@@ -20,27 +20,27 @@ type RegistryKey = { key: HKEY; subKey: string }
 
 type WindowsExternalEditorPathInfo =
   | {
-      /**
-       * Registry key with the install location of the app. If not provided,
-       * 'InstallLocation' or 'UninstallString' will be assumed.
-       **/
-      readonly installLocationRegistryKey?:
-        | 'InstallLocation'
-        | 'UninstallString'
+    /**
+     * Registry key with the install location of the app. If not provided,
+     * 'InstallLocation' or 'UninstallString' will be assumed.
+     **/
+    readonly installLocationRegistryKey?:
+    | 'InstallLocation'
+    | 'UninstallString'
 
-      /**
-       * List of lists of path components from the editor's installation folder to
-       * the potential executable shims. Only needed when the install location
-       * registry key is `InstallLocation`.
-       **/
-      readonly executableShimPaths: ReadonlyArray<ReadonlyArray<string>>
-    }
+    /**
+     * List of lists of path components from the editor's installation folder to
+     * the potential executable shims. Only needed when the install location
+     * registry key is `InstallLocation`.
+     **/
+    readonly executableShimPaths: ReadonlyArray<ReadonlyArray<string>>
+  }
   | {
-      /**
-       * Registry key with the install location of the app.
-       **/
-      readonly installLocationRegistryKey: 'DisplayIcon'
-    }
+    /**
+     * Registry key with the install location of the app.
+     **/
+    readonly installLocationRegistryKey: 'DisplayIcon'
+  }
 
 /** Represents an external editor on Windows */
 type WindowsExternalEditor = {

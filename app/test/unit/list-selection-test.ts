@@ -1,4 +1,4 @@
-import { findNextSelectableRow } from '../../src/ui/lib/list/selection'
+import { findNextSelectableRow } from '../../src/ui/common/list/selection'
 
 describe('list-selection', () => {
   describe('findNextSelectableRow', () => {

@@ -3,10 +3,10 @@ import * as React from 'react'
 import { Octicon, OcticonSymbolType } from '../octicons'
 import classNames from 'classnames'
 import { assertNever } from '../../lib/fatal-error'
-import { Button } from '../lib/button'
+import { Button } from '../common/button'
 import { clamp } from '../../lib/clamp'
-import { createObservableRef } from '../lib/observable-ref'
-import { Tooltip, TooltipDirection, TooltipTarget } from '../lib/tooltip'
+import { createObservableRef } from '../common/observable-ref'
+import { Tooltip, TooltipDirection, TooltipTarget } from '../common/tooltip'
 
 /** The button style. */
 export enum ToolbarButtonStyle {

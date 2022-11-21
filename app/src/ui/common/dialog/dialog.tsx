@@ -1,7 +1,7 @@
 import * as React from 'react'
 import classNames from 'classnames'
 import { DialogHeader } from './header'
-import { createUniqueId, releaseUniqueId } from '../../lib/id-pool'
+import { createUniqueId, releaseUniqueId } from '../id-pool'
 import { getTitleBarHeight } from '../../window/title-bar'
 
 /**

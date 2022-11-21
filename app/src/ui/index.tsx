@@ -37,7 +37,7 @@ import {
   enableSourceMaps,
   withSourceMappedStack,
 } from '../lib/source-map-support'
-import { UiActivityMonitor } from './lib/ui-activity-monitor'
+import { UiActivityMonitor } from './common/ui-activity-monitor'
 // import { RepositoryStateCache } from '../lib/stores/repository-state-cache'
 import { ApiRepositoriesStore } from '../lib/stores/api-repositories-store'
 // import { CommitStatusStore } from '../lib/stores/commit-status-store'
@@ -58,7 +58,7 @@ import { enableUnhandledRejectionReporting } from '../lib/feature-flag'
 import {
   ApplicationTheme,
   supportsSystemThemeChanges,
-} from './lib/application-theme'
+} from './common/application-theme'
 import { trampolineUIHelper } from '../lib/trampoline/trampoline-ui-helper'
 import { AliveStore } from '../lib/stores/alive-store'
 import { NotificationsStore } from '../lib/stores/notifications-store'

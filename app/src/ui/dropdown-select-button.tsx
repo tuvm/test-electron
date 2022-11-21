@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import React from 'react'
-import { Button } from './lib/button'
+import { Button } from './common/button'
 import { Octicon } from './octicons'
 import * as OcticonSymbol from './octicons/octicons.generated'
 

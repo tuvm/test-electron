@@ -1,12 +1,12 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import * as React from 'react'
-import { ApplicationTheme, ICustomTheme } from '../lib/application-theme'
+import { ApplicationTheme, ICustomTheme } from '../common/application-theme'
 import { SketchPicker } from 'react-color'
-import { Button } from '../lib/button'
+import { Button } from '../common/button'
 import { Octicon, syncClockwise } from '../octicons'
 import { enableCustomizeTheme } from '../../lib/feature-flag'
-import { CustomThemeDefaults } from '../lib/custom-theme'
+import { CustomThemeDefaults } from '../common/custom-theme'
 
 interface ICustomThemeSelectorProps {
   readonly selectedTheme: ApplicationTheme

@@ -15,14 +15,14 @@ import {
 // } from '../../models/repository'
 
 import { Popup, PopupType } from '../../models/popup'
-import { themeChangeMonitor } from '../../ui/lib/theme-change-monitor'
+import { themeChangeMonitor } from '../../ui/common/theme-change-monitor'
 // import { getAppPath } from '../../ui/lib/app-proxy'
 import {
   ApplicationTheme,
   getPersistedThemeName,
   ICustomTheme,
   setPersistedTheme,
-} from '../../ui/lib/application-theme'
+} from '../../ui/common/application-theme'
 import {
   getAppMenu,
   getCurrentWindowState,
@@ -92,7 +92,7 @@ import {
   ShowSideBySideDiffDefault,
   getShowSideBySideDiff,
   setShowSideBySideDiff,
-} from '../../ui/lib/diff-mode'
+} from '../../ui/common/diff-mode'
 import { DragElement } from '../../models/drag-drop'
 import { ILastThankYou } from '../../models/last-thank-you'
 import { UseWindowsOpenSSHKey } from '../ssh/ssh'

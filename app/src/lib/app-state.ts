@@ -21,7 +21,7 @@ import { Shell } from './shells'
 import {
   ApplicationTheme,
   ICustomTheme,
-} from '../ui/lib/application-theme'
+} from '../ui/common/application-theme'
 import { IAccountRepositories } from './stores/api-repositories-store'
 import { ManualConflictResolution } from '../models/manual-conflict-resolution'
 import { Banner } from '../models/banner'

@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { DialogContent } from '../common/dialog'
-import { LinkButton } from '../lib/link-button'
-import { Row } from '../../ui/lib/row'
-import { Select } from '../lib/select'
+import { LinkButton } from '../common/link-button'
+import { Row } from '../common/row'
+import { Select } from '../common/select'
 import { Shell, parse as parseShell } from '../../lib/shells'
 import { suggestedExternalEditor } from '../../lib/editors/shared'
 

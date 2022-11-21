@@ -4,7 +4,7 @@ import {
   SelectionSource,
   findNextSelectableRow,
   SelectionDirection,
-} from '../lib/list'
+} from '../common/list'
 import { IAutocompletionProvider } from './index'
 import { fatalError } from '../../lib/fatal-error'
 import classNames from 'classnames'
