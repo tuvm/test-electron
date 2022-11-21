@@ -6,7 +6,6 @@ import { App } from '../../src/ui/app'
 import { Dispatcher } from '../../src/ui/dispatcher'
 import {
   AppStore,
-  GitHubUserStore,
   DeviceRegisterStore,
   AccountsStore,
 } from '../../src/lib/stores'
@@ -30,7 +29,6 @@ describe('App', () => {
   let dispatcher: Dispatcher
   let statsStore: StatsStore
   // let repositoryStateManager: RepositoryStateCache
-  let githubUserStore: GitHubUserStore
   // let aheadBehindStore: AheadBehindStore
 
   beforeEach(async () => {
@@ -45,8 +43,6 @@ describe('App', () => {
       new InMemoryStore(),
       new AsyncInMemoryStore()
     )
-
-    githubUserStore = new GitHubUserStore(db)
 
     // repositoryStateManager = new RepositoryStateCache(statsStore)
 
@@ -64,7 +60,7 @@ describe('App', () => {
     notificationsStore.setNotificationsEnabled(false)
 
     appStore = new AppStore(
-      githubUserStore,
+      // githubUserStore,
       statsStore,
       new DeviceRegisterStore(),
       accountsStore,

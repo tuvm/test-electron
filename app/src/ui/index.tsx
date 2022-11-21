@@ -23,12 +23,10 @@ import {
 } from './dispatcher'
 import {
   AppStore,
-  GitHubUserStore,
   DeviceRegisterStore,
   TokenStore,
   AccountsStore,
 } from '../lib/stores'
-import { UserDatabase } from '../lib/databases'
 import { IAppState } from '../lib/app-state'
 import { StatsDatabase, StatsStore } from '../lib/stats'
 import { shellNeedsPatching, updateEnvironmentForProcess } from '../lib/shell'
@@ -205,9 +203,9 @@ window.addEventListener('unhandledrejection', ev => {
   }
 })
 
-const gitHubUserStore = new GitHubUserStore(
-  new UserDatabase('UserDatabase')
-)
+// const gitHubUserStore = new GitHubUserStore(
+//   new UserDatabase('UserDatabase')
+// )
 // const issuesStore = new IssuesStore(new IssuesDatabase('IssuesDatabase'))
 const statsStore = new StatsStore(
   new StatsDatabase('StatsDatabase'),
@@ -234,7 +232,7 @@ const notificationsStore = new NotificationsStore(
 )
 
 const appStore = new AppStore(
-  gitHubUserStore,
+  // gitHubUserStore,
   // cloningRepositoriesStore,
   // issuesStore,
   statsStore,

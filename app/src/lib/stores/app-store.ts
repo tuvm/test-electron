@@ -1,6 +1,5 @@
 import {
   AccountsStore,
-  GitHubUserStore,
   DeviceRegisterStore,
 } from '.'
 import { Account } from '../../models/account'
@@ -277,7 +276,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
   private showCIStatusPopover: boolean = false
 
   public constructor(
-    private readonly gitHubUserStore: GitHubUserStore,
+    // private readonly gitHubUserStore: GitHubUserStore,
     // private readonly cloningRepositoriesStore: CloningRepositoriesStore,
     // private readonly issuesStore: IssuesStore,
     private readonly statsStore: StatsStore,
@@ -415,9 +414,9 @@ export class AppStore extends TypedBaseStore<IAppState> {
   }
 
   private wireupStoreEventHandlers() {
-    this.gitHubUserStore.onDidUpdate(() => {
-      this.emitUpdate()
-    })
+    // this.gitHubUserStore.onDidUpdate(() => {
+    //   this.emitUpdate()
+    // })
 
     this.accountsStore.onDidUpdate(accounts => {
       this.accounts = accounts
