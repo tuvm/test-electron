@@ -252,7 +252,7 @@ export class Preferences extends React.Component<
   }
 
   private onSave = async () => {
-    this.props.dispatcher.setUseWindowsOpenSSH(this.state.useWindowsOpenSSH)
+    // this.props.dispatcher.setUseWindowsOpenSSH(this.state.useWindowsOpenSSH)
     this.props.dispatcher.setNotificationsEnabled(
       this.state.notificationsEnabled
     )

@@ -35,7 +35,7 @@ import {
   moveToApplicationsFolder,
   isWindowFocused,
 } from '../main-process-proxy'
-import { UncommittedChangesStrategy } from '../../models/uncommitted-changes-strategy'
+// import { UncommittedChangesStrategy } from '../../models/uncommitted-changes-strategy'
 import { ILastThankYou } from '../../models/last-thank-you'
 
 /**
@@ -189,21 +189,21 @@ export class Dispatcher {
     return this.appStore._resetSidebarWidth()
   }
 
-  /**
-   * Set the width of the commit summary column in the
-   * history view to the given value.
-   */
-  public setCommitSummaryWidth(width: number): Promise<void> {
-    return this.appStore._setCommitSummaryWidth(width)
-  }
+  // /**
+  //  * Set the width of the commit summary column in the
+  //  * history view to the given value.
+  //  */
+  // public setCommitSummaryWidth(width: number): Promise<void> {
+  //   return this.appStore._setCommitSummaryWidth(width)
+  // }
 
-  /**
-   * Reset the width of the commit summary column in the
-   * history view to its default value.
-   */
-  public resetCommitSummaryWidth(): Promise<void> {
-    return this.appStore._resetCommitSummaryWidth()
-  }
+  // /**
+  //  * Reset the width of the commit summary column in the
+  //  * history view to its default value.
+  //  */
+  // public resetCommitSummaryWidth(): Promise<void> {
+  //   return this.appStore._resetCommitSummaryWidth()
+  // }
 
   /** End the Welcome flow. */
   // public endWelcomeFlow(): Promise<void> {
@@ -379,38 +379,38 @@ export class Dispatcher {
     return this.appStore._setAskToMoveToApplicationsFolderSetting(value)
   }
 
-  /**
-   * Sets the user's preference so that confirmation to remove repo is not asked
-   */
-  public setConfirmRepoRemovalSetting(value: boolean): Promise<void> {
-    return this.appStore._setConfirmRepositoryRemovalSetting(value)
-  }
+  // /**
+  //  * Sets the user's preference so that confirmation to remove repo is not asked
+  //  */
+  // public setConfirmRepoRemovalSetting(value: boolean): Promise<void> {
+  //   return this.appStore._setConfirmRepositoryRemovalSetting(value)
+  // }
 
-  /**
-   * Sets the user's preference so that confirmation to discard changes is not asked
-   */
-  public setConfirmDiscardChangesSetting(value: boolean): Promise<void> {
-    return this.appStore._setConfirmDiscardChangesSetting(value)
-  }
+  // /**
+  //  * Sets the user's preference so that confirmation to discard changes is not asked
+  //  */
+  // public setConfirmDiscardChangesSetting(value: boolean): Promise<void> {
+  //   return this.appStore._setConfirmDiscardChangesSetting(value)
+  // }
 
-  /**
-   * Sets the user's preference so that confirmation to retry discard changes
-   * after failure is not asked
-   */
-  public setConfirmDiscardChangesPermanentlySetting(
-    value: boolean
-  ): Promise<void> {
-    return this.appStore._setConfirmDiscardChangesPermanentlySetting(value)
-  }
+  // /**
+  //  * Sets the user's preference so that confirmation to retry discard changes
+  //  * after failure is not asked
+  //  */
+  // public setConfirmDiscardChangesPermanentlySetting(
+  //   value: boolean
+  // ): Promise<void> {
+  //   return this.appStore._setConfirmDiscardChangesPermanentlySetting(value)
+  // }
 
   /**
    * Sets the user's preference for handling uncommitted changes when switching branches
    */
-  public setUncommittedChangesStrategySetting(
-    value: UncommittedChangesStrategy
-  ): Promise<void> {
-    return this.appStore._setUncommittedChangesStrategySetting(value)
-  }
+  // public setUncommittedChangesStrategySetting(
+  //   value: UncommittedChangesStrategy
+  // ): Promise<void> {
+  //   return this.appStore._setUncommittedChangesStrategySetting(value)
+  // }
 
   /**
    * Sets the user's preferred shell.
@@ -476,17 +476,17 @@ export class Dispatcher {
     return this.appStore._refreshApiRepositories(account)
   }
 
-  public setConfirmDiscardStashSetting(value: boolean) {
-    return this.appStore._setConfirmDiscardStashSetting(value)
-  }
+  // public setConfirmDiscardStashSetting(value: boolean) {
+  //   return this.appStore._setConfirmDiscardStashSetting(value)
+  // }
 
-  public setConfirmForcePushSetting(value: boolean) {
-    return this.appStore._setConfirmForcePushSetting(value)
-  }
+  // public setConfirmForcePushSetting(value: boolean) {
+  //   return this.appStore._setConfirmForcePushSetting(value)
+  // }
 
-  public setConfirmUndoCommitSetting(value: boolean) {
-    return this.appStore._setConfirmUndoCommitSetting(value)
-  }
+  // public setConfirmUndoCommitSetting(value: boolean) {
+  //   return this.appStore._setConfirmUndoCommitSetting(value)
+  // }
 
   /**
    * Updates the application state to indicate a conflict is in-progress
@@ -634,21 +634,21 @@ export class Dispatcher {
     return this.statsStore.recordErrorWhenSwitchingBranchesWithUncommmittedChanges()
   }
 
-  /**
-   * Set the width of the commit summary column in the
-   * history view to the given value.
-   */
-  public setStashedFilesWidth = (width: number): Promise<void> => {
-    return this.appStore._setStashedFilesWidth(width)
-  }
+  // /**
+  //  * Set the width of the commit summary column in the
+  //  * history view to the given value.
+  //  */
+  // public setStashedFilesWidth = (width: number): Promise<void> => {
+  //   return this.appStore._setStashedFilesWidth(width)
+  // }
 
-  /**
-   * Reset the width of the commit summary column in the
-   * history view to its default value.
-   */
-  public resetStashedFilesWidth = (): Promise<void> => {
-    return this.appStore._resetStashedFilesWidth()
-  }
+  // /**
+  //  * Reset the width of the commit summary column in the
+  //  * history view to its default value.
+  //  */
+  // public resetStashedFilesWidth = (): Promise<void> => {
+  //   return this.appStore._resetStashedFilesWidth()
+  // }
 
   /**
    * Increment the number of times the user has opened their external editor
@@ -738,13 +738,13 @@ export class Dispatcher {
     return this.statsStore.recordForkCreated()
   }
 
-  public setCommitSpellcheckEnabled(commitSpellcheckEnabled: boolean) {
-    this.appStore._setCommitSpellcheckEnabled(commitSpellcheckEnabled)
-  }
+  // public setCommitSpellcheckEnabled(commitSpellcheckEnabled: boolean) {
+  //   this.appStore._setCommitSpellcheckEnabled(commitSpellcheckEnabled)
+  // }
 
-  public setUseWindowsOpenSSH(useWindowsOpenSSH: boolean) {
-    this.appStore._setUseWindowsOpenSSH(useWindowsOpenSSH)
-  }
+  // public setUseWindowsOpenSSH(useWindowsOpenSSH: boolean) {
+  //   this.appStore._setUseWindowsOpenSSH(useWindowsOpenSSH)
+  // }
 
   public setNotificationsEnabled(notificationsEnabled: boolean) {
     this.appStore._setNotificationsEnabled(notificationsEnabled)
@@ -852,19 +852,19 @@ export class Dispatcher {
   //   this.statsStore.recordPullRequestReviewDialogSwitchToPullRequest(reviewType)
   // }
 
-  /**
-   * Set the width of the file list column in the pull request files changed
-   */
-  public setPullRequestFileListWidth(width: number): Promise<void> {
-    return this.appStore._setPullRequestFileListWidth(width)
-  }
+  // /**
+  //  * Set the width of the file list column in the pull request files changed
+  //  */
+  // public setPullRequestFileListWidth(width: number): Promise<void> {
+  //   return this.appStore._setPullRequestFileListWidth(width)
+  // }
 
-  /**
-   * Reset the width of the file list column in the pull request files changed
-   */
-  public resetPullRequestFileListWidth(): Promise<void> {
-    return this.appStore._resetPullRequestFileListWidth()
-  }
+  // /**
+  //  * Reset the width of the file list column in the pull request files changed
+  //  */
+  // public resetPullRequestFileListWidth(): Promise<void> {
+  //   return this.appStore._resetPullRequestFileListWidth()
+  // }
 
   /**
    * Device register actions

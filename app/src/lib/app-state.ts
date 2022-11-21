@@ -26,7 +26,7 @@ import { IAccountRepositories } from './stores/api-repositories-store'
 import { ManualConflictResolution } from '../models/manual-conflict-resolution'
 import { Banner } from '../models/banner'
 import { IStashEntry } from '../models/stash-entry'
-import { UncommittedChangesStrategy } from '../models/uncommitted-changes-strategy'
+// import { UncommittedChangesStrategy } from '../models/uncommitted-changes-strategy'
 import { DragElement } from '../models/drag-drop'
 import { ILastThankYou } from '../models/last-thank-you'
 // import {
@@ -143,13 +143,13 @@ export interface IAppState {
   readonly sidebarWidth: IConstrainedValue
 
   /** The width of the commit summary column in the history view */
-  readonly commitSummaryWidth: IConstrainedValue
+  // readonly commitSummaryWidth: IConstrainedValue
 
   /** The width of the files list in the stash view */
-  readonly stashedFilesWidth: IConstrainedValue
+  // readonly stashedFilesWidth: IConstrainedValue
 
   /** The width of the files list in the pull request files changed view */
-  readonly pullRequestFilesListWidth: IConstrainedValue
+  // readonly pullRequestFilesListWidth: IConstrainedValue
 
   /**
    * Used to highlight access keys throughout the app when the
@@ -166,26 +166,26 @@ export interface IAppState {
   /** Whether we should ask the user to move the app to /Applications */
   readonly askToMoveToApplicationsFolderSetting: boolean
 
-  /** Whether we should show a confirmation dialog */
-  readonly askForConfirmationOnRepositoryRemoval: boolean
+  // /** Whether we should show a confirmation dialog */
+  // readonly askForConfirmationOnRepositoryRemoval: boolean
 
-  /** Whether we should show a confirmation dialog */
-  readonly askForConfirmationOnDiscardChanges: boolean
+  // /** Whether we should show a confirmation dialog */
+  // readonly askForConfirmationOnDiscardChanges: boolean
 
-  /** Whether we should show a confirmation dialog */
-  readonly askForConfirmationOnDiscardChangesPermanently: boolean
+  // /** Whether we should show a confirmation dialog */
+  // readonly askForConfirmationOnDiscardChangesPermanently: boolean
 
-  /** Should the app prompt the user to confirm a discard stash */
-  readonly askForConfirmationOnDiscardStash: boolean
+  // /** Should the app prompt the user to confirm a discard stash */
+  // readonly askForConfirmationOnDiscardStash: boolean
 
-  /** Should the app prompt the user to confirm a force push? */
-  readonly askForConfirmationOnForcePush: boolean
+  // /** Should the app prompt the user to confirm a force push? */
+  // readonly askForConfirmationOnForcePush: boolean
 
-  /** Should the app prompt the user to confirm an undo commit? */
-  readonly askForConfirmationOnUndoCommit: boolean
+  // /** Should the app prompt the user to confirm an undo commit? */
+  // readonly askForConfirmationOnUndoCommit: boolean
 
   /** How the app should handle uncommitted changes when switching branches */
-  readonly uncommittedChangesStrategy: UncommittedChangesStrategy
+  // readonly uncommittedChangesStrategy: UncommittedChangesStrategy
 
   /** The external editor to use when opening repositories */
   readonly selectedExternalEditor: string | null

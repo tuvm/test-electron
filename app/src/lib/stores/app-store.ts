@@ -72,7 +72,7 @@ import {
   setBoolean,
   getBoolean,
   getNumber,
-  getEnum,
+  // getEnum,
   getObject,
   setObject,
   getFloatNumber,
@@ -80,10 +80,10 @@ import {
 import { ExternalEditorError, suggestedExternalEditor } from '../editors/shared'
 import { ApiRepositoriesStore } from './api-repositories-store'
 import { Banner, BannerType } from '../../models/banner'
-import {
-  UncommittedChangesStrategy,
-  defaultUncommittedChangesStrategy,
-} from '../../models/uncommitted-changes-strategy'
+// import {
+//   UncommittedChangesStrategy,
+//   defaultUncommittedChangesStrategy,
+// } from '../../models/uncommitted-changes-strategy'
 // import {
 //   TutorialStep,
 // } from '../../models/tutorial-step'
@@ -95,7 +95,7 @@ import {
 } from '../../ui/common/diff-mode'
 import { DragElement } from '../../models/drag-drop'
 import { ILastThankYou } from '../../models/last-thank-you'
-import { UseWindowsOpenSSHKey } from '../ssh/ssh'
+// import { UseWindowsOpenSSHKey } from '../ssh/ssh'
 import { clamp } from '../clamp'
 import { EndpointToken } from '../endpoint-token'
 import {
@@ -107,32 +107,32 @@ import * as ipcRenderer from '../ipc-renderer'
 const defaultSidebarWidth: number = 250
 const sidebarWidthConfigKey: string = 'sidebar-width'
 
-const defaultCommitSummaryWidth: number = 250
-const commitSummaryWidthConfigKey: string = 'commit-summary-width'
+// const defaultCommitSummaryWidth: number = 250
+// const commitSummaryWidthConfigKey: string = 'commit-summary-width'
 
-const defaultStashedFilesWidth: number = 250
-const stashedFilesWidthConfigKey: string = 'stashed-files-width'
+// const defaultStashedFilesWidth: number = 250
+// const stashedFilesWidthConfigKey: string = 'stashed-files-width'
 
-const defaultPullRequestFileListWidth: number = 250
-const pullRequestFileListConfigKey: string = 'pull-request-files-width'
+// const defaultPullRequestFileListWidth: number = 250
+// const pullRequestFileListConfigKey: string = 'pull-request-files-width'
 
 const askToMoveToApplicationsFolderDefault: boolean = true
-const confirmRepoRemovalDefault: boolean = true
-const confirmDiscardChangesDefault: boolean = true
-const confirmDiscardChangesPermanentlyDefault: boolean = true
-const confirmDiscardStashDefault: boolean = true
-const askForConfirmationOnForcePushDefault = true
-const confirmUndoCommitDefault: boolean = true
+// const confirmRepoRemovalDefault: boolean = true
+// const confirmDiscardChangesDefault: boolean = true
+// const confirmDiscardChangesPermanentlyDefault: boolean = true
+// const confirmDiscardStashDefault: boolean = true
+// const askForConfirmationOnForcePushDefault = true
+// const confirmUndoCommitDefault: boolean = true
 const askToMoveToApplicationsFolderKey: string = 'askToMoveToApplicationsFolder'
-const confirmRepoRemovalKey: string = 'confirmRepoRemoval'
-const confirmDiscardChangesKey: string = 'confirmDiscardChanges'
-const confirmDiscardStashKey: string = 'confirmDiscardStash'
-const confirmDiscardChangesPermanentlyKey: string =
-  'confirmDiscardChangesPermanentlyKey'
-const confirmForcePushKey: string = 'confirmForcePush'
-const confirmUndoCommitKey: string = 'confirmUndoCommit'
+// const confirmRepoRemovalKey: string = 'confirmRepoRemoval'
+// const confirmDiscardChangesKey: string = 'confirmDiscardChanges'
+// const confirmDiscardStashKey: string = 'confirmDiscardStash'
+// const confirmDiscardChangesPermanentlyKey: string =
+//   'confirmDiscardChangesPermanentlyKey'
+// const confirmForcePushKey: string = 'confirmForcePush'
+// const confirmUndoCommitKey: string = 'confirmUndoCommit'
 
-const uncommittedChangesStrategyKey = 'uncommittedChangesStrategyKind'
+// const uncommittedChangesStrategyKey = 'uncommittedChangesStrategyKind'
 
 const imageDiffTypeDefault = ImageDiffType.TwoUp
 const imageDiffTypeKey = 'image-diff-type'
@@ -199,9 +199,9 @@ export class AppStore extends TypedBaseStore<IAppState> {
   private appIsFocused: boolean = false
 
   private sidebarWidth = constrain(defaultSidebarWidth)
-  private commitSummaryWidth = constrain(defaultCommitSummaryWidth)
-  private stashedFilesWidth = constrain(defaultStashedFilesWidth)
-  private pullRequestFileListWidth = constrain(defaultPullRequestFileListWidth)
+  // private commitSummaryWidth = constrain(defaultCommitSummaryWidth)
+  // private stashedFilesWidth = constrain(defaultStashedFilesWidth)
+  // private pullRequestFileListWidth = constrain(defaultPullRequestFileListWidth)
 
   private windowState: WindowState | null = null
   private windowZoomFactor: number = 1
@@ -210,14 +210,14 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
   private askToMoveToApplicationsFolderSetting: boolean =
     askToMoveToApplicationsFolderDefault
-  private askForConfirmationOnRepositoryRemoval: boolean =
-    confirmRepoRemovalDefault
-  private confirmDiscardChanges: boolean = confirmDiscardChangesDefault
-  private confirmDiscardChangesPermanently: boolean =
-    confirmDiscardChangesPermanentlyDefault
-  private confirmDiscardStash: boolean = confirmDiscardStashDefault
-  private askForConfirmationOnForcePush = askForConfirmationOnForcePushDefault
-  private confirmUndoCommit: boolean = confirmUndoCommitDefault
+  // private askForConfirmationOnRepositoryRemoval: boolean =
+  //   confirmRepoRemovalDefault
+  // private confirmDiscardChanges: boolean = confirmDiscardChangesDefault
+  // private confirmDiscardChangesPermanently: boolean =
+  //   confirmDiscardChangesPermanentlyDefault
+  // private confirmDiscardStash: boolean = confirmDiscardStashDefault
+  // private askForConfirmationOnForcePush = askForConfirmationOnForcePushDefault
+  // private confirmUndoCommit: boolean = confirmUndoCommitDefault
   private imageDiffType: ImageDiffType = imageDiffTypeDefault
   private hideWhitespaceInChangesDiff: boolean =
     hideWhitespaceInChangesDiffDefault
@@ -229,7 +229,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
   private commitSpellcheckEnabled: boolean = commitSpellcheckEnabledDefault
   private showSideBySideDiff: boolean = ShowSideBySideDiffDefault
 
-  private uncommittedChangesStrategy = defaultUncommittedChangesStrategy
+  // private uncommittedChangesStrategy = defaultUncommittedChangesStrategy
 
   private selectedExternalEditor: string | null = null
 
@@ -496,9 +496,9 @@ export class AppStore extends TypedBaseStore<IAppState> {
       focusCommitMessage: this.focusCommitMessage,
       emoji: this.emoji,
       sidebarWidth: this.sidebarWidth,
-      commitSummaryWidth: this.commitSummaryWidth,
-      stashedFilesWidth: this.stashedFilesWidth,
-      pullRequestFilesListWidth: this.pullRequestFileListWidth,
+      // commitSummaryWidth: this.commitSummaryWidth,
+      // stashedFilesWidth: this.stashedFilesWidth,
+      // pullRequestFilesListWidth: this.pullRequestFileListWidth,
       appMenuState: this.appMenu ? this.appMenu.openMenus : [],
       highlightAccessKeys: this.highlightAccessKeys,
       isUpdateAvailableBannerVisible: this.isUpdateAvailableBannerVisible,
@@ -506,15 +506,15 @@ export class AppStore extends TypedBaseStore<IAppState> {
       currentBanner: this.currentBanner,
       askToMoveToApplicationsFolderSetting:
         this.askToMoveToApplicationsFolderSetting,
-      askForConfirmationOnRepositoryRemoval:
-        this.askForConfirmationOnRepositoryRemoval,
-      askForConfirmationOnDiscardChanges: this.confirmDiscardChanges,
-      askForConfirmationOnDiscardChangesPermanently:
-        this.confirmDiscardChangesPermanently,
-      askForConfirmationOnDiscardStash: this.confirmDiscardStash,
-      askForConfirmationOnForcePush: this.askForConfirmationOnForcePush,
-      askForConfirmationOnUndoCommit: this.confirmUndoCommit,
-      uncommittedChangesStrategy: this.uncommittedChangesStrategy,
+      // askForConfirmationOnRepositoryRemoval:
+      //   this.askForConfirmationOnRepositoryRemoval,
+      // askForConfirmationOnDiscardChanges: this.confirmDiscardChanges,
+      // askForConfirmationOnDiscardChangesPermanently:
+      //   this.confirmDiscardChangesPermanently,
+      // askForConfirmationOnDiscardStash: this.confirmDiscardStash,
+      // askForConfirmationOnForcePush: this.askForConfirmationOnForcePush,
+      // askForConfirmationOnUndoCommit: this.confirmUndoCommit,
+      // uncommittedChangesStrategy: this.uncommittedChangesStrategy,
       selectedExternalEditor: this.selectedExternalEditor,
       imageDiffType: this.imageDiffType,
       hideWhitespaceInChangesDiff: this.hideWhitespaceInChangesDiff,
@@ -583,58 +583,58 @@ export class AppStore extends TypedBaseStore<IAppState> {
     this.sidebarWidth = constrain(
       getNumber(sidebarWidthConfigKey, defaultSidebarWidth)
     )
-    this.commitSummaryWidth = constrain(
-      getNumber(commitSummaryWidthConfigKey, defaultCommitSummaryWidth)
-    )
-    this.stashedFilesWidth = constrain(
-      getNumber(stashedFilesWidthConfigKey, defaultStashedFilesWidth)
-    )
-    this.pullRequestFileListWidth = constrain(
-      getNumber(pullRequestFileListConfigKey, defaultPullRequestFileListWidth)
-    )
+    // this.commitSummaryWidth = constrain(
+    //   getNumber(commitSummaryWidthConfigKey, defaultCommitSummaryWidth)
+    // )
+    // this.stashedFilesWidth = constrain(
+    //   getNumber(stashedFilesWidthConfigKey, defaultStashedFilesWidth)
+    // )
+    // this.pullRequestFileListWidth = constrain(
+    //   getNumber(pullRequestFileListConfigKey, defaultPullRequestFileListWidth)
+    // )
 
     this.updateResizableConstraints()
     // TODO: Initiliaze here for now... maybe move to dialog mounting
-    this.updatePullRequestResizableConstraints()
+    // this.updatePullRequestResizableConstraints()
 
     this.askToMoveToApplicationsFolderSetting = getBoolean(
       askToMoveToApplicationsFolderKey,
       askToMoveToApplicationsFolderDefault
     )
 
-    this.askForConfirmationOnRepositoryRemoval = getBoolean(
-      confirmRepoRemovalKey,
-      confirmRepoRemovalDefault
-    )
+    // this.askForConfirmationOnRepositoryRemoval = getBoolean(
+    //   confirmRepoRemovalKey,
+    //   confirmRepoRemovalDefault
+    // )
 
-    this.confirmDiscardChanges = getBoolean(
-      confirmDiscardChangesKey,
-      confirmDiscardChangesDefault
-    )
+    // this.confirmDiscardChanges = getBoolean(
+    //   confirmDiscardChangesKey,
+    //   confirmDiscardChangesDefault
+    // )
 
-    this.confirmDiscardChangesPermanently = getBoolean(
-      confirmDiscardChangesPermanentlyKey,
-      confirmDiscardChangesPermanentlyDefault
-    )
+    // this.confirmDiscardChangesPermanently = getBoolean(
+    //   confirmDiscardChangesPermanentlyKey,
+    //   confirmDiscardChangesPermanentlyDefault
+    // )
 
-    this.confirmDiscardStash = getBoolean(
-      confirmDiscardStashKey,
-      confirmDiscardStashDefault
-    )
+    // this.confirmDiscardStash = getBoolean(
+    //   confirmDiscardStashKey,
+    //   confirmDiscardStashDefault
+    // )
 
-    this.askForConfirmationOnForcePush = getBoolean(
-      confirmForcePushKey,
-      askForConfirmationOnForcePushDefault
-    )
+    // this.askForConfirmationOnForcePush = getBoolean(
+    //   confirmForcePushKey,
+    //   askForConfirmationOnForcePushDefault
+    // )
 
-    this.confirmUndoCommit = getBoolean(
-      confirmUndoCommitKey,
-      confirmUndoCommitDefault
-    )
+    // this.confirmUndoCommit = getBoolean(
+    //   confirmUndoCommitKey,
+    //   confirmUndoCommitDefault
+    // )
 
-    this.uncommittedChangesStrategy =
-      getEnum(uncommittedChangesStrategyKey, UncommittedChangesStrategy) ??
-      defaultUncommittedChangesStrategy
+    // this.uncommittedChangesStrategy =
+    //   getEnum(uncommittedChangesStrategyKey, UncommittedChangesStrategy) ??
+    //   defaultUncommittedChangesStrategy
 
     const shellValue = localStorage.getItem(shellKey)
     this.selectedShell = shellValue ? parseShell(shellValue) : DefaultShell
@@ -713,65 +713,65 @@ export class AppStore extends TypedBaseStore<IAppState> {
     // chars per side in split diff mode. No one would want to use it this way
     // but it doesn't break the layout and it allows users to temporarily
     // maximize the width of the file list to see long path names.
-    const diffPaneMinWidth = 150
-    const filesMax = available - diffPaneMinWidth
+    // const diffPaneMinWidth = 150
+    // const filesMax = available - diffPaneMinWidth
 
-    this.commitSummaryWidth = constrain(this.commitSummaryWidth, 100, filesMax)
-    this.stashedFilesWidth = constrain(this.stashedFilesWidth, 100, filesMax)
+    // this.commitSummaryWidth = constrain(this.commitSummaryWidth, 100, filesMax)
+    // this.stashedFilesWidth = constrain(this.stashedFilesWidth, 100, filesMax)
   }
 
   /**
    * Calculate the constraints of the resizable pane in the pull request dialog
    * whenever the window dimensions change.
    */
-  private updatePullRequestResizableConstraints() {
-    // TODO: Get width of PR dialog -> determine if we will have default width
-    // for pr dialog. The goal is for it expand to fill some percent of
-    // available window so it will change on window resize. We may have some max
-    // value and min value of where to derive a default is we cannot obtain the
-    // width for some reason (like initialization nad no pr dialog is open)
-    // Thoughts -> ß
-    // 1. Use dialog id to grab dialog if exists, else use default
-    // 2. Pass dialog width up when and call this contrainst on dialog mounting
-    //    to initialize and subscribe to window resize inside dialog to be able
-    //    to pass up dialog width on window resize.
+  // private updatePullRequestResizableConstraints() {
+  //   // TODO: Get width of PR dialog -> determine if we will have default width
+  //   // for pr dialog. The goal is for it expand to fill some percent of
+  //   // available window so it will change on window resize. We may have some max
+  //   // value and min value of where to derive a default is we cannot obtain the
+  //   // width for some reason (like initialization nad no pr dialog is open)
+  //   // Thoughts -> ß
+  //   // 1. Use dialog id to grab dialog if exists, else use default
+  //   // 2. Pass dialog width up when and call this contrainst on dialog mounting
+  //   //    to initialize and subscribe to window resize inside dialog to be able
+  //   //    to pass up dialog width on window resize.
 
-    // Get the width of the dialog
-    const available = 850
-    const dialogPadding = 20
+  //   // Get the width of the dialog
+  //   const available = 850
+  //   const dialogPadding = 20
 
-    // This is a pretty silly width for a diff but it will fit ~9 chars per line
-    // in unified mode after subtracting the width of the unified gutter and ~4
-    // chars per side in split diff mode. No one would want to use it this way
-    // but it doesn't break the layout and it allows users to temporarily
-    // maximize the width of the file list to see long path names.
-    const diffPaneMinWidth = 150
-    const filesListMax = available - dialogPadding - diffPaneMinWidth
+  //   // This is a pretty silly width for a diff but it will fit ~9 chars per line
+  //   // in unified mode after subtracting the width of the unified gutter and ~4
+  //   // chars per side in split diff mode. No one would want to use it this way
+  //   // but it doesn't break the layout and it allows users to temporarily
+  //   // maximize the width of the file list to see long path names.
+  //   const diffPaneMinWidth = 150
+  //   const filesListMax = available - dialogPadding - diffPaneMinWidth
 
-    this.pullRequestFileListWidth = constrain(
-      this.pullRequestFileListWidth,
-      100,
-      filesListMax
-    )
-  }
+  //   this.pullRequestFileListWidth = constrain(
+  //     this.pullRequestFileListWidth,
+  //     100,
+  //     filesListMax
+  //   )
+  // }
 
-  public _setCommitSpellcheckEnabled(commitSpellcheckEnabled: boolean) {
-    if (this.commitSpellcheckEnabled === commitSpellcheckEnabled) {
-      return
-    }
+  // public _setCommitSpellcheckEnabled(commitSpellcheckEnabled: boolean) {
+  //   if (this.commitSpellcheckEnabled === commitSpellcheckEnabled) {
+  //     return
+  //   }
 
-    setBoolean(commitSpellcheckEnabledKey, commitSpellcheckEnabled)
-    this.commitSpellcheckEnabled = commitSpellcheckEnabled
+  //   setBoolean(commitSpellcheckEnabledKey, commitSpellcheckEnabled)
+  //   this.commitSpellcheckEnabled = commitSpellcheckEnabled
 
-    this.emitUpdate()
-  }
+  //   this.emitUpdate()
+  // }
 
-  public _setUseWindowsOpenSSH(useWindowsOpenSSH: boolean) {
-    setBoolean(UseWindowsOpenSSHKey, useWindowsOpenSSH)
-    this.useWindowsOpenSSH = useWindowsOpenSSH
+  // public _setUseWindowsOpenSSH(useWindowsOpenSSH: boolean) {
+  //   setBoolean(UseWindowsOpenSSHKey, useWindowsOpenSSH)
+  //   this.useWindowsOpenSSH = useWindowsOpenSSH
 
-    this.emitUpdate()
-  }
+  //   this.emitUpdate()
+  // }
 
   public _setNotificationsEnabled(notificationsEnabled: boolean) {
     this.notificationsStore.setNotificationsEnabled(notificationsEnabled)
@@ -904,26 +904,26 @@ export class AppStore extends TypedBaseStore<IAppState> {
     return Promise.resolve()
   }
 
-  public _setCommitSummaryWidth(width: number): Promise<void> {
-    this.commitSummaryWidth = { ...this.commitSummaryWidth, value: width }
-    setNumber(commitSummaryWidthConfigKey, width)
-    this.updateResizableConstraints()
-    this.emitUpdate()
+  // public _setCommitSummaryWidth(width: number): Promise<void> {
+  //   this.commitSummaryWidth = { ...this.commitSummaryWidth, value: width }
+  //   setNumber(commitSummaryWidthConfigKey, width)
+  //   this.updateResizableConstraints()
+  //   this.emitUpdate()
 
-    return Promise.resolve()
-  }
+  //   return Promise.resolve()
+  // }
 
-  public _resetCommitSummaryWidth(): Promise<void> {
-    this.commitSummaryWidth = {
-      ...this.commitSummaryWidth,
-      value: defaultCommitSummaryWidth,
-    }
-    localStorage.removeItem(commitSummaryWidthConfigKey)
-    this.updateResizableConstraints()
-    this.emitUpdate()
+  // public _resetCommitSummaryWidth(): Promise<void> {
+  //   this.commitSummaryWidth = {
+  //     ...this.commitSummaryWidth,
+  //     value: defaultCommitSummaryWidth,
+  //   }
+  //   localStorage.removeItem(commitSummaryWidthConfigKey)
+  //   this.updateResizableConstraints()
+  //   this.emitUpdate()
 
-    return Promise.resolve()
-  }
+  //   return Promise.resolve()
+  // }
 
   /**
    * Set the global application menu.
@@ -1026,74 +1026,74 @@ export class AppStore extends TypedBaseStore<IAppState> {
     return Promise.resolve()
   }
 
-  public _setConfirmRepositoryRemovalSetting(
-    confirmRepoRemoval: boolean
-  ): Promise<void> {
-    this.askForConfirmationOnRepositoryRemoval = confirmRepoRemoval
-    setBoolean(confirmRepoRemovalKey, confirmRepoRemoval)
+  // public _setConfirmRepositoryRemovalSetting(
+  //   confirmRepoRemoval: boolean
+  // ): Promise<void> {
+  //   this.askForConfirmationOnRepositoryRemoval = confirmRepoRemoval
+  //   setBoolean(confirmRepoRemovalKey, confirmRepoRemoval)
 
-    this.emitUpdate()
+  //   this.emitUpdate()
 
-    return Promise.resolve()
-  }
+  //   return Promise.resolve()
+  // }
 
-  public _setConfirmDiscardChangesSetting(value: boolean): Promise<void> {
-    this.confirmDiscardChanges = value
+  // public _setConfirmDiscardChangesSetting(value: boolean): Promise<void> {
+  //   this.confirmDiscardChanges = value
 
-    setBoolean(confirmDiscardChangesKey, value)
-    this.emitUpdate()
+  //   setBoolean(confirmDiscardChangesKey, value)
+  //   this.emitUpdate()
 
-    return Promise.resolve()
-  }
+  //   return Promise.resolve()
+  // }
 
-  public _setConfirmDiscardChangesPermanentlySetting(
-    value: boolean
-  ): Promise<void> {
-    this.confirmDiscardChangesPermanently = value
+  // public _setConfirmDiscardChangesPermanentlySetting(
+  //   value: boolean
+  // ): Promise<void> {
+  //   this.confirmDiscardChangesPermanently = value
 
-    setBoolean(confirmDiscardChangesPermanentlyKey, value)
-    this.emitUpdate()
+  //   setBoolean(confirmDiscardChangesPermanentlyKey, value)
+  //   this.emitUpdate()
 
-    return Promise.resolve()
-  }
+  //   return Promise.resolve()
+  // }
 
-  public _setConfirmDiscardStashSetting(value: boolean): Promise<void> {
-    this.confirmDiscardStash = value
+  // public _setConfirmDiscardStashSetting(value: boolean): Promise<void> {
+  //   this.confirmDiscardStash = value
 
-    setBoolean(confirmDiscardStashKey, value)
-    this.emitUpdate()
+  //   setBoolean(confirmDiscardStashKey, value)
+  //   this.emitUpdate()
 
-    return Promise.resolve()
-  }
+  //   return Promise.resolve()
+  // }
 
-  public _setConfirmForcePushSetting(value: boolean): Promise<void> {
-    this.askForConfirmationOnForcePush = value
-    setBoolean(confirmForcePushKey, value)
+  // public _setConfirmForcePushSetting(value: boolean): Promise<void> {
+  //   this.askForConfirmationOnForcePush = value
+  //   setBoolean(confirmForcePushKey, value)
 
-    this.emitUpdate()
+  //   this.emitUpdate()
 
-    return Promise.resolve()
-  }
+  //   return Promise.resolve()
+  // }
 
-  public _setConfirmUndoCommitSetting(value: boolean): Promise<void> {
-    this.confirmUndoCommit = value
-    setBoolean(confirmUndoCommitKey, value)
+  // public _setConfirmUndoCommitSetting(value: boolean): Promise<void> {
+  //   this.confirmUndoCommit = value
+  //   setBoolean(confirmUndoCommitKey, value)
 
-    this.emitUpdate()
+  //   this.emitUpdate()
 
-    return Promise.resolve()
-  }
+  //   return Promise.resolve()
+  // }
 
-  public _setUncommittedChangesStrategySetting(
-    value: UncommittedChangesStrategy
-  ): Promise<void> {
-    this.uncommittedChangesStrategy = value
+  // public _setUncommittedChangesStrategySetting(
+  //   value: UncommittedChangesStrategy
+  // ): Promise<void> {
+  //   this.uncommittedChangesStrategy = value
 
-    localStorage.setItem(uncommittedChangesStrategyKey, value)
+  //   localStorage.setItem(uncommittedChangesStrategyKey, value)
 
-    this.emitUpdate()
-    return Promise.resolve()
-  }
+  //   this.emitUpdate()
+  //   return Promise.resolve()
+  // }
 
   public _setShell(shell: Shell): Promise<void> {
     this.selectedShell = shell
@@ -1297,27 +1297,27 @@ export class AppStore extends TypedBaseStore<IAppState> {
     return this.resolvedExternalEditor
   }
 
-  /** This shouldn't be called directly. See `Dispatcher`. */
-  public _setStashedFilesWidth(width: number): Promise<void> {
-    this.stashedFilesWidth = { ...this.stashedFilesWidth, value: width }
-    setNumber(stashedFilesWidthConfigKey, width)
-    this.updateResizableConstraints()
-    this.emitUpdate()
+  // /** This shouldn't be called directly. See `Dispatcher`. */
+  // public _setStashedFilesWidth(width: number): Promise<void> {
+  //   this.stashedFilesWidth = { ...this.stashedFilesWidth, value: width }
+  //   setNumber(stashedFilesWidthConfigKey, width)
+  //   this.updateResizableConstraints()
+  //   this.emitUpdate()
 
-    return Promise.resolve()
-  }
+  //   return Promise.resolve()
+  // }
 
-  public _resetStashedFilesWidth(): Promise<void> {
-    this.stashedFilesWidth = {
-      ...this.stashedFilesWidth,
-      value: defaultStashedFilesWidth,
-    }
-    localStorage.removeItem(stashedFilesWidthConfigKey)
-    this.updateResizableConstraints()
-    this.emitUpdate()
+  // public _resetStashedFilesWidth(): Promise<void> {
+  //   this.stashedFilesWidth = {
+  //     ...this.stashedFilesWidth,
+  //     value: defaultStashedFilesWidth,
+  //   }
+  //   localStorage.removeItem(stashedFilesWidthConfigKey)
+  //   this.updateResizableConstraints()
+  //   this.emitUpdate()
 
-    return Promise.resolve()
-  }
+  //   return Promise.resolve()
+  // }
 
   // public async _showCreateForkDialog(
   //   repository: RepositoryWithGitHubRepository
@@ -1372,29 +1372,29 @@ export class AppStore extends TypedBaseStore<IAppState> {
     this.emitUpdate()
   }
 
-  public _setPullRequestFileListWidth(width: number): Promise<void> {
-    this.pullRequestFileListWidth = {
-      ...this.pullRequestFileListWidth,
-      value: width,
-    }
-    setNumber(pullRequestFileListConfigKey, width)
-    this.updatePullRequestResizableConstraints()
-    this.emitUpdate()
+  // public _setPullRequestFileListWidth(width: number): Promise<void> {
+  //   this.pullRequestFileListWidth = {
+  //     ...this.pullRequestFileListWidth,
+  //     value: width,
+  //   }
+  //   setNumber(pullRequestFileListConfigKey, width)
+  //   this.updatePullRequestResizableConstraints()
+  //   this.emitUpdate()
 
-    return Promise.resolve()
-  }
+  //   return Promise.resolve()
+  // }
 
-  public _resetPullRequestFileListWidth(): Promise<void> {
-    this.pullRequestFileListWidth = {
-      ...this.pullRequestFileListWidth,
-      value: defaultPullRequestFileListWidth,
-    }
-    localStorage.removeItem(pullRequestFileListConfigKey)
-    this.updatePullRequestResizableConstraints()
-    this.emitUpdate()
+  // public _resetPullRequestFileListWidth(): Promise<void> {
+  //   this.pullRequestFileListWidth = {
+  //     ...this.pullRequestFileListWidth,
+  //     value: defaultPullRequestFileListWidth,
+  //   }
+  //   localStorage.removeItem(pullRequestFileListConfigKey)
+  //   this.updatePullRequestResizableConstraints()
+  //   this.emitUpdate()
 
-    return Promise.resolve()
-  }
+  //   return Promise.resolve()
+  // }
 
   public _beginDeviceRegister(): Promise<void> {
     this.deviceRegisterStore.beginDeviceRegister();

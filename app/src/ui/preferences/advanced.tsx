@@ -5,7 +5,7 @@ import { LinkButton } from '../common/link-button'
 import { SamplesURL } from '../../lib/stats'
 // import { UncommittedChangesStrategy } from '../../models/uncommitted-changes-strategy'
 // import { RadioButton } from '../lib/radio-button'
-import { isWindowsOpenSSHAvailable } from '../../lib/ssh/ssh'
+// import { isWindowsOpenSSHAvailable } from '../../lib/ssh/ssh'
 import {
   getNotificationSettingsUrl,
   supportsNotifications,
@@ -58,13 +58,13 @@ export class Advanced extends React.Component<
   }
 
   public componentDidMount() {
-    this.checkSSHAvailability()
+    // this.checkSSHAvailability()
     this.updateNotificationsState()
   }
 
-  private async checkSSHAvailability() {
-    this.setState({ canUseWindowsSSH: await isWindowsOpenSSHAvailable() })
-  }
+  // private async checkSSHAvailability() {
+  //   this.setState({ canUseWindowsSSH: await isWindowsOpenSSHAvailable() })
+  // }
 
   private onReportingOptOutChanged = (
     event: React.FormEvent<HTMLInputElement>
