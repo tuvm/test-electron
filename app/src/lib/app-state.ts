@@ -9,7 +9,6 @@ import { CommittedFileChange, WorkingDirectoryStatus } from '../models/status'
 import { CloningRepository } from '../models/cloning-repository'
 import { IMenu } from '../models/app-menu'
 import { IRemote } from '../models/remote'
-import { CloneRepositoryTab } from '../models/clone-repository-tab'
 import { BranchesTab } from '../models/branches-tab'
 import { PullRequest } from '../models/pull-request'
 import { IAuthor } from '../models/author'
@@ -242,9 +241,6 @@ export interface IAppState {
 
   /** The current repository filter text. */
   readonly repositoryFilterText: string
-
-  /** The currently selected tab for Clone Repository. */
-  readonly selectedCloneRepositoryTab: CloneRepositoryTab
 
   /** The currently selected tab for the Branches foldout. */
   readonly selectedBranchesTab: BranchesTab

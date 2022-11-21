@@ -6,7 +6,6 @@ import { Account } from '../../models/account'
 import { AppMenu, IMenu } from '../../models/app-menu'
 import { Branch, IAheadBehind } from '../../models/branch'
 import { BranchesTab } from '../../models/branches-tab'
-import { CloneRepositoryTab } from '../../models/clone-repository-tab'
 import { CloningRepository } from '../../models/cloning-repository'
 import {
   ImageDiffType,
@@ -256,8 +255,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
   private resolveOpenInDesktop:
     | ((repository: Repository | null) => void)
     | null = null
-
-  private selectedCloneRepositoryTab = CloneRepositoryTab.DotCom
 
   private selectedBranchesTab = BranchesTab.Branches
   private selectedTheme = ApplicationTheme.System
@@ -538,7 +535,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
       selectedShell: this.selectedShell,
       repositoryFilterText: this.repositoryFilterText,
       resolvedExternalEditor: this.resolvedExternalEditor,
-      selectedCloneRepositoryTab: this.selectedCloneRepositoryTab,
       selectedBranchesTab: this.selectedBranchesTab,
       selectedTheme: this.selectedTheme,
       customTheme: this.customTheme,
@@ -1271,14 +1267,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
         this.emitError(error)
       }
     }
-  }
-
-  public _changeCloneRepositoriesTab(tab: CloneRepositoryTab): Promise<void> {
-    this.selectedCloneRepositoryTab = tab
-
-    this.emitUpdate()
-
-    return Promise.resolve()
   }
 
   /**

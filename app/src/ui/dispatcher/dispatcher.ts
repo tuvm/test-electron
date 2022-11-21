@@ -26,7 +26,6 @@ import { Account } from '../../models/account'
 import { AppMenu, ExecutableMenuItem } from '../../models/app-menu'
 import { Branch, IAheadBehind } from '../../models/branch'
 import { BranchesTab } from '../../models/branches-tab'
-import { CloneRepositoryTab } from '../../models/clone-repository-tab'
 import { Popup, PopupType } from '../../models/popup'
 import { PullRequest } from '../../models/pull-request'
 import {
@@ -529,11 +528,6 @@ export class Dispatcher {
     repositories: ReadonlyArray<Repository>
   ): Promise<void> {
     return this.appStore._installLFSHooks(repositories)
-  }
-
-  /** Change the selected Clone Repository tab. */
-  public changeCloneRepositoriesTab(tab: CloneRepositoryTab): Promise<void> {
-    return this.appStore._changeCloneRepositoriesTab(tab)
   }
 
   /**
