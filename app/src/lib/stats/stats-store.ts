@@ -26,20 +26,20 @@ import {
 // import { getNotificationsEnabled } from '../stores/notifications-store'
 // import { isInApplicationFolder } from '../../ui/main-process-proxy'
 // import { getRendererGUID } from '../get-renderer-guid'
-import { ValidNotificationPullRequestReviewState } from '../valid-notification-pull-request-review'
+// import { ValidNotificationPullRequestReviewState } from '../valid-notification-pull-request-review'
 
-type PullRequestReviewStatFieldInfix =
-  | 'Approved'
-  | 'ChangesRequested'
-  | 'Commented'
+// type PullRequestReviewStatFieldInfix =
+//   | 'Approved'
+//   | 'ChangesRequested'
+//   | 'Commented'
 
-type PullRequestReviewStatFieldSuffix =
-  | 'NotificationCount'
-  | 'NotificationClicked'
-  | 'DialogSwitchToPullRequestCount'
+// type PullRequestReviewStatFieldSuffix =
+//   | 'NotificationCount'
+//   | 'NotificationClicked'
+//   | 'DialogSwitchToPullRequestCount'
 
-type PullRequestReviewStatField =
-  `pullRequestReview${PullRequestReviewStatFieldInfix}${PullRequestReviewStatFieldSuffix}`
+// type PullRequestReviewStatField =
+//   `pullRequestReview${PullRequestReviewStatFieldInfix}${PullRequestReviewStatFieldSuffix}`
 
 const StatsEndpoint = 'https://central.github.com/api/usage/desktop'
 
@@ -1821,53 +1821,53 @@ export class StatsStore implements IStatsStore {
   }
 
   // Generates the stat field name for the given PR review type and suffix.
-  private getStatFieldForRequestReviewState(
-    reviewType: ValidNotificationPullRequestReviewState,
-    suffix: PullRequestReviewStatFieldSuffix
-  ): PullRequestReviewStatField {
-    const infixMap: Record<
-      ValidNotificationPullRequestReviewState,
-      PullRequestReviewStatFieldInfix
-    > = {
-      CHANGES_REQUESTED: 'ChangesRequested',
-      APPROVED: 'Approved',
-      COMMENTED: 'Commented',
-    }
+  // private getStatFieldForRequestReviewState(
+  //   reviewType: ValidNotificationPullRequestReviewState,
+  //   suffix: PullRequestReviewStatFieldSuffix
+  // ): PullRequestReviewStatField {
+  //   const infixMap: Record<
+  //     ValidNotificationPullRequestReviewState,
+  //     PullRequestReviewStatFieldInfix
+  //   > = {
+  //     CHANGES_REQUESTED: 'ChangesRequested',
+  //     APPROVED: 'Approved',
+  //     COMMENTED: 'Commented',
+  //   }
 
-    return `pullRequestReview${infixMap[reviewType]}${suffix}`
-  }
+  //   return `pullRequestReview${infixMap[reviewType]}${suffix}`
+  // }
 
   // Generic method to record stats related to Pull Request review notifications.
-  private recordPullRequestReviewStat(
-    reviewType: ValidNotificationPullRequestReviewState,
-    suffix: PullRequestReviewStatFieldSuffix
-  ) {
-    const statField = this.getStatFieldForRequestReviewState(reviewType, suffix)
-    return this.updateDailyMeasures(
-      m => ({ [statField]: m[statField] + 1 } as any)
-    )
-  }
+  // private recordPullRequestReviewStat(
+  //   reviewType: ValidNotificationPullRequestReviewState,
+  //   suffix: PullRequestReviewStatFieldSuffix
+  // ) {
+  //   const statField = this.getStatFieldForRequestReviewState(reviewType, suffix)
+  //   return this.updateDailyMeasures(
+  //     m => ({ [statField]: m[statField] + 1 } as any)
+  //   )
+  // }
 
-  public recordPullRequestReviewNotificationShown(
-    reviewType: ValidNotificationPullRequestReviewState
-  ): Promise<void> {
-    return this.recordPullRequestReviewStat(reviewType, 'NotificationCount')
-  }
+  // public recordPullRequestReviewNotificationShown(
+  //   reviewType: ValidNotificationPullRequestReviewState
+  // ): Promise<void> {
+  //   return this.recordPullRequestReviewStat(reviewType, 'NotificationCount')
+  // }
 
-  public recordPullRequestReviewNotificationClicked(
-    reviewType: ValidNotificationPullRequestReviewState
-  ): Promise<void> {
-    return this.recordPullRequestReviewStat(reviewType, 'NotificationClicked')
-  }
+  // public recordPullRequestReviewNotificationClicked(
+  //   reviewType: ValidNotificationPullRequestReviewState
+  // ): Promise<void> {
+  //   return this.recordPullRequestReviewStat(reviewType, 'NotificationClicked')
+  // }
 
-  public recordPullRequestReviewDialogSwitchToPullRequest(
-    reviewType: ValidNotificationPullRequestReviewState
-  ): Promise<void> {
-    return this.recordPullRequestReviewStat(
-      reviewType,
-      'DialogSwitchToPullRequestCount'
-    )
-  }
+  // public recordPullRequestReviewDialogSwitchToPullRequest(
+  //   reviewType: ValidNotificationPullRequestReviewState
+  // ): Promise<void> {
+  //   return this.recordPullRequestReviewStat(
+  //     reviewType,
+  //     'DialogSwitchToPullRequestCount'
+  //   )
+  // }
 
   public recordSubmoduleDiffViewedFromChangesList(): Promise<void> {
     return this.updateDailyMeasures(m => ({

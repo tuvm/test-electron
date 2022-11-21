@@ -7,7 +7,7 @@ import { AppMenu, IMenu } from '../../models/app-menu'
 import {
   ImageDiffType,
 } from '../../models/diff'
-import { PullRequest } from '../../models/pull-request'
+// import { PullRequest } from '../../models/pull-request'
 // import {
 //   ILocalRepositoryState,
 //   Repository,
@@ -84,9 +84,9 @@ import {
   UncommittedChangesStrategy,
   defaultUncommittedChangesStrategy,
 } from '../../models/uncommitted-changes-strategy'
-import {
-  TutorialStep,
-} from '../../models/tutorial-step'
+// import {
+//   TutorialStep,
+// } from '../../models/tutorial-step'
 import { parseRemote } from '../../lib/remote-parsing'
 import {
   ShowSideBySideDiffDefault,
@@ -255,7 +255,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
   private repositoryIndicatorsEnabled: boolean
 
   /** Which step the user needs to complete next in the onboarding tutorial */
-  private currentOnboardingTutorialStep = TutorialStep.NotApplicable
+  // private currentOnboardingTutorialStep = TutorialStep.NotApplicable
 
   private currentDragElement: DragElement | null = null
   private lastThankYou: ILastThankYou | undefined
@@ -530,7 +530,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       apiRepositories: this.apiRepositoriesStore.getState(),
       useWindowsOpenSSH: this.useWindowsOpenSSH,
       optOutOfUsageTracking: this.statsStore.getOptOut(),
-      currentOnboardingTutorialStep: this.currentOnboardingTutorialStep,
+      // currentOnboardingTutorialStep: this.currentOnboardingTutorialStep,
       repositoryIndicatorsEnabled: this.repositoryIndicatorsEnabled,
       commitSpellcheckEnabled: this.commitSpellcheckEnabled,
       currentDragElement: this.currentDragElement,
@@ -1247,17 +1247,17 @@ export class AppStore extends TypedBaseStore<IAppState> {
   //   await this._openInBrowser(url.toString())
   // }
 
-  public async _showPullRequestByPR(pr: PullRequest): Promise<void> {
-    const { htmlURL: baseRepoUrl } = pr.base.gitHubRepository
+  // public async _showPullRequestByPR(pr: PullRequest): Promise<void> {
+  //   const { htmlURL: baseRepoUrl } = pr.base.gitHubRepository
 
-    if (baseRepoUrl === null) {
-      return
-    }
+  //   if (baseRepoUrl === null) {
+  //     return
+  //   }
 
-    const showPrUrl = `${baseRepoUrl}/pull/${pr.pullRequestNumber}`
+  //   const showPrUrl = `${baseRepoUrl}/pull/${pr.pullRequestNumber}`
 
-    await this._openInBrowser(showPrUrl)
-  }
+  //   await this._openInBrowser(showPrUrl)
+  // }
 
   // private getIgnoreExistingUpstreamRemoteKey(repository: Repository): string {
   //   return `repository/${repository.id}/ignoreExistingUpstreamRemote`

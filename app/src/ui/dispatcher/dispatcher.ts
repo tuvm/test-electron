@@ -37,7 +37,6 @@ import {
 } from '../main-process-proxy'
 import { UncommittedChangesStrategy } from '../../models/uncommitted-changes-strategy'
 import { ILastThankYou } from '../../models/last-thank-you'
-import { ValidNotificationPullRequestReviewState } from '../../lib/valid-notification-pull-request-review'
 
 /**
  * An error handler function.
@@ -847,11 +846,11 @@ export class Dispatcher {
     this.statsStore.recordChecksFailedDialogRerunChecks()
   }
 
-  public recordPullRequestReviewDialogSwitchToPullRequest(
-    reviewType: ValidNotificationPullRequestReviewState
-  ) {
-    this.statsStore.recordPullRequestReviewDialogSwitchToPullRequest(reviewType)
-  }
+  // public recordPullRequestReviewDialogSwitchToPullRequest(
+  //   reviewType: ValidNotificationPullRequestReviewState
+  // ) {
+  //   this.statsStore.recordPullRequestReviewDialogSwitchToPullRequest(reviewType)
+  // }
 
   /**
    * Set the width of the file list column in the pull request files changed

@@ -1,11 +1,9 @@
 import { Account } from '../models/account'
 import { IDiff, ImageDiffType } from '../models/diff'
-// import { Repository, ILocalRepositoryState } from '../models/repository'
-import { Tip } from '../models/tip'
+
 import { CommittedFileChange, WorkingDirectoryStatus } from '../models/status'
 import { IMenu } from '../models/app-menu'
 import { IRemote } from '../models/remote'
-import { PullRequest } from '../models/pull-request'
 import { IAuthor } from '../models/author'
 import {
   IRevertProgress,
@@ -28,7 +26,6 @@ import { IAccountRepositories } from './stores/api-repositories-store'
 import { ManualConflictResolution } from '../models/manual-conflict-resolution'
 import { Banner } from '../models/banner'
 import { IStashEntry } from '../models/stash-entry'
-import { TutorialStep } from '../models/tutorial-step'
 import { UncommittedChangesStrategy } from '../models/uncommitted-changes-strategy'
 import { DragElement } from '../models/drag-drop'
 import { ILastThankYou } from '../models/last-thank-you'
@@ -254,8 +251,6 @@ export interface IAppState {
    */
   readonly apiRepositories: ReadonlyMap<Account, IAccountRepositories>
 
-  /** Which step the user is on in the Onboarding Tutorial */
-  readonly currentOnboardingTutorialStep: TutorialStep
 
   /**
    * Whether or not the app should update the repository indicators (the
@@ -406,17 +401,6 @@ export interface IRepositoryState {
   readonly selectedSection: RepositorySectionTab
 
   /**
-   * The state of the current pull request view in the repository.
-   *
-   * It will be populated when a user initiates a pull request. It may have
-   * content to retain a users pull request state if they navigate
-   * away from the current pull request view and then back. It is returned
-   * to null after a pull request has been opened.
-   */
-
-  readonly branchesState: IBranchesState
-
-  /**
    * The ordered local commit SHAs. The commits themselves can be looked up in
    * `commitLookup.`
    */
@@ -470,36 +454,6 @@ export interface IRepositoryState {
   /** State associated with a multi commit operation such as rebase,
    * cherry-pick, squash, reorder... */
   readonly multiCommitOperationState: IMultiCommitOperationState | null
-}
-
-export interface IBranchesState {
-  /**
-   * The current tip of HEAD, either a branch, a commit (if HEAD is
-   * detached) or an unborn branch (a branch with no commits).
-   */
-  readonly tip: Tip
-
-  /** The open pull requests in the repository. */
-  readonly openPullRequests: ReadonlyArray<PullRequest>
-
-  /** Are we currently loading pull requests? */
-  readonly isLoadingPullRequests: boolean
-
-  /** The pull request associated with the current branch. */
-  readonly currentPullRequest: PullRequest | null
-
-  /**
-   * Is the current branch configured to rebase on pull?
-   *
-   * This is the value returned from git config (local or global) for `git config pull.rebase`
-   *
-   * If this value is not found in config, this will be `undefined` to indicate
-   * that the default Git behaviour will occur.
-   */
-  readonly pullWithRebase?: boolean
-
-  /** Tracking branches that have been allowed to be force-pushed within Desktop */
-  readonly forcePushBranches: ReadonlyMap<string, string>
 }
 
 export interface ICommitSelection {

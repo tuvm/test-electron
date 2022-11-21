@@ -523,19 +523,6 @@ export class App extends React.Component<IAppProps, IAppState> {
             initialSelectedTab={popup.initialSelectedTab}
             dispatcher={this.props.dispatcher}
             dotComAccount={this.getDotComAccount()}
-            confirmRepositoryRemoval={
-              this.state.askForConfirmationOnRepositoryRemoval
-            }
-            confirmDiscardChanges={
-              this.state.askForConfirmationOnDiscardChanges
-            }
-            confirmDiscardChangesPermanently={
-              this.state.askForConfirmationOnDiscardChangesPermanently
-            }
-            confirmDiscardStash={this.state.askForConfirmationOnDiscardStash}
-            confirmForcePush={this.state.askForConfirmationOnForcePush}
-            confirmUndoCommit={this.state.askForConfirmationOnUndoCommit}
-            uncommittedChangesStrategy={this.state.uncommittedChangesStrategy}
             selectedExternalEditor={this.state.selectedExternalEditor}
             useWindowsOpenSSH={this.state.useWindowsOpenSSH}
             notificationsEnabled={this.state.notificationsEnabled}
@@ -545,7 +532,6 @@ export class App extends React.Component<IAppProps, IAppState> {
             selectedShell={this.state.selectedShell}
             selectedTheme={this.state.selectedTheme}
             customTheme={this.state.customTheme}
-            repositoryIndicatorsEnabled={this.state.repositoryIndicatorsEnabled}
           />
         )
       case PopupType.InstallGit:

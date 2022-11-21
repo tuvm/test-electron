@@ -3,8 +3,8 @@ import { DialogContent } from '../common/dialog'
 import { Checkbox, CheckboxValue } from '../lib/checkbox'
 import { LinkButton } from '../lib/link-button'
 import { SamplesURL } from '../../lib/stats'
-import { UncommittedChangesStrategy } from '../../models/uncommitted-changes-strategy'
-import { RadioButton } from '../lib/radio-button'
+// import { UncommittedChangesStrategy } from '../../models/uncommitted-changes-strategy'
+// import { RadioButton } from '../lib/radio-button'
 import { isWindowsOpenSSHAvailable } from '../../lib/ssh/ssh'
 import {
   getNotificationSettingsUrl,
@@ -20,20 +20,20 @@ interface IAdvancedPreferencesProps {
   readonly useWindowsOpenSSH: boolean
   readonly optOutOfUsageTracking: boolean
   readonly notificationsEnabled: boolean
-  readonly uncommittedChangesStrategy: UncommittedChangesStrategy
-  readonly repositoryIndicatorsEnabled: boolean
+  // readonly uncommittedChangesStrategy: UncommittedChangesStrategy
+  // readonly repositoryIndicatorsEnabled: boolean
   readonly onUseWindowsOpenSSHChanged: (checked: boolean) => void
   readonly onNotificationsEnabledChanged: (checked: boolean) => void
   readonly onOptOutofReportingChanged: (checked: boolean) => void
-  readonly onUncommittedChangesStrategyChanged: (
-    value: UncommittedChangesStrategy
-  ) => void
-  readonly onRepositoryIndicatorsEnabledChanged: (enabled: boolean) => void
+  // readonly onUncommittedChangesStrategyChanged: (
+  //   value: UncommittedChangesStrategy
+  // ) => void
+  // readonly onRepositoryIndicatorsEnabledChanged: (enabled: boolean) => void
 }
 
 interface IAdvancedPreferencesState {
   readonly optOutOfUsageTracking: boolean
-  readonly uncommittedChangesStrategy: UncommittedChangesStrategy
+  // readonly uncommittedChangesStrategy: UncommittedChangesStrategy
   readonly canUseWindowsSSH: boolean
   readonly suggestGrantNotificationPermission: boolean
   readonly warnNotificationsDenied: boolean
@@ -49,7 +49,7 @@ export class Advanced extends React.Component<
 
     this.state = {
       optOutOfUsageTracking: this.props.optOutOfUsageTracking,
-      uncommittedChangesStrategy: this.props.uncommittedChangesStrategy,
+      // uncommittedChangesStrategy: this.props.uncommittedChangesStrategy,
       canUseWindowsSSH: false,
       suggestGrantNotificationPermission: false,
       warnNotificationsDenied: false,
@@ -75,18 +75,18 @@ export class Advanced extends React.Component<
     this.props.onOptOutofReportingChanged(value)
   }
 
-  private onUncommittedChangesStrategyChanged = (
-    value: UncommittedChangesStrategy
-  ) => {
-    this.setState({ uncommittedChangesStrategy: value })
-    this.props.onUncommittedChangesStrategyChanged(value)
-  }
+  // private onUncommittedChangesStrategyChanged = (
+  //   value: UncommittedChangesStrategy
+  // ) => {
+  //   this.setState({ uncommittedChangesStrategy: value })
+  //   this.props.onUncommittedChangesStrategyChanged(value)
+  // }
 
-  private onRepositoryIndicatorsEnabledChanged = (
-    event: React.FormEvent<HTMLInputElement>
-  ) => {
-    this.props.onRepositoryIndicatorsEnabledChanged(event.currentTarget.checked)
-  }
+  // private onRepositoryIndicatorsEnabledChanged = (
+  //   event: React.FormEvent<HTMLInputElement>
+  // ) => {
+  //   this.props.onRepositoryIndicatorsEnabledChanged(event.currentTarget.checked)
+  // }
 
   private onUseWindowsOpenSSHChanged = (
     event: React.FormEvent<HTMLInputElement>
@@ -112,7 +112,7 @@ export class Advanced extends React.Component<
   public render() {
     return (
       <DialogContent>
-        <div className="advanced-section">
+        {/* <div className="advanced-section">
           <h2>If I have changes and I switch branches...</h2>
 
           <RadioButton
@@ -144,8 +144,8 @@ export class Advanced extends React.Component<
             label="Always stash and leave my changes on the current branch"
             onSelected={this.onUncommittedChangesStrategyChanged}
           />
-        </div>
-        <div className="advanced-section">
+        </div> */}
+        {/* <div className="advanced-section">
           <h2>Background updates</h2>
           <Checkbox
             label="Periodically fetch and refresh status of all repositories"
@@ -160,7 +160,7 @@ export class Advanced extends React.Component<
             Allows the display of up-to-date status indicators in the repository
             list. Disabling this may improve performance with many repositories.
           </p>
-        </div>
+        </div> */}
         {this.renderSSHSettings()}
         {this.renderNotificationsSettings()}
         <div className="advanced-section">
