@@ -22,7 +22,7 @@ import {
   ApplicationTheme,
   ICustomTheme,
 } from '../ui/common/application-theme'
-import { IAccountRepositories } from './stores/api-repositories-store'
+// import { IAccountRepositories } from './stores/api-repositories-store'
 import { ManualConflictResolution } from '../models/manual-conflict-resolution'
 import { Banner } from '../models/banner'
 // import { IStashEntry } from '../models/stash-entry'
@@ -249,7 +249,7 @@ export interface IAppState {
    *
    * See the ApiRepositoriesStore for more details on loading repositories
    */
-  readonly apiRepositories: ReadonlyMap<Account, IAccountRepositories>
+  // readonly apiRepositories: ReadonlyMap<Account, IAccountRepositories>
 
 
   /**

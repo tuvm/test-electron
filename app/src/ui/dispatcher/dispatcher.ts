@@ -5,10 +5,7 @@ import {
   FoldoutType,
 } from '../../lib/app-state'
 import { fatalError } from '../../lib/fatal-error'
-import {
-  setGenericPassword,
-  setGenericUsername,
-} from '../../lib/generic-git-auth'
+
 import { isGitOnPath } from '../../lib/is-git-on-path'
 import {
   rejectOAuthRequest,
@@ -64,11 +61,6 @@ export class Dispatcher {
   /** Load the initial state for the app. */
   public loadInitialState(): Promise<void> {
     return this.appStore.loadInitialState()
-  }
-
-  /** Set the repository filter text. */
-  public setRepositoryFilterText(text: string): Promise<void> {
-    return this.appStore._setRepositoryFilterText(text)
   }
 
   /** Show the popup. This will close any current popup. */
@@ -357,37 +349,6 @@ export class Dispatcher {
   public setShell(shell: Shell): Promise<void> {
     return this.appStore._setShell(shell)
   }
-
-  /** Save the generic git credentials. */
-  public async saveGenericGitCredentials(
-    hostname: string,
-    username: string,
-    password: string
-  ): Promise<void> {
-    log.info(`storing generic credentials for '${hostname}' and '${username}'`)
-    setGenericUsername(hostname, username)
-
-    try {
-      await setGenericPassword(hostname, username, password)
-    } catch (e) {
-      log.error(
-        `Error saving generic git credentials: ${username}@${hostname}`,
-        e
-      )
-
-      this.postError(e)
-    }
-  }
-
-  /**
-   * Request a refresh of the list of repositories that
-   * the provided account has explicit permissions to access.
-   * See ApiRepositoriesStore for more details.
-   */
-  public refreshApiRepositories(account: Account) {
-    return this.appStore._refreshApiRepositories(account)
-  }
-
 
   /**
    * Set the application-wide theme

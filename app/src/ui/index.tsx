@@ -39,7 +39,7 @@ import {
 } from '../lib/source-map-support'
 import { UiActivityMonitor } from './common/ui-activity-monitor'
 // import { RepositoryStateCache } from '../lib/stores/repository-state-cache'
-import { ApiRepositoriesStore } from '../lib/stores/api-repositories-store'
+// import { ApiRepositoriesStore } from '../lib/stores/api-repositories-store'
 // import { CommitStatusStore } from '../lib/stores/commit-status-store'
 
 // We're using a polyfill for the upcoming CSS4 `:focus-ring` pseudo-selector.
@@ -217,7 +217,7 @@ const accountsStore = new AccountsStore(localStorage, TokenStore)
 
 // const repositoryStateManager = new RepositoryStateCache(statsStore)
 
-const apiRepositoriesStore = new ApiRepositoriesStore(accountsStore)
+// const apiRepositoriesStore = new ApiRepositoriesStore(accountsStore)
 
 // const commitStatusStore = new CommitStatusStore(accountsStore)
 // const aheadBehindStore = new AheadBehindStore()
@@ -239,7 +239,7 @@ const appStore = new AppStore(
   deviceRegisterStore,
   accountsStore,
   // repositoryStateManager,
-  apiRepositoriesStore,
+  // apiRepositoriesStore,
   notificationsStore
 )
 

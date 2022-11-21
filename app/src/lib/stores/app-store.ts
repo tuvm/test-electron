@@ -33,7 +33,7 @@ import {
 import {
   API,
   getAccountForEndpoint,
-  getEndpointForRepository,
+  // getEndpointForRepository,
 } from '../api'
 import { shell } from '../app-shell'
 import {
@@ -78,7 +78,7 @@ import {
   getFloatNumber,
 } from '../local-storage'
 import { ExternalEditorError, suggestedExternalEditor } from '../editors/shared'
-import { ApiRepositoriesStore } from './api-repositories-store'
+// import { ApiRepositoriesStore } from './api-repositories-store'
 import { Banner, BannerType } from '../../models/banner'
 // import {
 //   UncommittedChangesStrategy,
@@ -87,7 +87,7 @@ import { Banner, BannerType } from '../../models/banner'
 // import {
 //   TutorialStep,
 // } from '../../models/tutorial-step'
-import { parseRemote } from '../../lib/remote-parsing'
+// import { parseRemote } from '../../lib/remote-parsing'
 import { DragElement } from '../../models/drag-drop'
 import { ILastThankYou } from '../../models/last-thank-you'
 // import { UseWindowsOpenSSHKey } from '../ssh/ssh'
@@ -266,7 +266,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
     // private readonly repositoriesStore: RepositoriesStore,
     // private readonly pullRequestCoordinator: PullRequestCoordinator,
     // private readonly repositoryStateCache: RepositoryStateCache,
-    private readonly apiRepositoriesStore: ApiRepositoriesStore,
+    // private readonly apiRepositoriesStore: ApiRepositoriesStore,
     private readonly notificationsStore: NotificationsStore
   ) {
     super()
@@ -411,8 +411,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
     })
     this.accountsStore.onDidError(error => this.emitError(error))
 
-    this.apiRepositoriesStore.onDidUpdate(() => this.emitUpdate())
-    this.apiRepositoriesStore.onDidError(error => this.emitError(error))
+    // this.apiRepositoriesStore.onDidUpdate(() => this.emitUpdate())
+    // this.apiRepositoriesStore.onDidError(error => this.emitError(error))
   }
 
   /** Load the emoji from disk. */
@@ -522,7 +522,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       selectedTheme: this.selectedTheme,
       customTheme: this.customTheme,
       currentTheme: this.currentTheme,
-      apiRepositories: this.apiRepositoriesStore.getState(),
+      // apiRepositories: this.apiRepositoriesStore.getState(),
       useWindowsOpenSSH: this.useWindowsOpenSSH,
       optOutOfUsageTracking: this.statsStore.getOptOut(),
       // currentOnboardingTutorialStep: this.currentOnboardingTutorialStep,
@@ -535,25 +535,25 @@ export class AppStore extends TypedBaseStore<IAppState> {
     }
   }
 
-  /** This shouldn't be called directly. See `Dispatcher`. */
-  public async _setRepositoryFilterText(text: string): Promise<void> {
-    this.repositoryFilterText = text
-    this.emitUpdate()
-  }
+  // /** This shouldn't be called directly. See `Dispatcher`. */
+  // public async _setRepositoryFilterText(text: string): Promise<void> {
+  //   this.repositoryFilterText = text
+  //   this.emitUpdate()
+  // }
 
-  public async fetchPullRequest(repoUrl: string, pr: string) {
-    const endpoint = getEndpointForRepository(repoUrl)
-    const account = getAccountForEndpoint(this.accounts, endpoint)
+  // public async fetchPullRequest(repoUrl: string, pr: string) {
+  //   const endpoint = getEndpointForRepository(repoUrl)
+  //   const account = getAccountForEndpoint(this.accounts, endpoint)
 
-    if (account) {
-      const api = API.fromAccount(account)
-      const remoteUrl = parseRemote(repoUrl)
-      if (remoteUrl && remoteUrl.owner && remoteUrl.name) {
-        return await api.fetchPullRequest(remoteUrl.owner, remoteUrl.name, pr)
-      }
-    }
-    return null
-  }
+  //   if (account) {
+  //     const api = API.fromAccount(account)
+  //     const remoteUrl = parseRemote(repoUrl)
+  //     if (remoteUrl && remoteUrl.owner && remoteUrl.name) {
+  //       return await api.fetchPullRequest(remoteUrl.owner, remoteUrl.name, pr)
+  //     }
+  //   }
+  //   return null
+  // }
 
   private getUserList = async () => {
     const res = await fetch('https://reqres.in/api/users?page=2');
@@ -1221,14 +1221,14 @@ export class AppStore extends TypedBaseStore<IAppState> {
   //   }
   // }
 
-  /**
-   * Request a refresh of the list of repositories that
-   * the provided account has explicit permissions to access.
-   * See ApiRepositoriesStore for more details.
-   */
-  public _refreshApiRepositories(account: Account) {
-    return this.apiRepositoriesStore.loadRepositories(account)
-  }
+  // /**
+  //  * Request a refresh of the list of repositories that
+  //  * the provided account has explicit permissions to access.
+  //  * See ApiRepositoriesStore for more details.
+  //  */
+  // public _refreshApiRepositories(account: Account) {
+  //   return this.apiRepositoriesStore.loadRepositories(account)
+  // }
 
   // public async _showGitHubExplore(repository: Repository): Promise<void> {
   //   const { gitHubRepository } = repository
