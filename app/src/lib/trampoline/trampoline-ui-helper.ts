@@ -1,5 +1,5 @@
 import { PopupType } from '../../models/popup'
-import { Dispatcher } from '../../ui/dispatcher'
+import { Dispatcher } from '../../dispatcher'
 
 type PromptSSHSecretResponse = {
   readonly secret: string | undefined

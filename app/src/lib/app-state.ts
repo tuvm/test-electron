@@ -1,20 +1,7 @@
 import { Account } from '../models/account'
-// import { IDiff, ImageDiffType } from '../models/diff'
-
-// import { CommittedFileChange, WorkingDirectoryStatus } from '../models/status'
 import { IMenu } from '../models/app-menu'
-import { IRemote } from '../models/remote'
-// import { IAuthor } from '../models/author'
-import {
-  IRevertProgress,
-  Progress,
-  ICheckoutProgress,
-  IMultiCommitOperationProgress,
-} from '../models/progress'
 import { Popup } from '../models/popup'
-
-import { DeviceRegisterState } from './stores'
-
+import { DeviceRegisterState } from '../stores'
 import { WindowState } from './window-state'
 import { Shell } from './shells'
 
@@ -22,47 +9,15 @@ import {
   ApplicationTheme,
   ICustomTheme,
 } from '../ui/common/application-theme'
-// import { IAccountRepositories } from './stores/api-repositories-store'
-import { ManualConflictResolution } from '../models/manual-conflict-resolution'
 import { Banner } from '../models/banner'
-// import { IStashEntry } from '../models/stash-entry'
-// import { UncommittedChangesStrategy } from '../models/uncommitted-changes-strategy'
 import { DragElement } from '../models/drag-drop'
 import { ILastThankYou } from '../models/last-thank-you'
-// import {
-//   MultiCommitOperationDetail,
-//   MultiCommitOperationStep,
-// } from '../models/multi-commit-operation'
-// import { IChangesetData } from './git'
-
-export enum SelectionType {
-  Repository,
-  CloningRepository,
-  MissingRepository,
-}
-
-export type PossibleSelections =
-  | {
-    type: SelectionType.Repository
-    // repository: Repository
-    state: IRepositoryState
-  }
-  | { type: SelectionType.MissingRepository }
 
 /** All of the shared app state. */
 export interface IAppState {
   readonly userList: any
 
   readonly accounts: ReadonlyArray<Account>
-  /**
-   * List of IDs of the most recently opened repositories (most recent first)
-   */
-  readonly recentRepositories: ReadonlyArray<number>
-
-  /**
-   * A cache of the latest repository state values, keyed by the repository id
-   */
-  // readonly localRepositoryStateLookup: Map<number, ILocalRepositoryState>
 
   /**
    * The state of the ongoing (if any) sign in process. See SignInState
@@ -142,15 +97,6 @@ export interface IAppState {
    */
   readonly sidebarWidth: IConstrainedValue
 
-  /** The width of the commit summary column in the history view */
-  // readonly commitSummaryWidth: IConstrainedValue
-
-  /** The width of the files list in the stash view */
-  // readonly stashedFilesWidth: IConstrainedValue
-
-  /** The width of the files list in the pull request files changed view */
-  // readonly pullRequestFilesListWidth: IConstrainedValue
-
   /**
    * Used to highlight access keys throughout the app when the
    * Alt key is pressed. Only applicable on non-macOS platforms.
@@ -166,32 +112,8 @@ export interface IAppState {
   /** Whether we should ask the user to move the app to /Applications */
   readonly askToMoveToApplicationsFolderSetting: boolean
 
-  // /** Whether we should show a confirmation dialog */
-  // readonly askForConfirmationOnRepositoryRemoval: boolean
-
-  // /** Whether we should show a confirmation dialog */
-  // readonly askForConfirmationOnDiscardChanges: boolean
-
-  // /** Whether we should show a confirmation dialog */
-  // readonly askForConfirmationOnDiscardChangesPermanently: boolean
-
-  // /** Should the app prompt the user to confirm a discard stash */
-  // readonly askForConfirmationOnDiscardStash: boolean
-
-  // /** Should the app prompt the user to confirm a force push? */
-  // readonly askForConfirmationOnForcePush: boolean
-
-  // /** Should the app prompt the user to confirm an undo commit? */
-  // readonly askForConfirmationOnUndoCommit: boolean
-
-  /** How the app should handle uncommitted changes when switching branches */
-  // readonly uncommittedChangesStrategy: UncommittedChangesStrategy
-
   /** The external editor to use when opening repositories */
   readonly selectedExternalEditor: string | null
-
-  /** Whether or not the app should use Windows' OpenSSH client */
-  readonly useWindowsOpenSSH: boolean
 
   /** The current setting for whether the user has disable usage reports */
   readonly optOutOfUsageTracking: boolean
@@ -205,26 +127,8 @@ export interface IAppState {
    */
   readonly resolvedExternalEditor: string | null
 
-  /** What type of visual diff mode we should use to compare images */
-  // readonly imageDiffType: ImageDiffType
-
-  /** Whether we should hide white space changes in changes diff */
-  // readonly hideWhitespaceInChangesDiff: boolean
-
-  /** Whether we should hide white space changes in history diff */
-  // readonly hideWhitespaceInHistoryDiff: boolean
-
-  /** Whether we should hide white space changes in the pull request diff */
-  // readonly hideWhitespaceInPullRequestDiff: boolean
-
-  /** Whether we should show side by side diffs */
-  // readonly showSideBySideDiff: boolean
-
   /** The user's preferred shell. */
   readonly selectedShell: Shell
-
-  /** The current repository filter text. */
-  readonly repositoryFilterText: string
 
   /** The selected appearance (aka theme) preference */
   readonly selectedTheme: ApplicationTheme
@@ -236,46 +140,10 @@ export interface IAppState {
   readonly currentTheme: ApplicationTheme
 
   /**
-   * A map keyed on a user account (GitHub.com or GitHub Enterprise)
-   * containing an object with repositories that the authenticated
-   * user has explicit permission (:read, :write, or :admin) to access
-   * as well as information about whether the list of repositories
-   * is currently being loaded or not.
-   *
-   * If a currently signed in account is missing from the map that
-   * means that the list of accessible repositories has not yet been
-   * loaded. An entry for an account with an empty list of repositories
-   * means that no accessible repositories was found for the account.
-   *
-   * See the ApiRepositoriesStore for more details on loading repositories
-   */
-  // readonly apiRepositories: ReadonlyMap<Account, IAccountRepositories>
-
-
-  /**
-   * Whether or not the app should update the repository indicators (the
-   * blue dot and the ahead/behind arrows in the repository list used to
-   * indicate that the repository has uncommitted changes or is out of sync
-   * with its remote) in the background. See `RepositoryIndicatorUpdater`
-   * for more information
-   */
-  readonly repositoryIndicatorsEnabled: boolean
-
-  /**
-   * Whether or not the app should use spell check on commit summary and description
-   */
-  // readonly commitSpellcheckEnabled: boolean
-
-  /**
    * Record of what logged in users have been checked to see if thank you is in
    * order for external contributions in latest release.
    */
   readonly lastThankYou: ILastThankYou | undefined
-
-  /**
-   * Whether or not the CI status popover is visible.
-   */
-  readonly showCIStatusPopover: boolean
 
   /**
    * Whether or not the user enabled high-signal notifications.
@@ -284,8 +152,6 @@ export interface IAppState {
 }
 
 export enum FoldoutType {
-  Repository,
-  Branch,
   AppMenu,
   AddMenu,
 }
@@ -310,271 +176,9 @@ export type AppMenuFoldout = {
   openedWithAccessKey?: boolean
 }
 
-export type BranchFoldout = {
-  type: FoldoutType.Branch
-}
-
 export type Foldout =
-  | { type: FoldoutType.Repository }
   | { type: FoldoutType.AddMenu }
-  | BranchFoldout
   | AppMenuFoldout
-
-export enum RepositorySectionTab {
-  Changes,
-  History,
-}
-
-/**
- * Stores information about a merge conflict when it occurs
- */
-export type MergeConflictState = {
-  readonly kind: 'merge'
-  readonly currentBranch: string
-  readonly currentTip: string
-  readonly manualResolutions: Map<string, ManualConflictResolution>
-}
-
-/** Guard function for checking conflicts are from a merge  */
-export function isMergeConflictState(
-  conflictStatus: ConflictState
-): conflictStatus is MergeConflictState {
-  return conflictStatus.kind === 'merge'
-}
-
-/**
- * Stores information about a rebase conflict when it occurs
- */
-export type RebaseConflictState = {
-  readonly kind: 'rebase'
-  /**
-   * This is the commit ID of the HEAD of the in-flight rebase
-   */
-  readonly currentTip: string
-  /**
-   * The branch chosen by the user to be rebased
-   */
-  readonly targetBranch: string
-  /**
-   * The branch chosen as the baseline for the rebase
-   */
-  readonly baseBranch?: string
-
-  /**
-   * The commit ID of the target branch before the rebase was initiated
-   */
-  readonly originalBranchTip: string
-  /**
-   * The commit ID of the base branch onto which the history will be applied
-   */
-  readonly baseBranchTip: string
-  /**
-   * Manual resolutions chosen by the user for conflicted files to be applied
-   * before continuing the rebase.
-   */
-  readonly manualResolutions: Map<string, ManualConflictResolution>
-}
-
-/** Guard function for checking conflicts are from a rebase  */
-export function isRebaseConflictState(
-  conflictStatus: ConflictState
-): conflictStatus is RebaseConflictState {
-  return conflictStatus.kind === 'rebase'
-}
-
-/**
- * Conflicts can occur during a rebase, merge, or cherry pick.
- *
- * Callers should inspect the `kind` field to determine the kind of conflict
- * that is occurring, as this will then provide additional information specific
- * to the conflict, to help with resolving the issue.
- */
-export type ConflictState =
-  | MergeConflictState
-  | RebaseConflictState
-  | CherryPickConflictState
-
-export interface IRepositoryState {
-  // readonly commitSelection: ICommitSelection
-  // readonly changesState: IChangesState
-  readonly compareState: ICompareState
-  readonly selectedSection: RepositorySectionTab
-
-  /**
-   * The ordered local commit SHAs. The commits themselves can be looked up in
-   * `commitLookup.`
-   */
-  readonly localCommitSHAs: ReadonlyArray<string>
-
-  /** The remote currently associated with the repository, if defined in the configuration */
-  readonly remote: IRemote | null
-
-  /** The tags that will get pushed if the user performs a push operation. */
-  readonly tagsToPush: ReadonlyArray<string> | null
-
-  /** Is a push/pull/fetch in progress? */
-  readonly isPushPullFetchInProgress: boolean
-
-  /** Is a commit in progress? */
-  readonly isCommitting: boolean
-
-  /** The date the repository was last fetched. */
-  readonly lastFetched: Date | null
-
-  /**
-   * If we're currently working on switching to a new branch this
-   * provides insight into the progress of that operation.
-   *
-   * null if no current branch switch operation is in flight.
-   */
-  readonly checkoutProgress: ICheckoutProgress | null
-
-  /**
-   * If we're currently working on pushing a branch, fetching
-   * from a remote or pulling a branch this provides insight
-   * into the progress of that operation.
-   *
-   * null if no such operation is in flight.
-   */
-  readonly pushPullFetchProgress: Progress | null
-
-  /**
-   * If we're currently reverting a commit and it involves LFS progress, this
-   * will contain the LFS progress.
-   *
-   * null if no such operation is in flight.
-   */
-  readonly revertProgress: IRevertProgress | null
-
-  readonly localTags: Map<string, string> | null
-
-  /** Undo state associated with a multi commit operation operation */
-  readonly multiCommitOperationUndoState: IMultiCommitOperationUndoState | null
-
-  /** State associated with a multi commit operation such as rebase,
-   * cherry-pick, squash, reorder... */
-  readonly multiCommitOperationState: IMultiCommitOperationState | null
-}
-
-// export interface ICommitSelection {
-//   /** The commits currently selected in the app */
-//   readonly shas: ReadonlyArray<string>
-
-//   /**
-//    * When multiple commits are selected, the diff is created using the rev range
-//    * of firstSha^..lastSha in the selected shas. Thus comparing the trees of the
-//    * the lastSha and the first parent of the first sha. However, our history
-//    * list shows commits in chronological order. Thus, when a branch is merged,
-//    * the commits from that branch are injected in their chronological order into
-//    * the history list. Therefore, given a branch history of A, B, C, D,
-//    * MergeCommit where B and C are from the merged branch, diffing on the
-//    * selection of A through D would not have the changes from B an C.
-//    *
-//    * This is a list of the shas that are reachable by following the parent links
-//    * (aka the graph) from the lastSha to the firstSha^ in the selection.
-//    *
-//    * Other notes: Given a selection A through D, executing `git diff A..D` would
-//    * give us the changes since A but not including A; since the user will have
-//    * selected A, we do `git diff A^..D` so that we include the changes of A.
-//    * */
-//   readonly shasInDiff: ReadonlyArray<string>
-
-//   /**
-//    * Whether the a selection of commits are group of adjacent to each other.
-//    * Example: Given these are indexes of sha's in history, 3, 4, 5, 6 is contiguous as
-//    * opposed to 3, 5, 8.
-//    *
-//    * Technically order does not matter, but shas are stored in order.
-//    *
-//    * Contiguous selections can be diffed. Non-contiguous selections can be
-//    * cherry-picked, reordered, or squashed.
-//    *
-//    * Assumed that a selections of zero or one commit are contiguous.
-//    * */
-//   readonly isContiguous: boolean
-
-//   /** The changeset data associated with the selected commit */
-//   // readonly changesetData: IChangesetData
-
-//   /** The selected file inside the selected commit */
-//   readonly file: CommittedFileChange | null
-
-//   /** The diff of the currently-selected file */
-//   // readonly diff: IDiff | null
-// }
-
-// export enum ChangesSelectionKind {
-//   WorkingDirectory = 'WorkingDirectory',
-//   Stash = 'Stash',
-// }
-
-// export type ChangesWorkingDirectorySelection = {
-//   readonly kind: ChangesSelectionKind.WorkingDirectory
-
-//   /**
-//    * The ID of the selected files. The files themselves can be looked up in
-//    * the `workingDirectory` property in `IChangesState`.
-//    */
-//   readonly selectedFileIDs: ReadonlyArray<string>
-//   // readonly diff: IDiff | null
-// }
-
-// export type ChangesStashSelection = {
-//   readonly kind: ChangesSelectionKind.Stash
-
-//   /** Currently selected file in the stash diff viewer UI (aka the file we want to show the diff for) */
-//   readonly selectedStashedFile: CommittedFileChange | null
-
-//   /** Currently selected file's diff */
-//   readonly selectedStashedFileDiff: IDiff | null
-// }
-
-// export type ChangesSelection =
-//   | ChangesWorkingDirectorySelection
-//   | ChangesStashSelection
-
-// export interface IChangesState {
-//   readonly workingDirectory: WorkingDirectoryStatus
-
-//   /**
-//    * Whether or not to show a field for adding co-authors to
-//    * a commit (currently only supported for GH/GHE repositories)
-//    */
-//   readonly showCoAuthoredBy: boolean
-
-//   /**
-//    * A list of authors (name, email pairs) which have been
-//    * entered into the co-authors input box in the commit form
-//    * and which _may_ be used in the subsequent commit to add
-//    * Co-Authored-By commit message trailers depending on whether
-//    * the user has chosen to do so.
-//    */
-//   readonly coAuthors: ReadonlyArray<IAuthor>
-
-//   /**
-//    * Stores information about conflicts in the working directory
-//    *
-//    * The absence of a value means there is no merge or rebase conflict underway
-//    */
-//   readonly conflictState: ConflictState | null
-
-//   /**
-//    * The latest GitHub Desktop stash entry for the current branch, or `null`
-//    * if no stash exists for the current branch.
-//    */
-//   readonly stashEntry: IStashEntry | null
-
-//   /**
-//    * The current selection state in the Changes view. Can be either
-//    * working directory or a stash. In the case of a working directory
-//    * selection multiple files may be selected. See `ChangesSelection`
-//    * for more information about the differences between the two.
-//    */
-//   readonly selection: ChangesSelection
-
-//   /** `true` if the GitHub API reports that the branch is protected */
-//   readonly currentBranchProtected: boolean
-// }
 
 /**
  * This represents the various states the History tab can be in.
@@ -604,35 +208,6 @@ export interface IDisplayHistory {
   readonly kind: HistoryTabMode.History
 }
 
-export interface ICompareState {
-  /** The current state of the compare form, based on user input */
-  readonly formState: IDisplayHistory
-
-  /** Whether the branch list should be expanded or hidden */
-  readonly showBranchList: boolean
-
-  /** The text entered into the compare branch filter text box */
-  readonly filterText: string
-
-  /** The SHA associated with the most recent history state */
-  readonly tip: string | null
-
-  /** The SHAs of commits to render in the compare list */
-  readonly commitSHAs: ReadonlyArray<string>
-
-  /** The SHAs of commits to highlight in the compare list */
-  readonly shasToHighlight: ReadonlyArray<string>
-
-}
-
-export interface ICompareFormUpdate {
-  /** The updated filter text to set */
-  readonly filterText: string
-
-  /** Thew new state of the branches list */
-  readonly showBranchList: boolean
-}
-
 export interface IViewHistory {
   readonly kind: HistoryTabMode.History
 }
@@ -641,116 +216,6 @@ export interface IViewHistory {
  * An action to send to the application store to update the compare state
  */
 export type CompareAction = IViewHistory
-
-/**
- * Undo state associated with a multi commit operation being performed on a
- * repository.
- */
-export interface IMultiCommitOperationUndoState {
-  /** The sha of the tip before operation was initiated. */
-  readonly undoSha: string
-
-  /** The name of the branch the operation applied to */
-  readonly branchName: string
-}
-
-/**
- * Stores information about a cherry pick conflict when it occurs
- */
-export type CherryPickConflictState = {
-  readonly kind: 'cherryPick'
-
-  /**
-   * Manual resolutions chosen by the user for conflicted files to be applied
-   * before continuing the cherry pick.
-   */
-  readonly manualResolutions: Map<string, ManualConflictResolution>
-
-  /**
-   * The branch chosen by the user to copy the cherry picked commits to
-   */
-  readonly targetBranchName: string
-}
-
-/** Guard function for checking conflicts are from a rebase  */
-export function isCherryPickConflictState(
-  conflictStatus: ConflictState
-): conflictStatus is CherryPickConflictState {
-  return conflictStatus.kind === 'cherryPick'
-}
-
-/**
- * Tracks the state of the app during a multi commit operation such as rebase,
- * cherry-picking, and interactive rebase (squashing, reordering).
- */
-export interface IMultiCommitOperationState {
-  /**
-   * The current step of the operation the user is at.
-   * Examples: ChooseBranchStep, ChooseBranchStep, ShowConflictsStep, etc.
-   */
-  // readonly step: MultiCommitOperationStep
-
-  /**
-   * This hold properties specific to the operation.
-   */
-  // readonly operationDetail: MultiCommitOperationDetail
-  /**
-   * The underlying parsed Git information associated with the progress of the
-   * current operation.
-   *
-   * Example: During cherry-picking, after each commit this progress will be
-   * updated to reflect the next commit in the list to cherry-pick.
-   */
-  readonly progress: IMultiCommitOperationProgress
-
-  /**
-   * Whether the user has done work to resolve any conflicts as part of this
-   * operation, and therefore, should be warned on aborting the operation.
-   */
-  readonly userHasResolvedConflicts: boolean
-
-  /**
-   * The commit id of the tip of the branch user is modifying in the operation.
-   *
-   * Uses:
-   *  - Cherry-picking = tip of target branch before cherry-pick, used to undo cherry-pick
-   *        - This maybe null if app opens mid cherry-pick
-   *  - Rebasing = tip of current branch before rebase, used enable force pushing after rebase complete.
-   *  - Interactive Rebasing (Squash, Reorder) = tip of current branch, used for force pushing and undoing
-   */
-  readonly originalBranchTip: string | null
-
-}
-
-export type MultiCommitOperationConflictState = {
-  readonly kind: 'multiCommitOperation'
-
-  /**
-   * Manual resolutions chosen by the user for conflicted files to be applied
-   * before continuing the operation
-   */
-  readonly manualResolutions: Map<string, ManualConflictResolution>
-
-  /**
-   * Depending on the operation, this may be either source branch or the
-   * target branch.
-   *
-   * Also, we may not know what it is. This usually happens if Desktop is closed
-   * during an operation and the reopened and we lose some context that is
-   * stored in state.
-   */
-  readonly ourBranch?: string
-
-  /**
-   * Depending on the operation, this may be either source branch or the
-   * target branch
-   *
-   * Also, we may not know what it is. This usually happens if Desktop is closed
-   * during an operation and the reopened and we lose some context that is
-   * stored in state.
-   */
-  readonly theirBranch?: string
-}
 
 /**
  * An interface for describing a desired value and a valid range

@@ -5,7 +5,7 @@ import {
 } from 'desktop-notifications'
 import { BrowserWindow } from 'electron'
 import { findToastActivatorClsid } from '../lib/find-toast-activator-clsid'
-import { DesktopAliveEvent } from '../lib/stores/alive-store'
+import { DesktopAliveEvent } from '../stores/alive-store'
 import * as ipcWebContents from './ipc-webcontents'
 
 let windowsToastActivatorClsid: string | undefined = undefined

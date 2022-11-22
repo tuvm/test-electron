@@ -1,8 +1,8 @@
 import React from 'react'
 import classNames from 'classnames'
 
-import { Dispatcher } from '../../dispatcher'
-import { DeviceRegisterState, DeviceRegisterStep } from '../../../lib/stores'
+import { Dispatcher } from '../../../dispatcher'
+import { DeviceRegisterState, DeviceRegisterStep } from '../../../stores'
 import { assertNever } from '../../../lib/fatal-error'
 import { UiView } from '../../common/ui-view'
 import { Register } from './register'

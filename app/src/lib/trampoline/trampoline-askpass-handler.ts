@@ -3,7 +3,7 @@ import { getKeyForEndpoint } from '../auth'
 //   getSSHKeyPassphrase,
 //   keepSSHKeyPassphraseToStore,
 // } from '../ssh/ssh-key-passphrase'
-import { TokenStore } from '../stores'
+import { TokenStore } from '../../stores'
 import { TrampolineCommandHandler } from './trampoline-command'
 // import { trampolineUIHelper } from './trampoline-ui-helper'
 // import { parseAddSSHHostPrompt } from '../ssh/ssh'

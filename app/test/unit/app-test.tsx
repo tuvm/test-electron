@@ -3,12 +3,12 @@ import * as ReactDOM from 'react-dom'
 import * as TestUtils from 'react-dom/test-utils'
 
 import { App } from '../../src/ui/app'
-import { Dispatcher } from '../../src/ui/dispatcher'
+import { Dispatcher } from '../../src/dispatcher'
 import {
   AppStore,
   DeviceRegisterStore,
   AccountsStore,
-} from '../../src/lib/stores'
+} from '../../src/stores'
 import { InMemoryDispatcher } from '../helpers/in-memory-dispatcher'
 import {
   TestUserDatabase,
@@ -21,8 +21,8 @@ import { TestActivityMonitor } from '../helpers/test-activity-monitor'
 // import { ApiRepositoriesStore } from '../../src/lib/stores/api-repositories-store'
 // import { CommitStatusStore } from '../../src/lib/stores/commit-status-store'
 // import { AheadBehindStore } from '../../src/lib/stores/ahead-behind-store'
-import { AliveStore } from '../../src/lib/stores/alive-store'
-import { NotificationsStore } from '../../src/lib/stores/notifications-store'
+import { AliveStore } from '../../src/stores/alive-store'
+import { NotificationsStore } from '../../src/stores/notifications-store'
 
 describe('App', () => {
   let appStore: AppStore

@@ -1,8 +1,8 @@
 import { IDataStore, ISecureStore } from './stores'
-import { getKeyForAccount } from '../auth'
-import { Account } from '../../models/account'
-import { fetchUser, EmailVisibility } from '../api'
-import { fatalError } from '../fatal-error'
+import { getKeyForAccount } from '../lib/auth'
+import { Account } from '../models/account'
+import { fetchUser, EmailVisibility } from '../lib/api'
+import { fatalError } from '../lib/fatal-error'
 import { TypedBaseStore } from './base-store'
 
 /** The data-only interface for storage. */

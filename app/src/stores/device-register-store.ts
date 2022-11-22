@@ -1,5 +1,5 @@
 import { TypedBaseStore } from './base-store'
-import { fatalError } from '../fatal-error';
+import { fatalError } from '../lib/fatal-error';
 
 /**
  * An enumeration of the possible steps that the device register

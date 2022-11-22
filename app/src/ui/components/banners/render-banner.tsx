@@ -4,7 +4,7 @@ import { assertNever } from '../../../lib/fatal-error'
 
 import { Banner, BannerType } from '../../../models/banner'
 
-import { Dispatcher } from '../../dispatcher'
+import { Dispatcher } from '../../../dispatcher'
 
 import { OpenThankYouCard } from './open-thank-you-card'
 import { SuccessBanner } from './success-banner'

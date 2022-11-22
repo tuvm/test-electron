@@ -3,15 +3,15 @@
 // } from 'dugite'
 
 import { Dispatcher } from '.'
-import { ExternalEditorError } from '../../lib/editors/shared'
+import { ExternalEditorError } from '../lib/editors/shared'
 import {
   ErrorWithMetadata,
-} from '../../lib/error-with-metadata'
+} from '../lib/error-with-metadata'
 // import { AuthenticationErrors } from '../../lib/git/authentication'
 // import { GitError, isAuthFailureError } from '../../lib/git/core'
-import { ShellError } from '../../lib/shells'
+import { ShellError } from '../lib/shells'
 
-import { PopupType } from '../../models/popup'
+import { PopupType } from '../models/popup'
 
 /**
  * Cast the error to an error with metadata if possible. Otherwise return null.

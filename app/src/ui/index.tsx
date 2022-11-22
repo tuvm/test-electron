@@ -20,13 +20,13 @@ import {
   // samlReauthRequired,
   // insufficientGitHubRepoPermissions,
   // discardChangesHandler,
-} from './dispatcher'
+} from '../dispatcher'
 import {
   AppStore,
   DeviceRegisterStore,
   TokenStore,
   AccountsStore,
-} from '../lib/stores'
+} from '../stores'
 import { IAppState } from '../lib/app-state'
 import { StatsDatabase, StatsStore } from '../lib/stats'
 import { shellNeedsPatching, updateEnvironmentForProcess } from '../lib/shell'
@@ -60,8 +60,8 @@ import {
   supportsSystemThemeChanges,
 } from './common/application-theme'
 import { trampolineUIHelper } from '../lib/trampoline/trampoline-ui-helper'
-import { AliveStore } from '../lib/stores/alive-store'
-import { NotificationsStore } from '../lib/stores/notifications-store'
+import { AliveStore } from '../stores/alive-store'
+import { NotificationsStore } from '../stores/notifications-store'
 import * as ipcRenderer from '../lib/ipc-renderer'
 import { migrateRendererGUID } from '../lib/get-renderer-guid'
 import { initializeRendererNotificationHandler } from '../lib/notifications/notification-handler'

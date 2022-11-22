@@ -1,12 +1,12 @@
 import { Disposable } from 'event-kit'
-import { Account } from '../../models/account'
-import { assertNever, fatalError } from '../fatal-error'
-import { askUserToOAuth } from '../../lib/oauth'
+import { Account } from '../models/account'
+import { assertNever, fatalError } from '../lib/fatal-error'
+import { askUserToOAuth } from '../lib/oauth'
 import {
   validateURL,
   InvalidURLErrorName,
   InvalidProtocolErrorName,
-} from '../../ui/common/enterprise-validate-url'
+} from '../ui/common/enterprise-validate-url'
 
 import {
   createAuthorization,
@@ -17,13 +17,13 @@ import {
   getDotComAPIEndpoint,
   getEnterpriseAPIURL,
   fetchMetadata,
-} from '../../lib/api'
+} from '../lib/api'
 
-import { AuthenticationMode } from '../../lib/2fa'
+// import { AuthenticationMode } from '../../lib/2fa'
 
-import { minimumSupportedEnterpriseVersion } from '../../lib/enterprise'
+import { minimumSupportedEnterpriseVersion } from '../lib/enterprise'
 import { TypedBaseStore } from './base-store'
-import { timeout } from '../promise'
+import { timeout } from '../lib/promise'
 
 function getUnverifiedUserErrorMessage(login: string): string {
   return `Unable to authenticate. The account ${login} is lacking a verified email address. Please sign in to GitHub.com, confirm your email address in the Emails section under Personal settings, and try again.`
@@ -154,7 +154,7 @@ export interface ITwoFactorAuthenticationState extends ISignInState {
   /**
    * The 2FA type expected by the GitHub endpoint.
    */
-  readonly type: AuthenticationMode
+  // readonly type: AuthenticationMode
 }
 
 /**
@@ -372,19 +372,6 @@ export class SignInStore extends TypedBaseStore<SignInState | null> {
 
       this.emitAuthenticate(user, SignInMethod.Basic)
       this.setState({ kind: SignInStep.Success })
-    } else if (
-      response.kind ===
-      AuthorizationResponseKind.TwoFactorAuthenticationRequired
-    ) {
-      this.setState({
-        kind: SignInStep.TwoFactorAuthentication,
-        endpoint,
-        username,
-        password,
-        type: response.type,
-        error: null,
-        loading: false,
-      })
     } else {
       if (response.kind === AuthorizationResponseKind.Error) {
         this.emitError(
@@ -637,13 +624,13 @@ export class SignInStore extends TypedBaseStore<SignInState | null> {
     } else {
       switch (response.kind) {
         case AuthorizationResponseKind.Failed:
-        case AuthorizationResponseKind.TwoFactorAuthenticationRequired:
-          this.setState({
-            ...currentState,
-            loading: false,
-            error: new Error('Two-factor authentication failed.'),
-          })
-          break
+        // case AuthorizationResponseKind.TwoFactorAuthenticationRequired:
+        //   this.setState({
+        //     ...currentState,
+        //     loading: false,
+        //     error: new Error('Two-factor authentication failed.'),
+        //   })
+        //   break
         case AuthorizationResponseKind.Error:
           this.emitError(
             new Error(

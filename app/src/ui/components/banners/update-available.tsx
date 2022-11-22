@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Dispatcher } from '../../dispatcher/index'
+import { Dispatcher } from '../../../dispatcher/index'
 import { LinkButton } from '../../common/link-button'
 import { lastShowCaseVersionSeen, updateStore } from '../../common/update-store'
 import { Octicon } from '../../octicons'

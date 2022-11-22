@@ -4,8 +4,8 @@ import {
   IAppState,
   FoldoutType,
 } from '../lib/app-state'
-import { Dispatcher } from './dispatcher'
-import { AppStore } from '../lib/stores'
+import { Dispatcher } from '../dispatcher'
+import { AppStore } from '../stores'
 import { assertNever } from '../lib/fatal-error'
 import { updateStore, UpdateStatus } from './common/update-store'
 import { shouldRenderApplicationMenu } from './common/features'
@@ -501,7 +501,7 @@ export class App extends React.Component<IAppProps, IAppState> {
             dispatcher={this.props.dispatcher}
             dotComAccount={this.getDotComAccount()}
             selectedExternalEditor={this.state.selectedExternalEditor}
-            useWindowsOpenSSH={this.state.useWindowsOpenSSH}
+            // useWindowsOpenSSH={this.state.useWindowsOpenSSH}
             notificationsEnabled={this.state.notificationsEnabled}
             optOutOfUsageTracking={this.state.optOutOfUsageTracking}
             enterpriseAccount={this.getEnterpriseAccount()}
@@ -853,7 +853,7 @@ export class App extends React.Component<IAppProps, IAppState> {
   }
 
   private onDragEnd = (dropTargetSelector: DropTargetSelector | undefined) => {
-    this.props.dispatcher.closeFoldout(FoldoutType.Branch)
+    // this.props.dispatcher.closeFoldout(FoldoutType.Branch)
     if (dropTargetSelector === undefined) {
       this.props.dispatcher.recordDragStartedAndCanceled()
     }

@@ -1,18 +1,18 @@
 import * as React from 'react'
 import { Account } from '../../../models/account'
 import { PreferencesTab } from '../../../models/preferences'
-import { Dispatcher } from '../../dispatcher'
+import { Dispatcher } from '../../../dispatcher'
 import { TabBar, TabBarType } from '../../common/tab-bar'
 import { Advanced } from './advanced'
 import { assertNever } from '../../../lib/fatal-error'
-import { Dialog, DialogFooter, DialogError } from '../../common/dialog'
+import { Dialog, DialogError } from '../../common/dialog'
 
 import { Shell, getAvailableShells } from '../../../lib/shells'
 import { getAvailableEditors } from '../../../lib/editors/lookup'
 
 import { Appearance } from './appearance'
 import { ApplicationTheme, ICustomTheme } from '../../common/application-theme'
-import { OkCancelButtonGroup } from '../../common/dialog/ok-cancel-button-group'
+// import { OkCancelButtonGroup } from '../../common/dialog/ok-cancel-button-group'
 import { Integrations } from './integrations'
 
 import { Octicon } from '../../octicons'
@@ -23,7 +23,6 @@ interface IPreferencesProps {
   readonly dotComAccount: Account | null
   readonly enterpriseAccount: Account | null
   readonly onDismissed: () => void
-  readonly useWindowsOpenSSH: boolean
   readonly notificationsEnabled: boolean
   readonly optOutOfUsageTracking: boolean
   readonly initialSelectedTab?: PreferencesTab
@@ -37,7 +36,6 @@ interface IPreferencesState {
   readonly selectedIndex: PreferencesTab
   
   readonly disallowedCharactersMessage: string | null
-  readonly useWindowsOpenSSH: boolean
   readonly notificationsEnabled: boolean
   readonly optOutOfUsageTracking: boolean
   readonly availableEditors: ReadonlyArray<string>
@@ -66,7 +64,6 @@ export class Preferences extends React.Component<
       selectedIndex: this.props.initialSelectedTab || PreferencesTab.Accounts,
       disallowedCharactersMessage: null,
       availableEditors: [],
-      useWindowsOpenSSH: false,
       notificationsEnabled: true,
       optOutOfUsageTracking: false,
       selectedExternalEditor: this.props.selectedExternalEditor,
@@ -85,7 +82,6 @@ export class Preferences extends React.Component<
     const availableShells = shells.map(e => e.shell)
 
     this.setState({
-      useWindowsOpenSSH: this.props.useWindowsOpenSSH,
       notificationsEnabled: this.props.notificationsEnabled,
       optOutOfUsageTracking: this.props.optOutOfUsageTracking,
       availableShells,
@@ -115,10 +111,6 @@ export class Preferences extends React.Component<
             <span>
               <Octicon className="icon" symbol={OcticonSymbol.person} />
               Integrations
-            </span>
-            <span>
-              <Octicon className="icon" symbol={OcticonSymbol.gitCommit} />
-              Git
             </span>
             <span>
               <Octicon className="icon" symbol={OcticonSymbol.paintbrush} />
@@ -180,10 +172,8 @@ export class Preferences extends React.Component<
       case PreferencesTab.Advanced: {
         View = (
           <Advanced
-            useWindowsOpenSSH={this.state.useWindowsOpenSSH}
             notificationsEnabled={this.state.notificationsEnabled}
             optOutOfUsageTracking={this.state.optOutOfUsageTracking}
-            onUseWindowsOpenSSHChanged={this.onUseWindowsOpenSSHChanged}
             onNotificationsEnabledChanged={this.onNotificationsEnabledChanged}
             onOptOutofReportingChanged={this.onOptOutofReportingChanged}
           />
@@ -195,10 +185,6 @@ export class Preferences extends React.Component<
     }
 
     return <div className="tab-container">{View}</div>
-  }
-
-  private onUseWindowsOpenSSHChanged = (useWindowsOpenSSH: boolean) => {
-    this.setState({ useWindowsOpenSSH })
   }
 
   private onNotificationsEnabledChanged = (notificationsEnabled: boolean) => {
@@ -226,7 +212,7 @@ export class Preferences extends React.Component<
   }
 
   private renderFooter() {
-    const hasDisabledError = this.state.disallowedCharactersMessage != null
+    // const hasDisabledError = this.state.disallowedCharactersMessage != null
 
     const index = this.state.selectedIndex
     switch (index) {
@@ -236,23 +222,12 @@ export class Preferences extends React.Component<
       case PreferencesTab.Integrations:
       case PreferencesTab.Advanced:
       case PreferencesTab.Prompts:
-      case PreferencesTab.Git: {
-        return (
-          <DialogFooter>
-            <OkCancelButtonGroup
-              okButtonText="Save"
-              okButtonDisabled={hasDisabledError}
-            />
-          </DialogFooter>
-        )
-      }
       default:
-        return assertNever(index, `Unknown tab index: ${index}`)
+        return assertNever(index as never, `Unknown tab index: ${index}`)
     }
   }
 
   private onSave = async () => {
-    // this.props.dispatcher.setUseWindowsOpenSSH(this.state.useWindowsOpenSSH)
     this.props.dispatcher.setNotificationsEnabled(
       this.state.notificationsEnabled
     )

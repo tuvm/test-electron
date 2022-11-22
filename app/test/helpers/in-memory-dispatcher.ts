@@ -1,4 +1,4 @@
-import { Dispatcher } from '../../src/ui/dispatcher'
+import { Dispatcher } from '../../src/dispatcher'
 
 export class InMemoryDispatcher extends Dispatcher {
   public loadInitialState(): Promise<void> {

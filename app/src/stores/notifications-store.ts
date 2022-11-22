@@ -3,7 +3,7 @@ import {
   AliveStore,
   DesktopAliveEvent,
 } from './alive-store'
-import { setBoolean, getBoolean } from '../local-storage'
+import { setBoolean, getBoolean } from '../lib/local-storage'
 // import { StatsStore } from '../stats'
 import { NotificationCallback } from 'desktop-notifications/dist/notification-callback'
 

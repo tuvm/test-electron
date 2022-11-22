@@ -3,35 +3,35 @@ import { Disposable } from 'event-kit'
 import {
   Foldout,
   FoldoutType,
-} from '../../lib/app-state'
-import { fatalError } from '../../lib/fatal-error'
+} from '../lib/app-state'
+import { fatalError } from '../lib/fatal-error'
 
-import { isGitOnPath } from '../../lib/is-git-on-path'
+import { isGitOnPath } from '../lib/is-git-on-path'
 import {
   rejectOAuthRequest,
   requestAuthenticatedUser,
   resolveOAuthRequest,
-} from '../../lib/oauth'
+} from '../lib/oauth'
 import {
   URLActionType,
-} from '../../lib/parse-app-url'
-import { Shell } from '../../lib/shells'
-import { ILaunchStats, StatsStore } from '../../lib/stats'
-import { AppStore } from '../../lib/stores/app-store'
+} from '../lib/parse-app-url'
+import { Shell } from '../lib/shells'
+import { ILaunchStats, StatsStore } from '../lib/stats'
+import { AppStore } from '../stores/app-store'
 
-import { Account } from '../../models/account'
-import { AppMenu, ExecutableMenuItem } from '../../models/app-menu'
-import { Popup, PopupType } from '../../models/popup'
+import { Account } from '../models/account'
+import { AppMenu, ExecutableMenuItem } from '../models/app-menu'
+import { Popup, PopupType } from '../models/popup'
 
-import { Banner, BannerType } from '../../models/banner'
+import { Banner, BannerType } from '../models/banner'
 
-import { ApplicationTheme, ICustomTheme } from '../common/application-theme'
+import { ApplicationTheme, ICustomTheme } from '../ui/common/application-theme'
 import {
   executeMenuItem,
   moveToApplicationsFolder,
   isWindowFocused,
-} from '../main-process-proxy'
-import { ILastThankYou } from '../../models/last-thank-you'
+} from '../ui/main-process-proxy'
+import { ILastThankYou } from '../models/last-thank-you'
 
 /**
  * An error handler function.

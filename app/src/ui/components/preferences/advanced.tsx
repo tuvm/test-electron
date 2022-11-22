@@ -17,12 +17,12 @@ import {
 } from '../../main-process-proxy'
 
 interface IAdvancedPreferencesProps {
-  readonly useWindowsOpenSSH: boolean
+  // readonly useWindowsOpenSSH: boolean
   readonly optOutOfUsageTracking: boolean
   readonly notificationsEnabled: boolean
   // readonly uncommittedChangesStrategy: UncommittedChangesStrategy
   // readonly repositoryIndicatorsEnabled: boolean
-  readonly onUseWindowsOpenSSHChanged: (checked: boolean) => void
+  // readonly onUseWindowsOpenSSHChanged: (checked: boolean) => void
   readonly onNotificationsEnabledChanged: (checked: boolean) => void
   readonly onOptOutofReportingChanged: (checked: boolean) => void
   // readonly onUncommittedChangesStrategyChanged: (
@@ -34,7 +34,7 @@ interface IAdvancedPreferencesProps {
 interface IAdvancedPreferencesState {
   readonly optOutOfUsageTracking: boolean
   // readonly uncommittedChangesStrategy: UncommittedChangesStrategy
-  readonly canUseWindowsSSH: boolean
+  // readonly canUseWindowsSSH: boolean
   readonly suggestGrantNotificationPermission: boolean
   readonly warnNotificationsDenied: boolean
   readonly suggestConfigureNotifications: boolean
@@ -50,7 +50,7 @@ export class Advanced extends React.Component<
     this.state = {
       optOutOfUsageTracking: this.props.optOutOfUsageTracking,
       // uncommittedChangesStrategy: this.props.uncommittedChangesStrategy,
-      canUseWindowsSSH: false,
+      // canUseWindowsSSH: false,
       suggestGrantNotificationPermission: false,
       warnNotificationsDenied: false,
       suggestConfigureNotifications: false,
@@ -88,11 +88,11 @@ export class Advanced extends React.Component<
   //   this.props.onRepositoryIndicatorsEnabledChanged(event.currentTarget.checked)
   // }
 
-  private onUseWindowsOpenSSHChanged = (
-    event: React.FormEvent<HTMLInputElement>
-  ) => {
-    this.props.onUseWindowsOpenSSHChanged(event.currentTarget.checked)
-  }
+  // private onUseWindowsOpenSSHChanged = (
+  //   event: React.FormEvent<HTMLInputElement>
+  // ) => {
+  //   this.props.onUseWindowsOpenSSHChanged(event.currentTarget.checked)
+  // }
 
   private onNotificationsEnabledChanged = (
     event: React.FormEvent<HTMLInputElement>
@@ -161,7 +161,7 @@ export class Advanced extends React.Component<
             list. Disabling this may improve performance with many repositories.
           </p>
         </div> */}
-        {this.renderSSHSettings()}
+        {/* {this.renderSSHSettings()} */}
         {this.renderNotificationsSettings()}
         <div className="advanced-section">
           <h2>Usage</h2>
@@ -179,24 +179,24 @@ export class Advanced extends React.Component<
     )
   }
 
-  private renderSSHSettings() {
-    if (!this.state.canUseWindowsSSH) {
-      return null
-    }
+  // private renderSSHSettings() {
+  //   if (!this.state.canUseWindowsSSH) {
+  //     return null
+  //   }
 
-    return (
-      <div className="advanced-section">
-        <h2>SSH</h2>
-        <Checkbox
-          label="Use system OpenSSH (recommended)"
-          value={
-            this.props.useWindowsOpenSSH ? CheckboxValue.On : CheckboxValue.Off
-          }
-          onChange={this.onUseWindowsOpenSSHChanged}
-        />
-      </div>
-    )
-  }
+  //   return (
+  //     <div className="advanced-section">
+  //       <h2>SSH</h2>
+  //       <Checkbox
+  //         label="Use system OpenSSH (recommended)"
+  //         value={
+  //           this.props.useWindowsOpenSSH ? CheckboxValue.On : CheckboxValue.Off
+  //         }
+  //         onChange={this.onUseWindowsOpenSSHChanged}
+  //       />
+  //     </div>
+  //   )
+  // }
 
   private renderNotificationsSettings() {
     return (

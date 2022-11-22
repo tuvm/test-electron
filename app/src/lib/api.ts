@@ -9,12 +9,10 @@ import {
   APIError,
   urlWithQueryString,
 } from './http'
-import { AuthenticationMode } from './2fa'
 import { uuid } from './uuid'
 import username from 'username'
-// import { GitProtocol } from './remote-parsing'
 import { Emitter } from 'event-kit'
-import JSZip from 'jszip'
+// import JSZip from 'jszip'
 import { updateEndpointVersion } from './endpoint-capabilities'
 
 const envEndpoint = process.env['DESKTOP_GITHUB_DOTCOM_API_ENDPOINT']
@@ -91,88 +89,6 @@ enum HttpStatusCode {
 
 /** The note URL used for authorizations the app creates. */
 const NoteURL = 'https://desktop.github.com/'
-
-/**
- * Information about a repository as returned by the GitHub API.
- */
-export interface IAPIRepository {
-  readonly clone_url: string
-  readonly ssh_url: string
-  readonly html_url: string
-  readonly name: string
-  readonly owner: IAPIIdentity
-  readonly private: boolean
-  readonly fork: boolean
-  readonly default_branch: string
-  readonly pushed_at: string
-  readonly has_issues: boolean
-  readonly archived: boolean
-}
-
-/** Information needed to clone a repository. */
-export interface IAPIRepositoryCloneInfo {
-  /** Canonical clone URL of the repository. */
-  readonly url: string
-
-  /**
-   * Default branch of the repository, if any. This is usually either retrieved
-   * from the API for GitHub repositories, or undefined for other repositories.
-   */
-  readonly defaultBranch?: string
-}
-
-export interface IAPIFullRepository extends IAPIRepository {
-  /**
-   * The parent repository of a fork.
-   *
-   * HACK: BEWARE: This is defined as `parent: IAPIRepository | undefined`
-   * rather than `parent?: ...` even though the parent property is actually
-   * optional in the API response. So we're lying a bit to the type system
-   * here saying that this will be present but the only time the difference
-   * between omission and explicit undefined matters is when using constructs
-   * like `x in y` or `y.hasOwnProperty('x')` which we do very rarely.
-   *
-   * Without at least one non-optional type in this interface TypeScript will
-   * happily let us pass an IAPIRepository in place of an IAPIFullRepository.
-   */
-  readonly parent: IAPIRepository | undefined
-
-  /**
-   * The high-level permissions that the currently authenticated
-   * user enjoys for the repository. Undefined if the API call
-   * was made without an authenticated user or if the repository
-   * isn't the primarily requested one (i.e. if this is the parent
-   * repository of the requested repository)
-   *
-   * The permissions hash will also be omitted when the repository
-   * information is embedded within another object such as a pull
-   * request (base.repo or head.repo).
-   *
-   * In other words, the only time when the permissions property
-   * will be present is when explicitly fetching the repository
-   * through the `/repos/user/name` endpoint or similar.
-   */
-  readonly permissions?: IAPIRepositoryPermissions
-}
-
-/*
- * Information about how the user is permitted to interact with a repository.
- */
-export interface IAPIRepositoryPermissions {
-  readonly admin: boolean
-  /* aka 'write' */
-  readonly push: boolean
-  /* aka 'read' */
-  readonly pull: boolean
-}
-
-/**
- * Information about a commit as returned by the GitHub API.
- */
-export interface IAPICommit {
-  readonly sha: string
-  readonly author: IAPIIdentity | {} | null
-}
 
 /**
  * Entity returned by the `/user/orgs` endpoint.
@@ -325,20 +241,6 @@ export interface IAPIRefStatus {
   readonly statuses: ReadonlyArray<IAPIRefStatusItem>
 }
 
-export interface IAPIRefCheckRun {
-  readonly id: number
-  readonly url: string
-  readonly status: APICheckStatus
-  readonly conclusion: APICheckConclusion | null
-  readonly name: string
-  readonly check_suite: IAPIRefCheckRunCheckSuite
-  readonly app: IAPIRefCheckRunApp
-  readonly completed_at: string
-  readonly started_at: string
-  readonly html_url: string
-  readonly pull_requests: ReadonlyArray<IAPIPullRequest>
-}
-
 // NB. Only partially mapped
 export interface IAPIRefCheckRunApp {
   readonly name: string
@@ -363,15 +265,6 @@ export interface IAPICheckSuite {
   readonly created_at: string
 }
 
-export interface IAPIRefCheckRuns {
-  readonly total_count: number
-  readonly check_runs: IAPIRefCheckRun[]
-}
-
-interface IAPIWorkflowRuns {
-  readonly total_count: number
-  readonly workflow_runs: ReadonlyArray<IAPIWorkflowRun>
-}
 // NB. Only partially mapped
 export interface IAPIWorkflowRun {
   readonly id: number
@@ -413,99 +306,6 @@ export interface IAPIWorkflowJobStep {
   readonly completed_at: string
   readonly started_at: string
   readonly log: string
-}
-
-/** Protected branch information returned by the GitHub API */
-export interface IAPIPushControl {
-  /**
-   * What status checks are required before merging?
-   *
-   * Empty array if user is admin and branch is not admin-enforced
-   */
-  required_status_checks: Array<string>
-
-  /**
-   * How many reviews are required before merging?
-   *
-   * 0 if user is admin and branch is not admin-enforced
-   */
-  required_approving_review_count: number
-
-  /**
-   * Is user permitted?
-   *
-   * Always `true` for admins.
-   * `true` if `Restrict who can push` is not enabled.
-   * `true` if `Restrict who can push` is enabled and user is in list.
-   * `false` if `Restrict who can push` is enabled and user is not in list.
-   */
-  allow_actor: boolean
-
-  /**
-   * Currently unused properties
-   */
-  pattern: string | null
-  required_signatures: boolean
-  required_linear_history: boolean
-  allow_deletions: boolean
-  allow_force_pushes: boolean
-}
-
-/** Branch information returned by the GitHub API */
-export interface IAPIBranch {
-  /**
-   * The name of the branch stored on the remote.
-   *
-   * NOTE: this is NOT a fully-qualified ref (i.e. `refs/heads/main`)
-   */
-  readonly name: string
-  /**
-   * Branch protection settings:
-   *
-   *  - `true` indicates that the branch is protected in some way
-   *  - `false` indicates no branch protection set
-   */
-  readonly protected: boolean
-}
-
-interface IAPIPullRequestRef {
-  readonly ref: string
-  readonly sha: string
-
-  /**
-   * The repository in which this ref lives. It could be null if the repository
-   * has been deleted since the PR was opened.
-   */
-  readonly repo: IAPIRepository | null
-}
-
-/** Information about a pull request as returned by the GitHub API. */
-export interface IAPIPullRequest {
-  readonly number: number
-  readonly title: string
-  readonly created_at: string
-  readonly updated_at: string
-  readonly user: IAPIIdentity
-  readonly head: IAPIPullRequestRef
-  readonly base: IAPIPullRequestRef
-  readonly body: string
-  readonly state: 'open' | 'closed'
-  readonly draft?: boolean
-}
-
-/** Information about a pull request review as returned by the GitHub API. */
-export interface IAPIPullRequestReview {
-  readonly id: number
-  readonly user: IAPIIdentity
-  readonly body: string
-  readonly html_url: string
-  readonly submitted_at: string
-  readonly state:
-  | 'APPROVED'
-  | 'DISMISSED'
-  | 'PENDING'
-  | 'COMMENTED'
-  | 'CHANGES_REQUESTED'
 }
 
 /** The metadata about a GitHub server. */
@@ -723,24 +523,6 @@ export class API {
     }
   }
 
-  /** Fetch a repo by its owner and name. */
-  public async fetchRepository(
-    owner: string,
-    name: string
-  ): Promise<IAPIFullRepository | null> {
-    try {
-      const response = await this.request('GET', `repos/${owner}/${name}`)
-      if (response.status === HttpStatusCode.NotFound) {
-        log.warn(`fetchRepository: '${owner}/${name}' returned a 404`)
-        return null
-      }
-      return await parsedResponse<IAPIFullRepository>(response)
-    } catch (e) {
-      log.warn(`fetchRepository: an error occurred for '${owner}/${name}'`, e)
-      return null
-    }
-  }
-
   /** Fetch the logged in account. */
   public async fetchAccount(): Promise<IAPIFullIdentity> {
     try {
@@ -797,190 +579,6 @@ export class API {
       )
       return null
     }
-  }
-
-  /**
-   * Get any check run results for the given ref.
-   */
-  public async fetchRefCheckRuns(
-    owner: string,
-    name: string,
-    ref: string
-  ): Promise<IAPIRefCheckRuns | null> {
-    const safeRef = encodeURIComponent(ref)
-    const path = `repos/${owner}/${name}/commits/${safeRef}/check-runs?per_page=100`
-    const headers = {
-      Accept: 'application/vnd.github.antiope-preview+json',
-    }
-
-    const response = await this.request('GET', path, { customHeaders: headers })
-
-    try {
-      return await parsedResponse<IAPIRefCheckRuns>(response)
-    } catch (err) {
-      log.debug(
-        `Failed fetching check runs for ref ${ref} (${owner}/${name})`,
-        err
-      )
-      return null
-    }
-  }
-
-  /**
-   * List workflow runs for a repository filtered by branch and event type of
-   * pull_request
-   */
-  public async fetchPRWorkflowRunsByBranchName(
-    owner: string,
-    name: string,
-    branchName: string
-  ): Promise<IAPIWorkflowRuns | null> {
-    const path = `repos/${owner}/${name}/actions/runs?event=pull_request&branch=${encodeURIComponent(
-      branchName
-    )}`
-    const customHeaders = {
-      Accept: 'application/vnd.github.antiope-preview+json',
-    }
-    const response = await this.request('GET', path, { customHeaders })
-    try {
-      return await parsedResponse<IAPIWorkflowRuns>(response)
-    } catch (err) {
-      log.debug(
-        `Failed fetching workflow runs for ${branchName} (${owner}/${name})`
-      )
-    }
-    return null
-  }
-
-  /**
-   * Return the workflow run for a given check_suite_id.
-   *
-   * A check suite is a reference for a set check runs.
-   * A workflow run is a reference for set a of workflows for the GitHub Actions
-   * check runner.
-   *
-   * If a check suite is comprised of check runs ran by actions, there will be
-   * one workflow run that represents that check suite. Thus, if this api should
-   * either return an empty array indicating there are no actions runs for that
-   * check_suite_id (so check suite was not ran by actions) or an array with a
-   * single element.
-   */
-  public async fetchPRActionWorkflowRunByCheckSuiteId(
-    owner: string,
-    name: string,
-    checkSuiteId: number
-  ): Promise<IAPIWorkflowRun | null> {
-    const path = `repos/${owner}/${name}/actions/runs?event=pull_request&check_suite_id=${checkSuiteId}`
-    const customHeaders = {
-      Accept: 'application/vnd.github.antiope-preview+json',
-    }
-    const response = await this.request('GET', path, { customHeaders })
-    try {
-      const apiWorkflowRuns = await parsedResponse<IAPIWorkflowRuns>(response)
-
-      if (apiWorkflowRuns.workflow_runs.length > 0) {
-        return apiWorkflowRuns.workflow_runs[0]
-      }
-    } catch (err) {
-      log.debug(
-        `Failed fetching workflow runs for ${checkSuiteId} (${owner}/${name})`
-      )
-    }
-    return null
-  }
-
-  /**
-   * List workflow run jobs for a given workflow run
-   */
-  public async fetchWorkflowRunJobs(
-    owner: string,
-    name: string,
-    workflowRunId: number
-  ): Promise<IAPIWorkflowJobs | null> {
-    const path = `repos/${owner}/${name}/actions/runs/${workflowRunId}/jobs`
-    const customHeaders = {
-      Accept: 'application/vnd.github.antiope-preview+json',
-    }
-    const response = await this.request('GET', path, {
-      customHeaders,
-    })
-    try {
-      return await parsedResponse<IAPIWorkflowJobs>(response)
-    } catch (err) {
-      log.debug(
-        `Failed fetching workflow jobs (${owner}/${name}) workflow run: ${workflowRunId}`
-      )
-    }
-    return null
-  }
-
-  /**
-   * Get JSZip for a workflow run log archive.
-   *
-   * If it fails to retrieve or parse the zip file, it will return null.
-   */
-  public async fetchWorkflowRunJobLogs(logsUrl: string): Promise<JSZip | null> {
-    const customHeaders = {
-      Accept: 'application/vnd.github.antiope-preview+json',
-    }
-    const response = await this.request('GET', logsUrl, {
-      customHeaders,
-    })
-
-    try {
-      const zipBlob = await response.blob()
-      return new JSZip().loadAsync(zipBlob)
-    } catch (e) {
-      // Sometimes a workflow provides a log url, but still returns a 404
-      // because a log file doesn't make sense for the workflow. Thus, we just
-      // want to fail without raising an error.
-    }
-
-    return null
-  }
-
-  /**
-   * Triggers GitHub to rerequest an existing check suite, without pushing new
-   * code to a repository.
-   */
-  public async rerequestCheckSuite(
-    owner: string,
-    name: string,
-    checkSuiteId: number
-  ): Promise<boolean> {
-    const path = `/repos/${owner}/${name}/check-suites/${checkSuiteId}/rerequest`
-
-    return this.request('POST', path)
-      .then(x => x.ok)
-      .catch(err => {
-        log.debug(
-          `Failed retry check suite id ${checkSuiteId} (${owner}/${name})`,
-          err
-        )
-        return false
-      })
-  }
-
-  /**
-   * Re-run all of the failed jobs and their dependent jobs in a workflow run
-   * using the id of the workflow run.
-   */
-  public async rerunFailedJobs(
-    owner: string,
-    name: string,
-    workflowRunId: number
-  ): Promise<boolean> {
-    const path = `/repos/${owner}/${name}/actions/runs/${workflowRunId}/rerun-failed-jobs`
-
-    return this.request('POST', path)
-      .then(x => x.ok)
-      .catch(err => {
-        log.debug(
-          `Failed to rerun failed workflow jobs for (${owner}/${name}): ${workflowRunId}`,
-          err
-        )
-        return false
-      })
   }
 
   /**
@@ -1069,7 +667,6 @@ export class API {
       reloadCache?: boolean
     } = {}
   ): Promise<Response> {
-    console.warn('HELLOO');
     const response = await request(
       this.endpoint,
       this.token,
@@ -1202,10 +799,7 @@ export enum AuthorizationResponseKind {
 export type AuthorizationResponse =
   | { kind: AuthorizationResponseKind.Authorized; token: string }
   | { kind: AuthorizationResponseKind.Failed; response: Response }
-  | {
-    kind: AuthorizationResponseKind.TwoFactorAuthenticationRequired
-    type: AuthenticationMode
-  }
+
   | { kind: AuthorizationResponseKind.Error; response: Response }
   | { kind: AuthorizationResponseKind.UserRequiresVerification }
   | { kind: AuthorizationResponseKind.PersonalAccessTokenBlocked }
@@ -1263,21 +857,7 @@ export async function createAuthorization(
       if (otpResponse) {
         const pieces = otpResponse.split(';')
         if (pieces.length === 2) {
-          const type = pieces[1].trim()
-          switch (type) {
-            case 'app':
-              return {
-                kind: AuthorizationResponseKind.TwoFactorAuthenticationRequired,
-                type: AuthenticationMode.App,
-              }
-            case 'sms':
-              return {
-                kind: AuthorizationResponseKind.TwoFactorAuthenticationRequired,
-                type: AuthenticationMode.Sms,
-              }
-            default:
-              return { kind: AuthorizationResponseKind.Failed, response }
-          }
+          return { kind: AuthorizationResponseKind.Failed, response }
         }
       }
 

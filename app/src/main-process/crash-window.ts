@@ -1,6 +1,6 @@
 import { BrowserWindow } from 'electron'
 import { Emitter, Disposable } from 'event-kit'
-import { ICrashDetails, ErrorType } from '../crash/shared'
+import { ICrashDetails, ErrorType } from '../ui/crash/shared'
 import { registerWindowStateChangedEvents } from '../lib/window-state'
 import * as ipcMain from './ipc-main'
 import * as ipcWebContents from './ipc-webcontents'

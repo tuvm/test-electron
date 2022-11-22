@@ -4,7 +4,7 @@ import { ISerializableMenuItem } from './menu-item'
 import { MenuLabelsEvent } from '../models/menu-labels'
 import { MenuEvent } from '../main-process/menu'
 import { LogLevel } from './logging/log-level'
-import { ICrashDetails } from '../crash/shared'
+import { ICrashDetails } from '../ui/crash/shared'
 import { WindowState } from './window-state'
 import { IMenu } from '../models/app-menu'
 import { ILaunchStats } from './stats'
@@ -15,7 +15,7 @@ import { PathType } from '../ui/common/app-proxy'
 import { ThemeSource } from '../ui/common/theme-source'
 import { DesktopNotificationPermission } from 'desktop-notifications/dist/notification-permission'
 import { NotificationCallback } from 'desktop-notifications/dist/notification-callback'
-import { DesktopAliveEvent } from './stores/alive-store'
+import { DesktopAliveEvent } from '../stores/alive-store'
 
 /**
  * Defines the simplex IPC channel names we use from the renderer

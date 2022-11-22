@@ -1,6 +1,6 @@
 import { ILastThankYou } from '../models/last-thank-you'
 import { ReleaseNote } from '../models/release-notes'
-import { Dispatcher } from '../ui/dispatcher'
+import { Dispatcher } from '../dispatcher'
 import { getChangeLog, getReleaseSummary } from './release-notes'
 
 /**
